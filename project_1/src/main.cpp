@@ -15,6 +15,7 @@ void output(arma::mat E_l, int N){
     cout << "var/sqrt(n): " << var_E_l/sqrt(N) << endl;
     }
 
+
 double f(double R_i, double R_j){
     return 1;
     }
@@ -31,14 +32,23 @@ double prob_dens_ratio(arma::mat R, arma::mat R_p, double alpha, double beta  = 
     return exp(-2*alpha*(arma::accu(arma::sum(arma::square(R))) - arma::accu(arma::sum(arma::square(R_p)))));
     }
 
-arma::mat prop_move(arma::mat R, int  N, double step){
+arma::mat prop_move(arma::mat R, int  N, double step, string sample = "importance" ){
     
     std::random_device rd;  //Will be used to obtain a seed for the random number engine
     std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
     std::uniform_real_distribution<> dis(0.0, 1.0);
     
-    for(int i = 0; i < N; i ++){
-         R[i] += step * dis(gen); 
+    if(sample = "importance"){
+        double sum_r = arma::accu(arma::sum(R))
+        for(int i = 0; i < N; i++){
+            R[i] += dis(gen)* sqrt(timestep) * sum_r * timestep * D_coeff 
+            }
+        
+        }
+    else{
+        for(int i = 0; i < N; i ++){
+             R[i] += step * dis(gen); 
+            }
         } 
     return R;
     }
@@ -85,7 +95,6 @@ void carlo(arma::mat R, arma::mat R_p, int n_dim,  int n_carlos, int N, double s
 
      output(E_l, N);
     }
-
 int  main(int argc,  char *argv[])
 {
 	string output_filename; 
@@ -96,7 +105,7 @@ int  main(int argc,  char *argv[])
     double step;
 
     if(argc < 3){
-        cout << "Wrong usage - compile as g++ main.cpp num_cycles num_particles" << endl  ; 
+        cout << "Wrong usage - run as ./a.out num_cycles num_particles num_dim" << endl  ; 
         exit(1);
         }
     else{
@@ -104,7 +113,7 @@ int  main(int argc,  char *argv[])
         N = atoi(argv[2]);
         num_dim = atoi(argv[3]);
      }
-    
+
     step = 0.1;
     alpha = 0.5;
     beta = 1; 
@@ -113,8 +122,9 @@ int  main(int argc,  char *argv[])
     arma::mat R_p = arma::mat(N, num_dim);
 
     carlo(R, R_p, num_dim, n_carlos, N, step, alpha, beta); 
-
-    /*Initialization steps 
+    
+    /*
+    Initialization steps 
      * Choose an initial vector R with positions for all particles
      * Fix number of monte-carlo steps
      * Choose initial values  for variational parameters and compute |psi_T ^a ( R ) | ^2 
