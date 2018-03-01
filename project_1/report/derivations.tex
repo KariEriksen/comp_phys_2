@@ -1,0 +1,144 @@
+\documentclass[12pt]{article}
+\usepackage[backend=biber]{biblatex}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{commath}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{xcolor}
+\usepackage{textcomp}
+\usepackage{dirtytalk}
+\usepackage{listings}
+\usepackage{wasysym}
+\usepackage{float}
+
+
+% Parameters for displaying code.
+\lstset{language=C++}
+\lstset{basicstyle=\ttfamily\small}
+\lstset{frame=single}
+\lstset{keywordstyle=\color{red}\bfseries}
+\lstset{commentstyle=\itshape\color{blue}}
+\lstset{showspaces=false}
+\lstset{showstringspaces=false}
+\lstset{showtabs=false}
+\lstset{breaklines}
+
+% Define new commands
+\newcommand{\expect}[1]{\langle #1 \rangle}
+\newcommand{\dd}[1]{\ \text{d}#1}
+\newcommand{\f}[2]{\frac{#1}{#2}} 
+\newcommand{\tf}[2]{\tfrac{#1}{#2}}
+\newcommand{\beq}{\begin{equation*}}
+\newcommand{\eeq}{\end{equation*}}
+\newcommand{\bra}[1]{\langle #1|}
+\newcommand{\ket}[1]{|#1 \rangle}
+\newcommand{\braket}[2]{\langle #1 | #2 \rangle}
+\newcommand{\av}[1]{\left| #1 \right|}
+\newcommand{\op}[1]{\widehat{#1}}
+\newcommand{\braopket}[3]{\langle #1 | \op{#2} | #3 \rangle}
+\newcommand{\ketbra}[2]{\ket{#1}\bra{#2}}
+\newcommand{\pp}[1]{\frac{\partial}{\partial #1}}
+\newcommand{\ppn}[1]{\frac{\partial^2}{\partial #1^2}}
+\newcommand{\up}{\left|\uparrow\rangle\right.}
+\newcommand{\down}{\left|\downarrow\rangle\right.}
+\newcommand{\updown}{\left|\uparrow\downarrow\rangle\right.}
+\newcommand{\downup}{\left|\downarrow\uparrow\rangle\right.}
+\newcommand{\ua}{\uparrow}
+\newcommand{\da}{\downarrow}
+
+% Add bibliography
+%\addbibresource{bibliography.bib}
+
+\begin{document}
+
+\title{Derivations}
+\author{Garbage}
+\maketitle
+
+\section*{Drift Force without interaction}
+
+Drift force is given by:
+\beq
+F = \f{2\Delta\Psi_T}{\Psi_T}
+\eeq
+With non-interacting particles, we have
+\beq
+\Psi_T = \prod_{i} g(\alpha, \beta, \vec{r}_i)
+\eeq
+so
+\begin{align*}
+	\Delta g(\alpha, \beta, \vec{r}_i) &= 
+	\left( \pp{x}+\pp{y}+\pp{z}\right)
+	\exp\big(-\alpha(x^{2}_i + y^{2}_i + \beta z^{2}_i)\big)
+\end{align*}
+The partial derivatives are:
+\begin{align*}
+	\pp{x}g &= -2\alpha x_i \exp\big(-\alpha(x^{2}_i + y^{2}_i + \beta z^{2}_i)\big) \\
+	\pp{y}g &= -2\alpha y_i \exp\big(-\alpha(x^{2}_i + y^{2}_i + \beta z^{2}_i)\big) \\
+	\pp{z}g &= -2\alpha\beta z_i \exp\big(-\alpha(x^{2}_i + y^{2}_i) + \beta z^{2}_i)\big)
+\end{align*}
+Using this we find:
+\begin{align*}
+	\Delta g(\alpha, \beta, \vec{r}_i) &= 
+	-2\alpha(x_i + y_i + \beta z_i)\exp\big(-\alpha(x^{2}_i + y^{2}_i) + \beta z^{2}_i)\big)
+\end{align*}
+Which finally gives:
+\beq
+	F = \f{2\Delta g}{g} = -4\alpha \sum_{i}(x_i + y_i + \beta z_i)
+\eeq
+
+\section{Local energy without interaction}
+\subsection{Single particle}
+\subsection{N particles}
+\subsubsection{1D}
+For N particles in one dimension, we have:
+\begin{align*}
+	\Psi_T &= \prod_{i} g(\alpha, \vec{r}_i) = \exp\big(-\alpha(x^{2}_i)\big) \\
+	E_L &= \f{\op{H}\Psi_T}{\Psi_T} \\
+	\op{H}\Psi_T &= \big(\sum_{i} \f{\hbar^2}{2m}\Delta^{2}_j + 
+	\f{1}{2}m\omega^{2}_{ho}x^{2}_i \big) \prod_{i} g_i \\
+	&= \f{\hbar^2}{2m}\sum_{i} \Delta^{2}_j \prod_{i} g_i + 
+	\f{1}{2}m\omega^{2}_{ho}x^{2}_i \prod_{i} g_i \\
+	\Delta^{2}_i &= \ppn{x_i}
+\end{align*}
+Computing the second-derivative of the wave-function:
+\begin{align*}
+	\Delta_j \prod_{i}g_i &=\pp{x_j}\prod_{i\neq j}g_i = -2\alpha x_i\prod_{i} g_i \\
+	\Delta^{2}_j\prod_{i}g_i &= \Delta_j(\Delta_j \prod_{i}g_i) \\
+	&= -2\alpha \Delta_j(x_i\prod_{i} g_i) \\
+	&= -2\alpha \big(\prod_{i}g_i + x_i\Delta_j\prod_{i}g_i \big) \\
+	&= -2\alpha \big(\prod_{i}g_i + x_i(-2\alpha x_i \prod_{i}g_)\big) \\
+	&= 2\alpha\prod_{i}g_i(2\alpha x^{2}_i - 1)
+\end{align*}
+With this we find the local energy $E_L$:
+\begin{align*}
+	E_L &= 
+	\f{1}{\prod_{i}g_i}\big(-\f{\hbar^2}{2m}\sum_{j}2\alpha\prod_{i}g_i
+	(2\alpha x^{2}_i - 1) + \f{1}{2}m\omega^{2}_{ho}\prod_{i}g_i \big) \\
+	&= -\f{\hbar^2}{m}\alpha N(2\alpha x^{2}_i - 2) + \f{1}{2}m\omega^{2}_{ho}
+\end{align*}
+where $\alpha = \f{1}{2a^{2}_{H_0}}$ and $a_{H_0} = \f{\hbar}{m\omega}$
+
+\subsubsection{2D}
+\subsubsection{3D}
+\section{Local energy with interaction}
+\subsection{Note on indices in project file.}
+The project file has screwed up indices for sums etc in the problem text,
+and lacks some clarity regarding $f(i,j)$. This is a brief summary of notes made
+in group session:
+\begin{align*}
+	\phi{\vec{r}_i} &= \exp(-\alpha(x^{2}_i + y^{2}_i + \beta z^{2}_i))\\
+	f(r_{ij}) &= \exp(\sum_{i<j}u(r_{ij})) \\
+	u(r_{ij}) &= ln(f(r_{ij})) = ln(\exp\big(\sum_{i<j}u(r_{ij})\big)) \\
+	f(r_{ij}) &= \exp\big(u(r_{ij})\big) \\
+	\Delta_k \exp\big(\sum_{i<j} u(r_{ij}) &= \exp\big(\sum_{i<j} u(r_{ij})\big) \cdot 
+	\Delta_k \sum_{l\neq k} u(r_{lk}) \\
+	\sum_{j\neq k} \Delta_k u(r_{kj})
+\end{align*}
+
+
+\end{document}
