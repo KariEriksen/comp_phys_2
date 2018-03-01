@@ -128,8 +128,9 @@ vector<double> carlo( mat R,  mat R_p, int n_dim,  int n_carlos, int N, double s
     return output(E_l, N, alpha);
     }
 
-void variational_mc(double beta_start, double beta_stop, double beta_increment, double alpha_start, double alpha_stop, double alpha_increment,
-                    mat R,  mat R_p, int n_dim,  int n_carlos, int N, double step)
+void variational_mc(double beta_start, double beta_stop, double beta_increment, double alpha_start,
+        double alpha_stop, double alpha_increment,
+        mat R,  mat R_p, int n_dim,  int n_carlos, int N, double step)
 {
 
     double best_alpha = alpha_start; 
