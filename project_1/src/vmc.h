@@ -30,10 +30,11 @@ class vmc {
     private :
         vector<double> carlo(double alpha, double beta);
         int variational_mc_naive(double beta_start, double beta_stop, double beta_increment,
-                double alpha_start, double alpha_stop, double alpha_increment 
+                double alpha_start, double alpha_stop, double alpha_increment,
+		 
                 );
 
-        void prop_move();
+        void (*prop_move)();
         double local_energy_noninter(double alpha, double beta);
         double prob_dens_ratio_noninter(mat R_curr, double alpha, double beta);
         double prob_dens_ratio_inter(mat R_curr, double alpha, double beta);

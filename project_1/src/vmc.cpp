@@ -133,19 +133,23 @@ vector<double> vmc::carlo(double alpha, double beta){
      * */
     
     double ratio, metro_num; 
+    
+    if(interactive){
+	}
+    else{
+	for(int i = 0; i < n_carlos; i++){
+	     R_curr = R;
+	     prop_move();
+	     ratio = prob_dens_ratio_noninter(R_curr, alpha, beta);
+	     metro_num = dis(gen);
 
-    for(int i = 0; i < n_carlos; i++){
-         R_curr = R;
-         prop_move();
-         ratio = prob_dens_ratio_noninter(R_curr, alpha, beta);
-         metro_num = dis(gen);
+	     if(ratio > metro_num){
+		 R = R_p;
+		 }
 
-         if(ratio > metro_num){
-             R = R_p;
-             }
-
-         E_l[i] = local_energy_noninter(alpha, beta);
-        }
+	     E_l[i] = local_energy_noninter(alpha, beta);
+	    }
+	}
     return output(E_l);
 }
 
@@ -205,9 +209,13 @@ int vmc::solve(
     vmc::R = mat(N, n_dim);
     vmc::R_p = mat(N, n_dim);
     
-    if(vmc::gradient_desc == false)
+    if(interactive){
+	        
+    }
+    
+    if(gradient_desc == false)
     {
-        vmc::variational_mc_naive(alpha_start, alpha_stop, alpha_increment, 
+        variational_mc_naive(alpha_start, alpha_stop, alpha_increment, 
                 beta_start, beta_stop, beta_increment);
         return 0;
     }
