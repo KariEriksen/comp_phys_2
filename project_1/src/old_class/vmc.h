@@ -1,3 +1,8 @@
+#define arma_import
+#ifdef arma_import
+    #include <armadillo>
+#endif
+
 using namespace arma;
 using namespace std;
 
@@ -7,9 +12,9 @@ class vmc {
         double step;
     
     private: 
+        bool anal_derivative = false;
         bool importance_sampling = false; 
         bool gradient_desc = false; 
-        bool anal_derivative = false; 
         bool interactive = false;
         mat R;
         mat R_p;
@@ -30,8 +35,7 @@ class vmc {
     private :
         vector<double> carlo(double alpha, double beta);
         int variational_mc_naive(double beta_start, double beta_stop, double beta_increment,
-                double alpha_start, double alpha_stop, double alpha_increment,
-		 
+                double alpha_start, double alpha_stop, double alpha_increment
                 );
 
         void (*prop_move)();
@@ -43,3 +47,6 @@ class vmc {
 
 
 };
+
+
+
