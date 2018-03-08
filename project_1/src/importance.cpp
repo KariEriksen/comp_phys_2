@@ -6,6 +6,6 @@ using namespace arma;
 double Importance::metropolis_hastings(WaveFunc *psi_t){
     mat R_p(size(R));
     R_p = R; 
-    return psi_t -> proportion(R, R_p);
+    return psi_t -> ratio(R, R_p);
     
 }

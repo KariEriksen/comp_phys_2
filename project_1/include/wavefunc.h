@@ -17,5 +17,5 @@ class WaveFunc{
         virtual double E_l(mat R) = 0;
         virtual double nabla(mat R) = 0;
         virtual double laplace(mat R) = 0;
-        virtual double proportion(mat R, mat R_p) = 0; 
+        virtual double ratio(mat R, mat R_p) = 0; 
        };

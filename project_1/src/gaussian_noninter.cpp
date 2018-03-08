@@ -20,8 +20,8 @@ double GaussianNonInterNumeric::evaluate(mat R){
     double alpha = params[0];
     double beta = params[1];
     
-    cout << "alpha beta " <<alpha << " " << beta << endl;
     mat R_c(size(R));
+    R_c = R;
     if(N_d > 2){
         R_c.col(2) *= beta;
     }
@@ -30,7 +30,6 @@ double GaussianNonInterNumeric::evaluate(mat R){
 }
 double GaussianNonInterNumeric::laplace(mat R){
     double h = params[2];
-    cout << "h " << h << endl;
     double der = (evaluate(R-h) - 2* evaluate(R) + evaluate(R + h))/(h*h) ; 
     return der;
 }
@@ -40,9 +39,12 @@ double GaussianNonInterNumeric::nabla(mat R){
 }
         
 
-double GaussianNonInterNumeric::proportion(mat R, mat R_p){
-    cout << "proportion " << endl ; 
-    return evaluate(R) / evaluate (R_p);
+double GaussianNonInterNumeric::ratio(mat R, mat R_p){
+    double eval_R = evaluate(R);
+    double eval_R_p = evaluate(R_p);
+
+    double prop = eval_R / eval_R_p;
+    return prop;
 }
 
 void GaussianNonInterNumeric::set_params(vector<double> params_i, int N_d_i, int N_p_i){
