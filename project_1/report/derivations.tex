@@ -63,7 +63,7 @@
 
 Drift force is given by:
 \beq
-F = \f{2\Delta\Psi_T}{\Psi_T}
+F = \f{2\nabla\Psi_T}{\Psi_T}
 \eeq
 With non-interacting particles, we have
 \beq
@@ -71,7 +71,7 @@ With non-interacting particles, we have
 \eeq
 so
 \begin{align*}
-	\Delta g(\alpha, \beta, \vec{r}_i) &= 
+	\nabla g(\alpha, \beta, \vec{r}_i) &= 
 	\left( \pp{x}+\pp{y}+\pp{z}\right)
 	\exp\big(-\alpha(x^{2}_i + y^{2}_i + \beta z^{2}_i)\big)
 \end{align*}
@@ -83,12 +83,12 @@ The partial derivatives are:
 \end{align*}
 Using this we find:
 \begin{align*}
-	\Delta g(\alpha, \beta, \vec{r}_i) &= 
+	\nabla g(\alpha, \beta, \vec{r}_i) &= 
 	-2\alpha(x_i + y_i + \beta z_i)\exp\big(-\alpha(x^{2}_i + y^{2}_i) + \beta z^{2}_i)\big)
 \end{align*}
 Which finally gives:
 \beq
-	F = \f{2\Delta g}{g} = -4\alpha \sum_{i}(x_i + y_i + \beta z_i)
+	F = \f{2\nabla g}{g} = -4\alpha \sum_{i}(x_i + y_i + \beta z_i)
 \eeq
 
 \section{Local energy without interaction}
@@ -99,18 +99,18 @@ For N particles in one dimension, we have:
 \begin{align*}
 	\Psi_T &= \prod_{i} g(\alpha, \vec{r}_i) = \exp\big(-\alpha(x^{2}_i)\big) \\
 	E_L &= \f{\op{H}\Psi_T}{\Psi_T} \\
-	\op{H}\Psi_T &= \big(\sum_{i} \f{\hbar^2}{2m}\Delta^{2}_j + 
+	\op{H}\Psi_T &= \big(\sum_{i} \f{\hbar^2}{2m}\nabla^{2}_j + 
 	\f{1}{2}m\omega^{2}_{ho}x^{2}_i \big) \prod_{i} g_i \\
-	&= \f{\hbar^2}{2m}\sum_{i} \Delta^{2}_j \prod_{i} g_i + 
+	&= \f{\hbar^2}{2m}\sum_{i} \nabla^{2}_j \prod_{i} g_i + 
 	\f{1}{2}m\omega^{2}_{ho}x^{2}_i \prod_{i} g_i \\
-	\Delta^{2}_i &= \ppn{x_i}
+	\nabla^{2}_i &= \ppn{x_i}
 \end{align*}
 Computing the second-derivative of the wave-function:
 \begin{align*}
-	\Delta_j \prod_{i}g_i &=\pp{x_j}\prod_{i\neq j}g_i = -2\alpha x_i\prod_{i} g_i \\
-	\Delta^{2}_j\prod_{i}g_i &= \Delta_j(\Delta_j \prod_{i}g_i) \\
-	&= -2\alpha \Delta_j(x_i\prod_{i} g_i) \\
-	&= -2\alpha \big(\prod_{i}g_i + x_i\Delta_j\prod_{i}g_i \big) \\
+	\nabla_j \prod_{i}g_i &=\pp{x_j}\prod_{i\neq j}g_i = -2\alpha x_i\prod_{i} g_i \\
+	\nabla^{2}_j\prod_{i}g_i &= \nabla_j(\nabla_j \prod_{i}g_i) \\
+	&= -2\alpha \nabla_j(x_i\prod_{i} g_i) \\
+	&= -2\alpha \big(\prod_{i}g_i + x_i\nabla_j\prod_{i}g_i \big) \\
 	&= -2\alpha \big(\prod_{i}g_i + x_i(-2\alpha x_i \prod_{i}g_)\big) \\
 	&= 2\alpha\prod_{i}g_i(2\alpha x^{2}_i - 1)
 \end{align*}
@@ -125,6 +125,34 @@ where $\alpha = \f{1}{2a^{2}_{H_0}}$ and $a_{H_0} = \f{\hbar}{m\omega}$
 
 \subsubsection{2D}
 \subsubsection{3D}
+Edited 08.03.18.
+\begin{align*}
+	\nabla_k\Psi_T(\vec{r}) &= \nabla_k\phi(\vec{r}_k)\cdot\prod_{i \neq k}\phi(\vec{r}_i) \\
+	\nabla^{2}_{k}\Psi_T(\vec{r}) &=\nabla_k[\nabla_k\Psi_T(\vec{r})] \\
+	&= \nabla_k[\nabla_k\phi(\vec{r}_k)\cdot\prod_{i \neq k}\phi(\vec{r}_i)] \\
+	&= \nabla^{2}_{k}\phi(\vec{r}_k)\cdot\prod_{i \neq k}\phi(\vec{r}_i)\\
+\end{align*}
+where
+\begin{align*}
+	\nabla_k\phi(\vec{r}_k) &= \nabla_k\exp(-\alpha(x{^2}_k+y{^2}_k+\beta z{^2}_k)) \\
+	&= -2\alpha(x_k + y_k + \beta z_k)\exp(-\alpha(x{^2}_k+y{^2}_k+\beta z{^2}_k))
+\end{align*}
+and
+\begin{align*}
+	\nabla^{2}_{k}\phi(\vec{r}_k) &= \nabla_k\big(\nabla_k
+		\exp(-\alpha(x{^2}_k+y{^2}_k+\beta z{^2}_k))\big) \\
+	&= \nabla_k\big(-2\alpha(x_k + y_k + \beta z_k)
+		\exp(-\alpha(x{^2}_k+y{^2}_k+\beta z{^2}_k))\big) \\
+	&= -2\alpha\big(\nabla_k(x_k + y_k + \beta z_k)
+		\cdot\exp(-\alpha(x{^2}_k+y{^2}_k+\beta z{^2}_k)) \\
+		&+ \nabla_k\exp(-\alpha(x{^2}_k+y{^2}_k+\beta z{^2}_k))
+		\cdot(x_k + y_k + \beta z_k)\big) \\
+	&= -2\alpha\big(\nabla_k(x_k + y_k + \beta z_k)\cdot\phi(\vec{r}_k)
+		-2\alpha(x_k + y_k + \beta z_k)^2\phi(\vec{r}_k)\big) \\
+	&= -2\alpha\big((2+\beta)\phi(\vec{r}_k)
+		-2\alpha(x_k + y_k + \beta z_k)^2\phi(\vec{r}_k)\big) \\
+\end{align*}
+
 \section{Local energy with interaction}
 \subsection{Note on indices in project file.}
 The project file has screwed up indices for sums etc in the problem text,
@@ -135,9 +163,9 @@ in group session:
 	f(r_{ij}) &= \exp(\sum_{i<j}u(r_{ij})) \\
 	u(r_{ij}) &= ln(f(r_{ij})) = ln(\exp\big(\sum_{i<j}u(r_{ij})\big)) \\
 	f(r_{ij}) &= \exp\big(u(r_{ij})\big) \\
-	\Delta_k \exp\big(\sum_{i<j} u(r_{ij}) &= \exp\big(\sum_{i<j} u(r_{ij})\big) \cdot 
-	\Delta_k \sum_{l\neq k} u(r_{lk}) \\
-	\sum_{j\neq k} \Delta_k u(r_{kj})
+	\nabla_k \exp\big(\sum_{i<j} u(r_{ij}) &= \exp\big(\sum_{i<j} u(r_{ij})\big) \cdot 
+	\nabla_k \sum_{l\neq k} u(r_{lk}) \\
+	\sum_{j\neq k} \nabla_k u(r_{kj})
 \end{align*}
 
 
