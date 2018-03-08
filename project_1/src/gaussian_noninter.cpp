@@ -10,9 +10,9 @@ GaussianNonInterNumeric::GaussianNonInterNumeric() : WaveFunc(){}
 
 double GaussianNonInterNumeric::E_l(mat R){
     double _over_psi = evaluate(R);
-    double _nabla_psi = nabla(R);
+    double _laplace_psi = laplace(R);
     
-    return _over_psi*_nabla_psi;
+    return _over_psi*_laplace_psi;
     
 }
 
