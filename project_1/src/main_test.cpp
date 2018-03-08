@@ -6,7 +6,7 @@ int main(int argc, char *argv[]){
     
     importance D;
     D.set_params(1, 1, 1, 10);
-    D.solve(g, false);
+    D.solve(&g, false);
 
     return 0;
 }

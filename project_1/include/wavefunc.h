@@ -4,12 +4,14 @@
 using namespace std;
 using namespace arma;
 
-class wavefunc{
+class WaveFunc{
     public:
+
         vector<double> params;
 
-        wavefunc(){}
+        WaveFunc(){}
         virtual void set_params(vector<double> params) =0;
+        virtual ~WaveFunc() {}
 
         virtual mat evaluate(mat R) = 0;
         virtual mat nabla(mat R) = 0;

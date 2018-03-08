@@ -5,6 +5,7 @@
 
 #include <random>
 #include "../include/wavefunc.h"
+#include "../include/gaussian_noninter.h"
 
 using namespace std;
 using namespace arma;
@@ -21,19 +22,19 @@ class vmc{
 
     public:
         vector<double> monte_carlo();
-        void solve(wavefunc psi, bool import);
+        void solve(WaveFunc *psi, bool import);
         void set_params(double a, double b, int N, int mc_cycles);
     protected:
-        virtual mat metropolis_hastings(mat R) = 0;
+        virtual mat metropolis_hastings(mat R, WaveFunc *psi_t) = 0;
 };
 
 class importance: public vmc{
     protected:
-         mat metropolis_hastings(mat R);
+         mat metropolis_hastings(mat R, WaveFunc *psi_t);
 };
 
 class naive_mh: public vmc{
     protected:
-        mat metropolis_hastings(mat R);
+        mat metropolis_hastings(mat R, WaveFunc *psi_t);
 };
 

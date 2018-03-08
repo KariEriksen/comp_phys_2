@@ -6,9 +6,7 @@
 using namespace std;
 using namespace arma;
 
-class wavefunc;
-
-class GaussianNonInterNumeric: public wavefunc{
+class GaussianNonInterNumeric: public WaveFunc{
     public: 
         void set_params(vector<double> params);
         double proportion(mat R, mat R_p);

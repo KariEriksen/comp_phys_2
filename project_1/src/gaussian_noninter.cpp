@@ -1,11 +1,12 @@
 #include "../include/gaussian_noninter.h"
+#include "../include/wavefunc.h"
 
 #include <armadillo>
 
 using namespace std;
 using namespace arma;
 
-GaussianNonInterNumeric::GaussianNonInterNumeric() : wavefunc(){}
+GaussianNonInterNumeric::GaussianNonInterNumeric() : WaveFunc(){}
 
 mat GaussianNonInterNumeric::evaluate(mat R){
     double alpha = params[0];
