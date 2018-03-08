@@ -13,7 +13,7 @@ using namespace arma;
 class vmc{
     public:
         double a, b;
-        int N, mc_cycles;
+        int N_p, N_mc, N_d;
    protected:
         mat R;
         random_device rd;  //Will be used to obtain a seed for the random number engine
@@ -22,8 +22,8 @@ class vmc{
 
     public:
         vector<double> monte_carlo();
-        void solve(WaveFunc *psi, bool import);
-        void set_params(double a, double b, int N, int mc_cycles);
+        void solve(WaveFunc *psi);
+        void set_params(double a, double b, int N, int dim,int mc_cycles);
     protected:
         virtual mat metropolis_hastings(mat R, WaveFunc *psi_t) = 0;
 };
