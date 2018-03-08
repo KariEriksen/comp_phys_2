@@ -1,0 +1,32 @@
+\section{Method}
+Keeping the stuff here for examples. Might even be relevant.
+\subsection{Randomization}
+Randomizing the transaction factor $\epsilon$, and the picking of financial agents,
+\lstinline{agent_one} and \lstinline{agent_two}, was done by initializing the following
+random number generators (RNGs):
+\begin{lstlisting}
+std::random_device rd;
+std::mt19937_64 gen(rd());
+std::uniform_int_distribution<int> AgentPicker(0,NAgents-1);
+std::uniform_real_distribution<double> TransactionFactorGenerator(0.0,1.0);
+// Calling RNGs to initialize agents and transaction factor:
+agent_one = AgentPicker(gen);
+agent_two = AgentPicker(gen);
+TransactionFactor = TransactionFactorGenerator(gen);
+\end{lstlisting}
+
+\subsection{Conservation of money}
+A potential source of money "leaks" in the simulations is if 
+\lstinline{agent_one} = \lstinline{agent_two}.
+In this case the system would "leak" an amount of money equal to $\epsilon(m_1+m_2)$, propagating
+for each transaction where that agent is involved, and for each subsequent instance of the error.
+This was handled by a simple test
+\begin{lstlisting}
+if (agent_one == agent_two){
+    continue;
+}
+\end{lstlisting}
+which throws away the transactions where this would happen.
+
+
+
