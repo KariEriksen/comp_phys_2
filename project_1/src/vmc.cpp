@@ -23,6 +23,7 @@ void vmc::set_params(double a, double b, int N, int mc_cycles){
 }
 
 void vmc::solve(WaveFunc *psi_t, bool import){
+    // -> is dereferencing and  member access to methods of class.
     psi_t -> params = vector<double> (a, b);
     
     if(import){
@@ -36,10 +37,7 @@ void vmc::solve(WaveFunc *psi_t, bool import){
     b(0, 0) = 1; b(0, 1) = 2; b(1, 0) = 0;
     mat c(2, 2);
     
-    c = psi_t -> evaluate(b);
-    cout << "HELLO SIR  " << endl;
     c = metropolis_hastings(b, psi_t);
-    cout << "wha?" << endl;
 }
 
 
