@@ -18,23 +18,24 @@ class vmc{
         mat R;
         random_device rd;  //Will be used to obtain a seed for the random number engine
         mt19937 *gen; //Standard mersenne_twister_engine seeded with rd()
-        uniform_real_distribution<double> *dis; 
 
     public:
-        vector<double> monte_carlo();
-        void solve(WaveFunc *psi);
+        vector<double> monte_carlo(WaveFunc *psi_t);
+        vector<double> solve(WaveFunc *psi);
         void set_params(double a, double b, int N, int dim,int mc_cycles);
     protected:
-        virtual mat metropolis_hastings(mat R, WaveFunc *psi_t) = 0;
+        virtual double metropolis_hastings(WaveFunc *psi_t) = 0;
 };
 
-class importance: public vmc{
+class Importance: public vmc{
     protected:
-         mat metropolis_hastings(mat R, WaveFunc *psi_t);
+        double metropolis_hastings(WaveFunc *psi_t);
 };
 
-class naive_mh: public vmc{
+class NaiveMh: public vmc{
+    public:
+        double step;
     protected:
-        mat metropolis_hastings(mat R, WaveFunc *psi_t);
+        double metropolis_hastings(WaveFunc *psi_t);
 };
 

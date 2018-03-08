@@ -5,7 +5,7 @@ wavefunc.o: ../include/wavefunc.h wavefunc.cpp
 	clang wavefunc.cpp -c --std=c++11
 
 gaussian_noninter.o: ../include/gaussian_noninter.h gaussian_noninter.cpp
-	clang gaussian_noninter.cpp -c --std=c++11 ~/armadillo/armadillo-8.400.0/include
+	clang gaussian_noninter.cpp -c --std=c++11 -I ~/armadillo/armadillo-8.400.0/include
 
 vmc.o: ../include/vmc.h vmc.cpp ../include/wavefunc.h wavefunc.cpp
 	clang vmc.cpp -std=c++11 -c -I ~/armadillo/armadillo-8.400.0/include

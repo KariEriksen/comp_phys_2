@@ -3,8 +3,9 @@
 
 using namespace arma;
 
-mat importance::metropolis_hastings(mat R, WaveFunc *psi_t){
-    cout << "AGAIN, HELLO" << endl;
-    psi_t -> evaluate(R);
-    return R;
+double Importance::metropolis_hastings(WaveFunc *psi_t){
+    mat R_p(size(R));
+    R_p = R; 
+    return psi_t -> ratio(R, R_p);
+    
 }
