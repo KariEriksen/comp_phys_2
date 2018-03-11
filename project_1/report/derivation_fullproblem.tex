@@ -1,0 +1,260 @@
+\documentclass[a4paper,10pt,twoside]{report}
+\usepackage[utf8x]{inputenc}
+\usepackage[squaren]{SIunits}
+\usepackage{a4wide}
+\usepackage{array}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{cancel}
+\usepackage{enumerate}
+\date{\today}
+\title{Project 1 - spring 2018\\
+	\normalsize FYS4411 - Computational Physics}
+
+\author{Kari Eriksen}
+
+
+% Kommentarer er markert med "%" i margen. Alle disse kan, om du
+% Ã¸nsker det, fjernes i sin helhet.
+% 
+% Erstatt ``DOKUMENTTITTEL'' med dokumentets tittel. 
+% Erstatt ``FORFATTER'' med ditt navn. 
+
+% Hvis du vil ha dagens dato hver gang du redigerer dokumentet kan
+% du bytte ut DATO med \today, ellers erstatter du "DATO" med en 
+% fornuftig dato.
+ 
+% Det finnes ogsÃ¥ ved universitetet en pakke som heter "uioforside".
+% Denne kan du lese mer om i veiledningen 
+
+%\begin{figure}
+%\centering
+%\includegraphics{saddle.png}
+%\caption{The solutions of the system is a saddle. The system is unstable, except for the stable line.}
+%\label{fig:my_label}
+%\end{figure}
+
+
+\begin{document}
+\raggedright
+\maketitle
+\newpage
+
+
+\section*{Problem 1}
+
+
+
+\appendix
+\section*{Appendix A}
+
+The local energy is given by
+
+$$E_L(r)=\frac{1}{\Psi_T(r)}\hat{H}\Psi_T(r)$$
+
+with trail wave equation
+
+$$\Psi_T(r) = \prod_{i} g(\alpha, \beta, r_i) \prod_{i<j} f(a, |r_i - r_j|)$$
+
+The Hamiltonian becomes
+
+$$\hat{H} = \sum_{i}^{N} \left( \frac{-\hbar^2}{2m} \nabla_i^2 + V_{ext}(r_i)\right) + \sum_{i>j}^{N} V_{int}(r_i, r_j)$$
+
+where  
+
+$$
+V_{ext}(r_i) = 
+\begin{cases}
+\frac{1}{2} m\omega_{ho}^2 r^2\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (S)\\
+\frac{1}{2} m [\omega_{ho}^2(x^2+ y^2) + \omega_z^2 z^2]\ \ \  (E)
+\end{cases}
+$$
+
+and
+
+$$
+v_{int}(|r_i - r_j|) = 
+\begin{cases}
+\infty \ \ \ \   |r_i - r_j| \le a \\
+0 \ \ \ \ \ \ |r_i - r_j| > a
+\end{cases}
+$$
+
+
+First only harmonic oscillator (a=0) and we use $\beta = 1$ for one particle in 1D.
+
+for one particle the trail wave equation and Hamiltonian becomes
+
+$$\Psi_T(r) = g(\alpha, x) = e^{-\alpha x_i^2},$$
+
+$$\hat{H} = \left( \frac{-\hbar^2}{2m} \nabla^2 + \frac{1}{2} m\omega_{ho}^2 x^2\right)$$
+
+$$E_L = \frac{1}{e^{-\alpha x^2}}\left( \frac{-\hbar^2}{2m} \nabla^2 (e^{-\alpha x^2}) + \frac{1}{2} m\omega_{ho}^2 x^2(e^{-\alpha x^2})\right)$$
+
+\begin{align*}
+\nabla^2(e^{-\alpha x^2}) &= \frac{d^2 e^{-\alpha x^2}}{dx^2}\\
+&= \frac{d}{dx} \left(\frac{de^{-\alpha x^2}}{dx}\right)\\
+&= \frac{d}{dx} (-2\alpha x \cdot e^{-\alpha x^2})\\
+&= (4\alpha^2 x^2 - 2\alpha)e^{-\alpha x^2} 
+\end{align*}
+
+$$E_L = \frac{e^{-\alpha x^2}}{e^{-\alpha x^2}}\left( \frac{-\hbar^2}{2m}  (4\alpha^2 x^2 - 2\alpha) + \frac{1}{2} m\omega_{ho}^2 x^2\right)$$
+
+$$E_L = \frac{-\hbar^2}{2m}(4\alpha^2 x^2 - 2\alpha) + \frac{1}{2} m\omega_{ho}^2 x^2$$
+
+Solving the same problem for one particle in 2D and 3D we get something similar, 
+
+$$E_L = (\frac{-\hbar^2}{2m})4\alpha^2 (x^2 + y^2) - 4\alpha + \frac{1}{2} m\omega_{ho}^2 (x^2 + y^2),$$
+
+$$E_L = (\frac{-\hbar^2}{2m})4\alpha^2 (x^2 + y^2 + z^2) - 6\alpha + \frac{1}{2} m\omega_{ho}^2 (x^2 + y^2 + z^2).$$
+
+ADD LOCAL ENERGY FOR N PARTICLES IN 3D!!!
+
+Now we can try to solve the complete problem. The trail wave function is now
+
+$$\Psi_T(r) = \prod_{i} g(\alpha, \beta, r_i) \prod_{i<j} f(a, |r_i - r_j|)$$
+
+and first we rewrite it using 
+
+$$g(\alpha, \beta, r_i) = \exp -\alpha (x_i^2 + y_i^2 + \beta z_i^2) = \phi (r_i)$$
+
+and 
+
+$$f(r_{ij})\exp \left(\sum_{i<j}u(r_{ij})\right)$$
+
+getting 
+
+$$\Psi_T(r) = \prod_{i} \phi (r_i) \exp \left(\sum_{i<j}u(r_{ij})\right).$$
+
+The local energy for this problem becomes:
+
+
+\begin{equation} \label{eq:local energy}
+E_L = \frac{1}{\Psi_T(\boldsymbol{r})} \left( \sum_{i}^{N} \left(\frac{\hbar^2}{2m} \nabla_i^2 \Psi_T(r) + \frac{1}{2} m\omega_{ho}^2 r^2 \Psi_T(r) \right) + \sum_{i<j}^{N} V_{int}(r_i,r_j) \Psi_T(r) \right).
+\end{equation}
+
+The difficulty in \eqref{eq:local energy} is solving the derivatives of the wave equation given the complexity of the exponential. We begin with the first derivative.
+
+$$\nabla_i^2 \prod_{i} \phi (r_i) \exp \left(\sum_{i<j}u(r_{ij})\right) = \nabla_i \cdot \nabla_i \prod_{i} \phi (r_i) \exp \left(\sum_{i<j}u(r_{ij})\right)$$
+
+The first derivative of particle k:
+
+$$\nabla_k \prod_{i} \phi (r_i) \exp \left(\sum_{i<j}u(r_{ij})\right) = \nabla_k \left( \prod_{i} \phi (r_i) \right) \exp \left(\sum_{i<j}u(r_{ij})\right) + \nabla_k \left(\exp \left(\sum_{i<j}u(r_{ij})\right)\right)  \prod_{i} \phi (r_i) $$
+
+\begin{align*}
+\nabla_k \left( \prod_{i} \phi (r_i) \right) &= \nabla_k (\phi(r_1)(\phi(r_2)...(\phi(r_k)..(\phi(r_N)) \\
+&=\nabla_k \left(e^{-\alpha (x_1^2 + y_1^2 + z_1^2)} e^{-\alpha (x_2^2 + y_2^2 + z_2^2)} ... e^{-\alpha (x_k^2 + y_k^2 + z_k^2)} ... e^{-\alpha (x_N^2 + y_N^2 + z_N^2)}\right)\\
+&=\nabla_k \phi(r_k) \left[\prod_{i\ne k} \phi(r_i)\right]\\
+\nabla_k \exp \left(\sum_{i<j}u(r_{ij})\right) &= \nabla_k \exp (u(r_{12}) + u(r_{13}) + ... + u(r_{23}) + ... + u(r_{kj}) + .. + u(r_{N-1,N}) )\\
+&=\exp \left(\sum_{i<j}u(r_{ij})\right) \sum_{i\ne k} \nabla_k u(r_{kj})
+\end{align*}
+
+And the first derivative of the trail wave equation is
+
+$$\nabla_k \Psi_T(r) = \nabla_k \phi(r_k) \left[\prod_{i\ne k} \phi(r_i)\right] \exp \left(\sum_{i<j}u(r_{ij})\right) +  \prod_{i} \phi (r_i) \exp \left(\sum_{i<j}u(r_{ij})\right) \sum_{j\ne k} \nabla_k u(r_{kj}).$$
+
+FINAL EXPRESSION FOR TRAIL WAVE FUNCTION?
+
+Now we find the second derivative of the wave function.
+
+\begin{align*}
+\frac{1}{\Psi_T(r)}\nabla_k^2 \Psi_T(r) &= \frac{1}{\nabla_k \prod_{i} \phi (r_i) \exp \left(\sum_{i<j}u(r_{ij})\right)} \left( \nabla_k \left( \nabla_k \phi(r_k) \left[\prod_{i\ne k} \phi(r_i)\right] \right) \cdot \exp \left(\sum_{i<j}u(r_{ij})\right)  \right. \\
+\\
+&+\nabla_k \phi(r_k) \left[\prod_{i\ne k} \phi(r_i)\right] \cdot \nabla_k \left( \exp \left(\sum_{i<j}u(r_{ij})\right)\right)\\
+\\
+&+\nabla_k \left( \prod_{i} \phi (r_i) \right) \cdot \exp \left(\sum_{i<j}u(r_{ij})\right) \sum_{j\ne k} \nabla_k u(r_{kj}) \\
+\\
+&+ \prod_{i} \phi (r_i) \cdot \nabla_k \left(\exp \left(\sum_{i<j}u(r_{ij})\right)\right) \sum_{j\ne k} \nabla_k u(r_{kj})  \\
+\\
+&+ \left. \prod_{i} \phi (r_i) \exp \left(\sum_{i<j}u(r_{ij})\right) \cdot \nabla_k \left(\sum_{j\ne k} \nabla_k u(r_{kj}) \right) \right) \\
+\end{align*}
+
+Solving these equations separately makes it easier.
+
+$$\frac{\nabla_k^2 \phi(r_k) \left[\prod_{i\ne k} \phi(r_i)\right]  \cdot \exp \left(\sum_{i<j}u(r_{ij})\right)}{\nabla_k \prod_{i} \phi (r_i) \exp \left(\sum_{i<j}u(r_{ij})\right)} = \frac{\nabla_k^2 \phi(r_k)}{\phi(r_k)}$$
+
+$$\frac{\nabla_k \phi(r_k) \left[\prod_{i\ne k} \phi(r_i)\right] \cdot \nabla_k \left( \exp \left(\sum_{i<j}u(r_{ij})\right)\right)}{\nabla_k \prod_{i} \phi (r_i) \exp \left(\sum_{i<j}u(r_{ij})\right)} = \frac{\nabla_k \phi(r_k)}{\phi(r_k)} \sum_{j \ne k} \nabla_k u(r_{kj})$$
+
+$$\frac{\nabla_k \left( \prod_{i} \phi (r_i) \right) \cdot \exp \left(\sum_{i<j}u(r_{ij})\right) \sum_{j\ne k} \nabla_k u(r_{kj})}{\nabla_k \prod_{i} \phi (r_i) \exp \left(\sum_{i<j}u(r_{ij})\right)} = \frac{\nabla_k \phi(r_k)}{\phi(r_k)} \sum_{j \ne k} \nabla_k u(r_{kj})$$
+
+$$\frac{\prod_{i} \phi (r_i) \cdot \nabla_k \left(\exp \left(\sum_{i<j}u(r_{ij})\right)\right) \sum_{j\ne k} \nabla_k u(r_{kj})}{\nabla_k \prod_{i} \phi (r_i) \exp \left(\sum_{i<j}u(r_{ij})\right)} =  \sum_{i \ne k} \nabla_k u(r_{ki}) \sum_{j \ne k} \nabla_k u(r_{kj})$$
+
+$$\frac{\prod_{i} \phi (r_i) \exp \left(\sum_{i<j}u(r_{ij})\right) \cdot \nabla_k \left(\sum_{j\ne k} \nabla_k u(r_{kj}) \right)}{\nabla_k \prod_{i} \phi (r_i) \exp \left(\sum_{i<j}u(r_{ij})\right)} = \sum_{j \ne k} \nabla_k^2 u(r_{kj})$$
+
+Putting them together again we get the following
+
+\begin{equation} \label{eq:local energy 2}
+\frac{1}{\Psi_T(r)}\nabla_k^2 \Psi_T(r) = \frac{\nabla_k^2 \phi(r_k)}{\phi(r_k)} + 2\frac{\nabla_k \phi(r_k)}{\phi(r_k)} \sum_{j \ne k} \nabla_k u(r_{kj}) + \sum_{i \ne k} \nabla_k u(r_{ki}) \sum_{j \ne k} \nabla_k u(r_{kj}) + \sum_{j \ne k} \nabla_k^2 u(r_{kj})
+\end{equation}
+
+
+We solve the first and second derivatives of $u(r_{kj})$.
+
+\begin{equation} \label{first der}
+\nabla_k u(r_{kj}) = \left(\vec{i} \frac{\partial}{\partial x_k} + \vec{j} \frac{\partial}{\partial y_k} + \vec{k} \frac{\partial}{\partial z_k}\right) u(r_{kj})
+\end{equation}
+
+From Rottmann p. 128 we have that
+
+\begin{align*}
+\frac{\partial u(r_{kj})}{\partial x_k}\ \vec{i}  &= \frac{\partial u(r_{kj})}{\partial r_{kj}} \frac{\partial r_{kj}}{\partial x_k} \ \vec{i}\\
+&= u'(r_{kj}) \frac{\partial \sqrt{|x_k - x_j|^2 + |y_k - y_j|^2 + |z_k - z_j|^2}}{\partial x_k} \vec{i}\\
+&=u'(r_{kj}) \frac{1}{2} 2 |x_k - x_j|\frac{1}{r_{kj}} \vec{i}\\
+&=\frac{u'(r_{kj})|x_k - x_j|}{r_{kj}} \vec{i}\\
+\frac{\partial u(r_{kj})}{\partial y_k}\ \vec{j}  &= \frac{u'(r_{kj})|y_k - y_j|}{r_{kj}} \vec{j}\\
+\frac{\partial u(r_{kj})}{\partial z_k}\ \vec{k}  &=\frac{u'(r_{kj})|z_k - z_j|}{r_{kj}} \vec{k}
+\end{align*}
+
+where we have used the fact that $r_{kj} = \sqrt{|x_k - x_j|^2 + |y_k - y_j|^2 + |z_k - z_j|^2}$. Now equation \eqref{first der} becomes
+
+\begin{align*}
+\nabla_k u(r_{kj}) &= u(r_{kj})\frac{(|x_k - x_j|\vec{i} + |y_k - y_j|\vec{j} + |z_k - z_j|\vec{k})}{r_{kj}}\\
+&= u(r_{kj}) \frac{(\boldsymbol{r_k} - \boldsymbol{r_j})}{r_{kj}}.
+\end{align*}
+
+And for the second derivative have that
+
+\begin{equation} \label{second der}
+\nabla_k^2 u(r_{kj}) = \left(\frac{\partial^2}{\partial x_k^2} + \frac{\partial^2}{\partial y_k^2} + \frac{\partial^2}{\partial z_k^2}\right) u(r_{kj})
+\end{equation}
+
+and use Rottmann p. 128 again and see that
+
+\begin{align*}
+\frac{\partial^2 u(r_{kj})}{\partial x_{kj}^2} &= \frac{\partial^2 u(r_{kj})}{\partial r_{kj}^2} \left(\frac{\partial r_{kj}}{\partial x_{kj}}\right)^2 + \frac{\partial u(r_{kj})}{\partial r_{kj}} \frac{\partial^2 r_{kj}}{\partial x_{kj}^2}\\
+& =u''(r_{kj}) \frac{(x_k - x_j)^2}{r_{kj}^2} + u'(r_{kj}) \frac{\partial^2 r_{kj}}{\partial x_{kj}^2}\\
+\frac{\partial^2 r_{kj}}{\partial x_{kj}^2} &= \frac{\partial^2 \sqrt{|x_k - x_j|^2 + |y_k - y_j|^2 + |z_k - z_j|^2}}{\partial x_{kj}^2}\\
+&= \frac{\partial \frac{x_k - x_j}{\sqrt{|x_k - x_j|^2 + |y_k - y_j|^2 + |z_k - z_j|^2}}}{\partial x_{kj}}\\
+&= \frac{r_{kj} - \frac{1}{2} (x_k - x_j) \cdot \frac{2(x_k - x_j)}{r_{kj}}}{r_{kj}^2}\\
+&= \frac{1}{r_{kj}} - \frac{(x_k - x_j)^2}{r_{kj}^3}.
+\end{align*}
+
+These equations put together and solving with respect to $y$ and $z$ we get 
+
+\begin{align*}
+\frac{\partial^2 u(r_{kj})}{\partial x_{kj}^2} &= u''(r_{kj}) \frac{(x_k - x_j)^2}{r_{kj}^2} + u'(r_{kj}) \left(\frac{1}{r_{kj}} - \frac{(x_k - x_j)^2}{r_{kj}^3}\right),\\
+\frac{\partial^2 u(r_{kj})}{\partial y_{kj}^2} &= u''(r_{kj}) \frac{(y_k - y_j)^2}{r_{kj}^2} + u'(r_{kj}) \left(\frac{1}{r_{kj}} - \frac{(y_k - y_j)^2}{r_{kj}^3}\right),\\
+\frac{\partial^2 u(r_{kj})}{\partial z_{kj}^2} &= u''(r_{kj}) \frac{(z_k - z_j)^2}{r_{kj}^2} + u'(r_{kj}) \left(\frac{1}{r_{kj}} - \frac{(z_k - z_j)^2}{r_{kj}^3}\right).
+\end{align*}
+
+Now we can add them all together and equation \eqref{second der} becomes
+
+\begin{align*}
+\nabla_k^2 u(r_{kj}) &= \frac{u''(r_{kj})}{r_{kj}^2} ((x_k - x_j)^2 + (y_k - y_j)^2 + (z_k - z_j)^2) \\
+&+ u'(r_{kj}) \left(\frac{3}{r_{kj}} - \frac{(x_k - x_j)^2 + (y_k - y_j)^2 + (z_k - z_j)^2}{r_{kj}^3}\right)\\
+&= \frac{u''(r_{kj}) r_{kj}^2}{r_{kj}^2} + u'(r_{kj}) \left( \frac{3}{r_{kj}} - \frac{r_{kj}^2}{r_{kj}^3}\right)\\
+&= u''(r_{kj}) + u'(r_{kj})\frac{2}{r_{kj}}
+\end{align*}
+
+Now we can write out the complete second derivative, equation \eqref{eq:local energy 2} 
+
+\begin{align*}
+\frac{1}{\Psi_T(r)}\nabla_k^2 \Psi_T(r) &= \frac{\nabla_k^2 \phi(r_k)}{\phi(r_k)} + 2\frac{\nabla_k \phi(r_k)}{\phi(r_k)} \sum_{j \ne k} \frac{(\boldsymbol{r_k} - \boldsymbol{r_j})}{r_{kj}} u'(r_{kj}) \\
+&+ \sum_{ij \ne k} \frac{(\boldsymbol{r_k} - \boldsymbol{r_i})}{r_{ki}} \frac{(\boldsymbol{r_k} - \boldsymbol{r_j})}{r_{kj}} u'(r_{ki}) u'(r_{kj}) + \sum_{j \ne k} \left(u''(r_{kj}) + \frac{2}{r_{kj}}u'(r_{kj})\right).
+\end{align*}
+
+
+
+\end{document}
