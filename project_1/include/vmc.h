@@ -5,7 +5,10 @@
 
 #include <random>
 #include "../include/wavefunc.h"
-#include "../include/gaussian_noninter.h"
+#include "../include/gaussian_noninter_numeric.h"
+#include "../include/gaussian_noninter_analytic.h"
+#include "../include/gaussian_inter_numeric.h"
+#include "../include/gaussian_inter_analytic.h"
 
 using namespace std;
 using namespace arma;
