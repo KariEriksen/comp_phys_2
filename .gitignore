@@ -34,3 +34,9 @@
 
 #swapfiles from vim 
 *.swp
+
+#qt files
+.config
+.creator
+.files
+.include
