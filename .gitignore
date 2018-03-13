@@ -36,7 +36,7 @@
 *.swp
 
 #qt files
-.config
-.creator
-.files
-.include
+*.config
+*.creator
+*.files
+*.include
