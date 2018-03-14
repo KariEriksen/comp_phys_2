@@ -12,7 +12,7 @@ int main(int argc, char *argv[]){
     double alpha, beta, step, h; 
     int N_p, N_d, N_mc;
     alpha = 0.5; beta = 1; step = 0.1; h = 1e-5; 
-    N_p = 100; N_d = 1; N_mc = 1e5;
+    N_p = 50; N_d = 1; N_mc = 1e5;
     
     vector<double> params = {alpha, beta, h};
     g.set_params(params, N_d, N_p);
