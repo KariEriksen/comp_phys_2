@@ -15,6 +15,7 @@ using namespace arma;
 
 class vmc{
     public:
+        double step;       
         double a, b;
         int N_p, N_mc, N_d;
    protected:
@@ -27,18 +28,17 @@ class vmc{
         vector<double> solve(WaveFunc *psi);
         void set_params(double a, double b, int N, int dim,int mc_cycles);
     protected:
-        virtual double metropolis_hastings(WaveFunc *psi_t) = 0;
+        virtual double metropolis_hastings(WaveFunc *psi_t, double prev_E_l) = 0;
 };
 
 class Importance: public vmc{
     protected:
-        double metropolis_hastings(WaveFunc *psi_t);
+        double metropolis_hastings(WaveFunc *psi_t, double prev_E_l);
 };
 
 class NaiveMh: public vmc{
-    public:
-        double step;
+
     protected:
-        double metropolis_hastings(WaveFunc *psi_t);
+        double metropolis_hastings(WaveFunc *psi_t, double prev_E_l);
 };
 

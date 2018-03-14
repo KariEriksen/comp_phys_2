@@ -1,4 +1,4 @@
-#include "../include/gaussian_noninter.h"
+#include "../include/gaussian_noninter_numeric.h"
 #include "../include/vmc.h"
 
 using namespace std;
@@ -11,8 +11,8 @@ int main(int argc, char *argv[]){
     NaiveMh D;
     double alpha, beta, step, h; 
     int N_p, N_d, N_mc;
-    alpha = 1; beta = 1; step = 1; h = 1e-4; 
-    N_p = 2; N_d = 1; N_mc = 1e5;
+    alpha = 0.5; beta = 1; step = 0.1; h = 1e-5; 
+    N_p = 100; N_d = 1; N_mc = 1e5;
     
     vector<double> params = {alpha, beta, h};
     g.set_params(params, N_d, N_p);

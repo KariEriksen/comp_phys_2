@@ -9,11 +9,11 @@ using namespace arma;
 GaussianNonInterNumeric::GaussianNonInterNumeric() : WaveFunc(){}
 
 double GaussianNonInterNumeric::E_l(mat R){
-    double _over_psi = evaluate(R);
+    double _psi = evaluate(R);
     double _laplace_psi = laplace(R);
+    double pot = (double) as_scalar(accu(sum(square(R))));
     
-    return _over_psi*_laplace_psi;
-    
+    return - 0.5 * _laplace_psi/_psi + 0.5 * pot ;
 }
 
 double GaussianNonInterNumeric::evaluate(mat R){
@@ -25,26 +25,28 @@ double GaussianNonInterNumeric::evaluate(mat R){
     if(N_d > 2){
         R_c.col(2) *= beta;
     }
-    double ret_val = (double) as_scalar(exp(-alpha *(accu(sum(R_c)))));
+    double ret_val = 0;
+    double internal = accu(sum(square(R_c)));
+    ret_val = (double) as_scalar(exp(-alpha *(internal)));
     return ret_val;
 }
 double GaussianNonInterNumeric::laplace(mat R){
     double h = params[2];
-    double der = (evaluate(R-h) - 2* evaluate(R) + evaluate(R + h))/(h*h) ;
-    return der;
+    double scnd_der = (evaluate(R-h) - 2* evaluate(R) + evaluate(R + h))/(h*h) ;
+    return scnd_der;
 }
 
 double GaussianNonInterNumeric::nabla(mat R){
-    return 0;
+    double h = params[2];
+    double der = (evaluate(R + h) - evaluate(R))/h;
+    return der;
 }
 
 
 double GaussianNonInterNumeric::ratio(mat R, mat R_p){
     double eval_R = evaluate(R);
     double eval_R_p = evaluate(R_p);
-
-    double prop = eval_R / eval_R_p;
-    return prop;
+    return eval_R / eval_R_p;
 }
 
 void GaussianNonInterNumeric::set_params(vector<double> params_i, int N_d_i, int N_p_i){

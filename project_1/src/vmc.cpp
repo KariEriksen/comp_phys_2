@@ -12,13 +12,16 @@ using namespace std;
 
 vector<double> vmc::monte_carlo(WaveFunc *psi_t){
     vector<double> E_l; 
+    E_l.push_back(psi_t -> E_l(R));
 
-    for(int i = 0; i < N_mc; i++){
-        double tmp = metropolis_hastings(psi_t);
+    for(int i = 1; i < N_mc; i++){
+        double tmp = metropolis_hastings(psi_t, E_l[i-1]);
         E_l.push_back(tmp);
     }
     rowvec E_l_arma(E_l);
-    cout << mean(E_l_arma) <<"  "<< stddev(E_l_arma) << endl;
+    cout << "----------------------" << endl;
+    cout << "Mean    | std_dev " << endl;
+    cout << mean(E_l_arma)<<"  "<< stddev(E_l_arma) << endl;
     return E_l;
 }
 
@@ -40,8 +43,7 @@ vector<double> vmc::solve(WaveFunc *psi_t){
     for(int i = 0; i < N_p; i++){
         for(int j = 0; j < N_d; j++){
             //dis and gen must be dereferenced to use
-            double tmp;
-            tmp = dis(*gen);
+            double tmp = dis(*gen) * step;
             R(i, j) = tmp;
         }
     }
