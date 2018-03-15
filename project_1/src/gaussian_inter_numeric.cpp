@@ -8,12 +8,44 @@ using namespace arma;
 
 GaussianInterNumeric::GaussianInterNumeric() : WaveFunc(){}
 
+double GaussianInterNumeric::v_int(mat R){
+    double a = params[3];
+
+    for(int i = 0; i < N_p; i++){
+        double tmp1 = (double) accu(sqrt(sum(square(R.row(i)))));
+        for (int j = i + 1; j < N_p -1 ; j++){
+            double tmp2 = (double) accu(sqrt(sum(square(R.row(j)))));
+            if (std::abs(tmp1 - tmp2) < a) return 1e8;
+        }
+    }
+    return 0;
+}
+
+double GaussianInterNumeric::jastrow(mat R){
+    double a = params[3];
+    double ret_val = 0;
+
+    for(int i = 0; i < N_p; i++){
+        double tmp1 = (double) accu(sqrt(sum(square(R.row(i)))));
+        for (int j = i + 1; j < N_p -1 ; j++){
+            double tmp2 = (double) accu(sqrt(sum(square(R.row(j)))));
+            double comp = std::abs(tmp1 - tmp2);
+            if (comp < a){
+                ret_val += 1 - a/comp;
+            }
+        }
+    }
+    return ret_val;
+}
+
+
 double GaussianInterNumeric::E_l(mat R){
-    double _over_psi = evaluate(R);
+    double _psi = evaluate(R);
     double _laplace_psi = laplace(R);
-
-    return _over_psi*_laplace_psi;
-
+    double V_ext = 0.5 * (double) as_scalar(accu(sum(square(R))));
+    double V_int = v_int(R); 
+    
+    return - 0.5 * _laplace_psi/_psi +  V_ext + V_int;
 }
 
 double GaussianInterNumeric::evaluate(mat R){
@@ -25,26 +57,30 @@ double GaussianInterNumeric::evaluate(mat R){
     if(N_d > 2){
         R_c.col(2) *= beta;
     }
-    double ret_val = (double) as_scalar(exp(-alpha *(accu(sum(R_c)))));
-    return ret_val;
+    double ret_val = 0;
+    double internal = accu(sum(square(R_c)));
+    double jastrow_factors = jastrow(R);
+
+    ret_val = (double) as_scalar(exp(-alpha *(internal)));
+    return ret_val + jastrow_factors;
 }
 double GaussianInterNumeric::laplace(mat R){
     double h = params[2];
-    double der = (evaluate(R-h) - 2* evaluate(R) + evaluate(R + h))/(h*h) ;
-    return der;
+    double scnd_der = (evaluate(R-h) - 2* evaluate(R) + evaluate(R + h))/(h*h) ;
+    return scnd_der;
 }
 
 double GaussianInterNumeric::nabla(mat R){
-    return 0;
+    double h = params[2];
+    double der = (evaluate(R + h) - evaluate(R))/h;
+    return der;
 }
 
 
 double GaussianInterNumeric::ratio(mat R, mat R_p){
     double eval_R = evaluate(R);
     double eval_R_p = evaluate(R_p);
-
-    double prop = eval_R / eval_R_p;
-    return prop;
+    return eval_R / eval_R_p;
 }
 
 void GaussianInterNumeric::set_params(vector<double> params_i, int N_d_i, int N_p_i){

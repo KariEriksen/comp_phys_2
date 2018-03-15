@@ -42,7 +42,7 @@ vector<double> vmc::solve(WaveFunc *psi_t){
 
     for(int i = 0; i < N_p; i++){
         for(int j = 0; j < N_d; j++){
-            //dis and gen must be dereferenced to use
+            //gen must be dereferenced to use
             double tmp = dis(*gen) * step;
             R(i, j) = tmp;
         }
