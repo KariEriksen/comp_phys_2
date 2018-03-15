@@ -33,9 +33,11 @@ double GaussianNonInterAnalytic::evaluate(mat R){
 double GaussianNonInterAnalytic::laplace(mat R){
 
     double alpha = params[0];
-    double alpha_sq = alpha*alpha;
+    double alpha_sq = params[1];
+    double factor = N_d*N_p;
 
-    double scnd_der = N_d*N_p*alpha - 2*alpha_sq*as_scalar(accu(sum(square(R))));
+    //
+    double scnd_der = factor*alpha - 2*alpha_sq*as_scalar(accu(sum(square(R))));
     return scnd_der;
 }
 
@@ -56,4 +58,5 @@ void GaussianNonInterAnalytic::set_params(vector<double> params_i, int N_d_i, in
     N_d = N_d_i;
     N_p = N_p_i;
     params = params_i;
+
 }
