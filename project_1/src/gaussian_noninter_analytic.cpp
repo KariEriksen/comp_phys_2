@@ -9,11 +9,11 @@ using namespace arma;
 GaussianNonInterAnalytic::GaussianNonInterAnalytic() : WaveFunc(){}
 
 double GaussianNonInterAnalytic::E_l(mat R){
-    double _over_psi = evaluate(R);
-    double _laplace_psi = laplace(R);
 
-    return _over_psi*_laplace_psi;
+    double kin = laplace(R);
+    double pot = (double) as_scalar(accu(sum(square(R))));
 
+    return kin + 0.5*pot;
 }
 
 double GaussianNonInterAnalytic::evaluate(mat R){
@@ -25,12 +25,18 @@ double GaussianNonInterAnalytic::evaluate(mat R){
     if(N_d > 2){
         R_c.col(2) *= beta;
     }
-    double ret_val = (double) as_scalar(N_d*N_p - 2*alpha*alpha*(sum(R_c)));
-    //double ret_val = (double) as_scalar(exp(-alpha *(accu(sum(R_c)))));
+    double ret_val = 0;
+    double internal = accu(sum(square(R_c)));
+    ret_val = (double) as_scalar(exp(-alpha *(internal)));
     return ret_val;
 }
 double GaussianNonInterAnalytic::laplace(mat R){
-    return 0;
+
+    double alpha = params[0];
+    double alpha_sq = alpha*alpha;
+
+    double scnd_der = N_d*N_p*alpha - 2*alpha_sq*as_scalar(accu(sum(square(R))));
+    return scnd_der;
 }
 
 double GaussianNonInterAnalytic::nabla(mat R){

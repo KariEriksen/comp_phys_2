@@ -1,4 +1,5 @@
 #include "../include/gaussian_noninter_numeric.h"
+#include "../include/gaussian_noninter_analytic.h"
 #include "../include/vmc.h"
 
 using namespace std;
@@ -6,7 +7,7 @@ using namespace arma;
 
 int main(int argc, char *argv[]){
     // Derived object of WaveFunc class 
-    GaussianNonInterNumeric g;
+    GaussianNonInterAnalytic g;
  
     NaiveMh D;
     double alpha, beta, step, h; 
