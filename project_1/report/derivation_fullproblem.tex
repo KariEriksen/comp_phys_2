@@ -13,7 +13,7 @@
 \title{Project 1 - spring 2018\\
 	\normalsize FYS4411 - Computational Physics}
 
-\author{Kari Eriksen}
+\author{}
 
 
 % Kommentarer er markert med "%" i margen. Alle disse kan, om du
@@ -256,5 +256,43 @@ Now we can write out the complete second derivative, equation \eqref{eq:local en
 \end{align*}
 
 
+For the full analytical solution of the interacting problem we solve each term by it self.
+
+\begin{align*}
+\frac{1}{\phi(r_k)}\nabla_k^2 \phi(r_k) &= \frac{\nabla_k^2 \ exp(-\alpha(x_k^2 + y_k^2 + \beta z_k^2))}{exp(-\alpha(x_k^2 + y_k^2 + \beta z_k^2))}\\
+&= ((2\alpha(2\alpha x_k^2 - 1)) + (2\alpha(2\alpha y_k^2 - 1)) + (2\alpha \beta(2\alpha \beta z_k^2 - 1))) \cdot \frac{\phi(r_k)}{\phi(r_k)}\\
+&=-4\alpha^2 - 2\alpha \beta + 4\alpha^2(x_k^2 + y_k^2 + \beta z_k^2)\\ \\
+\frac{1}{\phi(r_k)}\nabla_k \phi(r_k) &= \frac{\nabla_k \ exp(-\alpha(x_k^2 + y_k^2 + \beta z_k^2))}{exp(-\alpha(x_k^2 + y_k^2 + \beta z_k^2))}\\
+&= (2\alpha x_k \vec{i} + 2\alpha y_k \vec{j} + 2\alpha \beta z_k \vec{k}) \cdot \frac{\phi(r_k)}{\phi(r_k)}\\
+&= (2\alpha x_k \vec{i} + 2\alpha y_k \vec{j} + 2\alpha \beta z_k \vec{k})
+\end{align*}
+
+Wolfram alpha gives to solution the first and second derivatives of function $u(r_{kj})$.
+
+\begin{align*}
+u'(r_{kj}) &= \frac{d (\ln{f(r_{kj})})}{dr_{kj}} \\
+&= \frac{d\ \ln{\left(1 - \frac{a}{(r_k - r_j)}\right)}}{dr_{kj}} \\
+&= - \frac{a}{ar_{kj} - r_{kj}^2}\\ \\
+u''(r_{kj}) &= \frac{d^2 (\ln{f(r_{kj})})}{dr_{kj}^2} \\
+&= \frac{a(a - 2r_{kj})}{r_{kj}^2(a - r_{kj})^2}
+\end{align*}
+
+Putting all of this together we end up with the following expression for the second derivative of the wave equation divided by it self:
+
+\begin{align*}
+\frac{1}{\Psi_T(r)}\nabla_k^2 \Psi_T(r) &= -4\alpha^2 - 2\alpha \beta + 4\alpha^2(x_k^2 + y_k^2 + \beta z_k^2) \\
+&+ 2((2\alpha x_k \vec{i} + 2\alpha y_k \vec{j} + 2\alpha \beta z_k \vec{k})) \sum_{j \ne k} \left( \frac{(x_k - x_j)\vec{i} + (y_k - y_j)\vec{j} + (z_k - z_j)\vec{k}}{r_{kj}} \left( \frac{-a}{ar_{kj} - r_{kj}^2} \right) \right)\\
+&+ \sum_{j \ne k} \left( \frac{(x_k - x_i)\vec{i} + (y_k - y_i)\vec{j} + (z_k - z_i)\vec{k}}{r_{ki}} \right) \left( \frac{(x_k - x_j)\vec{i} + (y_k - y_j)\vec{j} + (z_k - z_j)\vec{k}}{r_{kj}} \right) \\
+&* \left( \frac{-a}{ar_{ki} - r_{ki}^2} \right) \left( \frac{-a}{ar_{kj} - r_{kj}^2} \right)\\
+&+ \sum_{j \ne k} \left( \frac{a(a - 2r_{kj})}{r_{kj}^2(a - r_{kj})^2} + \frac{2}{r_{kj}} - \frac{a}{ar_{kj} - r_{kj}^2}\right)
+\end{align*}
+
+Drift force:
+
+Add calculations later.... OBS OBS
+
+$$\nabla u(r_{kj}) = - \frac{a(\vec{r_k} - \vec{r_j})}{ar_{kj}^2 - r_{kj})^3}$$
+
+$$F = (2\alpha x_k \vec{i} + 2\alpha y_k \vec{j} + 2\alpha \beta z_k \vec{k}) + \sum_{j \ne k} \left( - \frac{a(\vec{r_k} - \vec{r_j})}{ar_{kj}^2 - r_{kj})^3} \right)$$
 
 \end{document}
