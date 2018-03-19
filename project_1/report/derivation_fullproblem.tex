@@ -1,60 +1,10 @@
-\documentclass[a4paper,10pt,twoside]{report}
-\usepackage[utf8x]{inputenc}
-\usepackage[squaren]{SIunits}
-\usepackage{a4wide}
-\usepackage{array}
-\usepackage{amsmath}
-\usepackage{amsfonts}
-\usepackage{amssymb}
-\usepackage{graphicx}
-\usepackage{cancel}
-\usepackage{enumerate}
-\date{\today}
-\title{Project 1 - spring 2018\\
-	\normalsize FYS4411 - Computational Physics}
-
-\author{}
-
-
-% Kommentarer er markert med "%" i margen. Alle disse kan, om du
-% Ã¸nsker det, fjernes i sin helhet.
-% 
-% Erstatt ``DOKUMENTTITTEL'' med dokumentets tittel. 
-% Erstatt ``FORFATTER'' med ditt navn. 
-
-% Hvis du vil ha dagens dato hver gang du redigerer dokumentet kan
-% du bytte ut DATO med \today, ellers erstatter du "DATO" med en 
-% fornuftig dato.
- 
-% Det finnes ogsÃ¥ ved universitetet en pakke som heter "uioforside".
-% Denne kan du lese mer om i veiledningen 
-
-%\begin{figure}
-%\centering
-%\includegraphics{saddle.png}
-%\caption{The solutions of the system is a saddle. The system is unstable, except for the stable line.}
-%\label{fig:my_label}
-%\end{figure}
-
-
-\begin{document}
-\raggedright
-\maketitle
-\newpage
-
-
-\section*{Problem 1}
-
-
-
-\appendix
-\section*{Appendix A}
+\subsection*{Appendix A - Problem 1}
 
 The local energy is given by
 
 $$E_L(r)=\frac{1}{\Psi_T(r)}\hat{H}\Psi_T(r)$$
 
-with trail wave equation
+with trial wave equation
 
 $$\Psi_T(r) = \prod_{i} g(\alpha, \beta, r_i) \prod_{i<j} f(a, |r_i - r_j|)$$
 
@@ -85,7 +35,7 @@ $$
 
 First only harmonic oscillator (a=0) and we use $\beta = 1$ for one particle in 1D.
 
-for one particle the trail wave equation and Hamiltonian becomes
+for one particle the trial wave equation and Hamiltonian becomes
 
 $$\Psi_T(r) = g(\alpha, x) = e^{-\alpha x_i^2},$$
 
@@ -112,7 +62,7 @@ $$E_L = (\frac{-\hbar^2}{2m})4\alpha^2 (x^2 + y^2 + z^2) - 6\alpha + \frac{1}{2}
 
 ADD LOCAL ENERGY FOR N PARTICLES IN 3D!!!
 
-Now we can try to solve the complete problem. The trail wave function is now
+Now we can try to solve the complete problem. The trial wave function is now
 
 $$\Psi_T(r) = \prod_{i} g(\alpha, \beta, r_i) \prod_{i<j} f(a, |r_i - r_j|)$$
 
@@ -151,11 +101,11 @@ $$\nabla_k \prod_{i} \phi (r_i) \exp \left(\sum_{i<j}u(r_{ij})\right) = \nabla_k
 &=\exp \left(\sum_{i<j}u(r_{ij})\right) \sum_{i\ne k} \nabla_k u(r_{kj})
 \end{align*}
 
-And the first derivative of the trail wave equation is
+And the first derivative of the trial wave equation is
 
 $$\nabla_k \Psi_T(r) = \nabla_k \phi(r_k) \left[\prod_{i\ne k} \phi(r_i)\right] \exp \left(\sum_{i<j}u(r_{ij})\right) +  \prod_{i} \phi (r_i) \exp \left(\sum_{i<j}u(r_{ij})\right) \sum_{j\ne k} \nabla_k u(r_{kj}).$$
 
-FINAL EXPRESSION FOR TRAIL WAVE FUNCTION?
+FINAL EXPRESSION FOR TRIAL WAVE FUNCTION?
 
 Now we find the second derivative of the wave function.
 
@@ -295,4 +245,3 @@ $$\nabla u(r_{kj}) = - \frac{a(\vec{r_k} - \vec{r_j})}{ar_{kj}^2 - r_{kj})^3}$$
 
 $$F = (2\alpha x_k \vec{i} + 2\alpha y_k \vec{j} + 2\alpha \beta z_k \vec{k}) + \sum_{j \ne k} \left( - \frac{a(\vec{r_k} - \vec{r_j})}{ar_{kj}^2 - r_{kj})^3} \right)$$
 
-\end{document}
