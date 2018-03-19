@@ -40,3 +40,9 @@
 *.creator
 *.files
 *.include
+
+#latex files
+*.aux
+*.log 
+*.bbl 
+*.blg 
