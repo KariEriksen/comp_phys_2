@@ -22,6 +22,7 @@ class vmc{
     public:
         vector<double> monte_carlo(WaveFunc *psi_t);
         vector<double> solve(WaveFunc *psi);
+        void generate_positions(double step_int);
         void set_params(double a, double b, int N, int dim,int mc_cycles);
     protected:
         virtual double metropolis_hastings(WaveFunc *psi_t, double prev_E_l) = 0;

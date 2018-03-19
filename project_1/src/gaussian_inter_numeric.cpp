@@ -23,21 +23,23 @@ double GaussianInterNumeric::v_int(mat R){
 
 double GaussianInterNumeric::jastrow(mat R){
     double a = params[3];
-    double ret_val = 0;
+    double ret_val = 1;
 
     for(int i = 0; i < N_p; i++){
         double tmp1 = (double) accu(sqrt(sum(square(R.row(i)))));
         for (int j = i + 1; j < N_p -1 ; j++){
             double tmp2 = (double) accu(sqrt(sum(square(R.row(j)))));
             double comp = std::abs(tmp1 - tmp2);
-            if (comp < a){
-                ret_val += 1 - a/comp;
+            if (comp > a){
+                ret_val *= 1 - a/comp;
+            }
+            else{
+                return 0;
             }
         }
     }
     return ret_val;
 }
-
 
 double GaussianInterNumeric::E_l(mat R){
     double _psi = evaluate(R);
@@ -62,7 +64,7 @@ double GaussianInterNumeric::evaluate(mat R){
     double jastrow_factors = jastrow(R);
 
     ret_val = (double) as_scalar(exp(-alpha *(internal)));
-    return ret_val + jastrow_factors;
+    return ret_val * jastrow_factors;
 }
 double GaussianInterNumeric::laplace(mat R){
     double h = params[2];
