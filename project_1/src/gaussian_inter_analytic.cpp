@@ -52,23 +52,28 @@ double GaussianInterAnalytic::laplace(mat R){
     double beta = params[2];
     double a = params[3];
 
-    double xk = R(k,j);
-    double yk = R(k,j);
-    double zk = R(k,j);
-
-    double xk_sq = R(k,j);
-    double yk_sq = R(k,j);
-    double zk_sq = R(k,j);
-
     double sum_1 = 0;
     double sum_2 = 0;
     double sum_3 = 0;
 
     if (j != k){
         for(int k = 0; k < N_p; k++){
-            for(int j =  0; j < N_d; j++){
+            for(int j =  0; j < N_p; j++){
                 //NOT done!! and not correct
-                r_kj = R(k,j);
+                double xk = R(k,1);
+                double yk = R(k,2);
+                double zk = R(k,3);
+
+                double xj = R(j,1);
+                double yj = R(j,2);
+                double zj = R(j,3);
+
+                double xkj_sq = (xk - xj)*(xk - xj);
+                double ykj_sq = (yk - yj)*(yk - yj);
+                double zkj_sq = (zk - zj)*(zk - zj);
+
+
+                r_kj = sqrt(xkj_sq + ykj_sq + zkj_sq);
                 sum_1 += -a/(a*r_kj - r_kj*r_kj);
 
                 part_1 = (a*(a-r_kj))/(r_kj*r_kj*(a - r_kj)*(a - r_kj));
