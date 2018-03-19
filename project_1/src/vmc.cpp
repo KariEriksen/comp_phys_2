@@ -52,6 +52,7 @@ vector<double> vmc::solve(WaveFunc *psi_t){
     // -> is dereferencing and  member access to methods of class.
     
     generate_positions(step);
+    psi_t -> initialize(R);
     double evaluated = psi_t -> evaluate(R);
     double step_init = 0;
     
@@ -65,11 +66,11 @@ vector<double> vmc::solve(WaveFunc *psi_t){
     while(evaluated == 0){
         step_init += step;
         generate_positions(step_init);
+        psi_t -> initialize(R);
         evaluated = psi_t -> evaluate(R);
         cout << step_init << endl;
     }
-    psi_t -> initialize(R);
-    
+
     return monte_carlo(psi_t);
 }
 
