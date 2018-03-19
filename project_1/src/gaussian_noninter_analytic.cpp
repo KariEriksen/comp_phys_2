@@ -36,7 +36,8 @@ double GaussianNonInterAnalytic::laplace(mat R){
     double alpha_sq = params[1];
     double factor = N_d*N_p;
 
-    //
+    //This is the analytical expression for the second derivative of the
+    //wave function. Not calculating the laplacien
     double scnd_der = factor*alpha - 2*alpha_sq*as_scalar(accu(sum(square(R))));
     return scnd_der;
 }
