@@ -52,16 +52,25 @@ vector<double> vmc::solve(WaveFunc *psi_t){
     // -> is dereferencing and  member access to methods of class.
     
     generate_positions(step);
+    psi_t -> initialize(R);
     double evaluated = psi_t -> evaluate(R);
     double step_init = 0;
+    
+    /*
+     *Accepting a state in which a particle pair is closer than the permitted
+     * distance "a" is unphysical, and a waste of MC-cycles. We guarantee that the
+     * first state has a non-zero probability to occur and thus also guarantee that any
+     * proposed thate that has a < |r_i - r_j | for any particle pair is rejected
+     */
 
     while(evaluated == 0){
         step_init += step;
         generate_positions(step_init);
+        psi_t -> initialize(R);
         evaluated = psi_t -> evaluate(R);
         cout << step_init << endl;
     }
-    
+
     return monte_carlo(psi_t);
 }
 

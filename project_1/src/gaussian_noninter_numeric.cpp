@@ -36,18 +36,21 @@ double GaussianNonInterNumeric::laplace(mat R){
     return scnd_der;
 }
 
-double GaussianNonInterNumeric::nabla(mat R){
+double GaussianNonInterNumeric::drift_force(mat R){
     double h = params[2];
     double der = (evaluate(R + h) - evaluate(R))/h;
     return der;
 }
 
 
-double GaussianNonInterNumeric::ratio(mat R, mat R_p){
+double GaussianNonInterNumeric::ratio(mat R, mat R_p, int k){
     double eval_R = evaluate(R);
     double eval_R_p = evaluate(R_p);
     return eval_R / eval_R_p;
 }
+
+void GaussianNonInterNumeric::initialize(mat R){}
+void GaussianNonInterNumeric::update(){};
 
 void GaussianNonInterNumeric::set_params(vector<double> params_i, int N_d_i, int N_p_i){
     N_d = N_d_i;
