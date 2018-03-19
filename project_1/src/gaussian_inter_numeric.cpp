@@ -8,33 +8,49 @@ using namespace arma;
 
 GaussianInterNumeric::GaussianInterNumeric() : WaveFunc(){}
 
-double GaussianInterNumeric::v_int(mat R){
+void initialize(mat R){
     double a = params[3];
 
-    for(int i = 0; i < N_p; i++){
-        double tmp1 = (double) accu(sqrt(sum(square(R.row(i)))));
-        for (int j = i + 1; j < N_p -1 ; j++){
-            double tmp2 = (double) accu(sqrt(sum(square(R.row(j)))));
-            if (std::abs(tmp1 - tmp2) < a) return 1e8;
+    D = new trimatu(mat(N_p, N_p).zeros(), 1);
+    for(int i = 0; i < N_p; i ++ ){
+        mat temp_outer = R.row(i);
+        for(int j = 0; j > i; j){
+            mat temp_inner = R.row(k);
+            D(i, j) = 1 - a/(std::abs((double) sum(temp_outer - temp_inner)));
         }
     }
-    return 0;
 }
 
-double GaussianInterNumeric::jastrow(mat R){
+double GaussianInterNumeric::eval_corr(mat R, int k = -1){
     double a = params[3];
     double ret_val = 1;
-
-    for(int i = 0; i < N_p; i++){
-        double tmp1 = (double) accu(sqrt(sum(square(R.row(i)))));
-        for (int j = i + 1; j < N_p -1 ; j++){
-            double tmp2 = (double) accu(sqrt(sum(square(R.row(j)))));
-            double comp = std::abs(tmp1 - tmp2);
-            if (comp > a){
-                ret_val *= 1 - a/comp;
+    D_old = D;
+    
+    if(k != -1){
+        mat r_k = R.row(k);
+        for(int i = 0;  k < i ; i++){
+            r_ik = std::abs(sum(R.row(i) - r_k));
+            if(r_ik > a){
+                D(i, k) = r_ik;
             }
             else{
-                return 0;
+                D(i, k) = 0;
+            }
+        }
+        for(int i = k; i < N_p ; i ){
+            r_ik = std::abs(sum(R.row(i) - r_k));
+            if(r_ik > a){
+                D(k, i) = r_ik;
+            }
+            else{
+                D(k, i) = 0;
+            }       
+        }
+    }
+
+    for(int i = 0; i < N_p; i++){
+        for (int j = i + 1; j < N_p -1 ; j++){
+            ret_val *= D(i, j);
             }
         }
     }
@@ -42,15 +58,21 @@ double GaussianInterNumeric::jastrow(mat R){
 }
 
 double GaussianInterNumeric::E_l(mat R){
-    double _psi = evaluate(R);
+
+    /*
+     * since the sampling guarantees that no state in which any |r_i - rj| 
+     * is zero the internal potential is taken to be zero as a consequence.
+    '*/
+
+    double _psi = eval_g(R);
     double _laplace_psi = laplace(R);
     double V_ext = 0.5 * (double) as_scalar(accu(sum(square(R))));
     double V_int = v_int(R); 
     
-    return - 0.5 * _laplace_psi/_psi +  V_ext + V_int;
+    return - 0.5 * _laplace_psi/_psi +  V_ext;
 }
 
-double GaussianInterNumeric::evaluate(mat R){
+double GaussianInterNumeric::eval_g(mat R){
     double alpha = params[0];
     double beta = params[1];
 
@@ -61,28 +83,27 @@ double GaussianInterNumeric::evaluate(mat R){
     }
     double ret_val = 0;
     double internal = accu(sum(square(R_c)));
-    double jastrow_factors = jastrow(R);
 
     ret_val = (double) as_scalar(exp(-alpha *(internal)));
-    return ret_val * jastrow_factors;
+    return ret_val;
 }
 double GaussianInterNumeric::laplace(mat R){
     double h = params[2];
-    double scnd_der = (evaluate(R-h) - 2* evaluate(R) + evaluate(R + h))/(h*h) ;
+    double scnd_der = (eval_g(R-h) - 2* eval_g(R) + eval_g(R + h))/(h*h) ;
     return scnd_der;
 }
 
-double GaussianInterNumeric::nabla(mat R){
+double GaussianInterNumeric::drift_force(mat R){
     double h = params[2];
-    double der = (evaluate(R + h) - evaluate(R))/h;
+    double der = (eval_g(R + h) - eval_g(R))/h;
     return der;
 }
 
 
-double GaussianInterNumeric::ratio(mat R, mat R_p){
-    double eval_R = evaluate(R);
-    double eval_R_p = evaluate(R_p);
-    return eval_R / eval_R_p;
+double GaussianInterNumeric::ratio(mat R, mat R_p, k){
+    double prob_R = eval_g(R)*eval_corr(R);
+    double prob_R_p = eval_g(R_p)*eval_corr(R_p, k);
+    return prob_R / prob_R_p;
 }
 
 void GaussianInterNumeric::set_params(vector<double> params_i, int N_d_i, int N_p_i){

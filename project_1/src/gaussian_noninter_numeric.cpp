@@ -9,14 +9,14 @@ using namespace arma;
 GaussianNonInterNumeric::GaussianNonInterNumeric() : WaveFunc(){}
 
 double GaussianNonInterNumeric::E_l(mat R){
-    double _psi = evaluate(R);
+    double _psi = eval_g(R);
     double _laplace_psi = laplace(R);
     double pot = (double) as_scalar(accu(sum(square(R))));
     
     return - 0.5 * _laplace_psi/_psi + 0.5 * pot ;
 }
 
-double GaussianNonInterNumeric::evaluate(mat R){
+double GaussianNonInterNumeric::eval_g(mat R){
     double alpha = params[0];
     double beta = params[1];
 
@@ -32,20 +32,20 @@ double GaussianNonInterNumeric::evaluate(mat R){
 }
 double GaussianNonInterNumeric::laplace(mat R){
     double h = params[2];
-    double scnd_der = (evaluate(R-h) - 2* evaluate(R) + evaluate(R + h))/(h*h) ;
+    double scnd_der = (eval_g(R-h) - 2* eval_g(R) + eval_g(R + h))/(h*h) ;
     return scnd_der;
 }
 
-double GaussianNonInterNumeric::nabla(mat R){
+double GaussianNonInterNumeric::drift_force(mat R){
     double h = params[2];
-    double der = (evaluate(R + h) - evaluate(R))/h;
+    double der = (eval_g(R + h) - eval_g(R))/h;
     return der;
 }
 
 
-double GaussianNonInterNumeric::ratio(mat R, mat R_p){
-    double eval_R = evaluate(R);
-    double eval_R_p = evaluate(R_p);
+double GaussianNonInterNumeric::ratio(mat R, mat R_p, int k){
+    double eval_R = eval_g(R);
+    double eval_R_p = eval_g(R_p);
     return eval_R / eval_R_p;
 }
 
