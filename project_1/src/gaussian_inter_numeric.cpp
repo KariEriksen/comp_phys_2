@@ -23,9 +23,10 @@ void GaussianInterNumeric::initialize(mat R){
 double GaussianInterNumeric::eval_corr(mat R, int k = -1){
     double a = params[3];
     double ret_val = 1;
+    mat D_c = D;
+
     if(k != -1){
         mat r_k = R.row(k);
-        cout << "k is " << k << endl;
         for(int i = 0;  k > i ; i++){
             cout << "i is " << i << endl;
             double r_ik = std::abs(sum(R.row(i) - r_k));
@@ -51,7 +52,10 @@ double GaussianInterNumeric::eval_corr(mat R, int k = -1){
             ret_val *= D(i, j);
             }
         }
-    if(k != -1) D_p = D;
+    if(k != -1){ 
+        D_p = D;
+        D = D_c;
+    }
     return ret_val;
 }
 
@@ -81,7 +85,7 @@ double GaussianInterNumeric::E_l(mat R){
      * since the sampling guarantees that no state in which any |r_i - rj| 
      * is zero the internal potential is taken to be zero as a consequence.
     '*/
-    double _psi = evaluate(R) * eval_corr(R);
+    double _psi = evaluate(R);
     double _laplace_psi = laplace(R);
     double V_ext = 0.5 * (double) as_scalar(accu(sum(square(R))));
     
@@ -91,9 +95,9 @@ double GaussianInterNumeric::E_l(mat R){
 
 double GaussianInterNumeric::laplace(mat R){
     double h = params[2];
-    double scnd_der = (evaluate(R-h)*eval_corr(R-h) 
-            - 2* evaluate(R)*eval_corr(R) 
-            + evaluate(R + h)*eval_corr(R + h))/(h*h) ;
+    double scnd_der = (evaluate(R-h)
+            - 2* evaluate(R)
+            + evaluate(R + h))/(h*h) ;
     return scnd_der;
 }
 
