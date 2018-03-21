@@ -35,6 +35,12 @@
 #swapfiles from vim 
 *.swp
 
+#python garbage
+*.pyc
+__pycache__/
+*.py[cod]
+*$py.class
+
 #qt files
 *.config
 *.creator

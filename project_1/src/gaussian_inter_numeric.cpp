@@ -28,7 +28,6 @@ double GaussianInterNumeric::eval_corr(mat R, int k = -1){
     if(k != -1){
         mat r_k = R.row(k);
         for(int i = 0;  k > i ; i++){
-            cout << "i is " << i << endl;
             double r_ik = std::abs(sum(R.row(i) - r_k));
             if(r_ik > a){
                 D(i, k) = r_ik;
@@ -54,7 +53,7 @@ double GaussianInterNumeric::eval_corr(mat R, int k = -1){
         }
     if(k != -1){ 
         D_p = D;
-        D = D_c;
+        D = D_c; 
     }
     return ret_val;
 }
