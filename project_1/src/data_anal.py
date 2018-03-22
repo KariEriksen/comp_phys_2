@@ -52,9 +52,9 @@ header_regex_obj = re.compile(header_regex)
 
 filenames = sorted(filenames, key = lambda x: float(alpha_regex_obj.search(x).group(1)))
 means = []
-stds = []
+#stds = []
 times = []
-x = np.arange(0.3, 0.8, 0.05)
+x = np.arange(0.1, 1, 0.05)
 
 N_p = 0
 N_mc = 0
@@ -78,13 +78,13 @@ for filename in filenames:
             N_mc = match_o.group(3)
 
         A = loadtxt(t_filename, delimiter = "\n", skiprows = 2)
-        stds.append(block(A))
+        #stds.append(block(A))
         means.append(mean(A))
     else:
         print("fuck you")
 
 means = np.array(means)/float(N_p)
-plt.errorbar(x, means, yerr = stds)
+plt.plot(x, means)
 plt.title(sim_type + "_"+ r"VMC with $N_P = ${} | $N_D = ${}| average time[s]: {:g}".format(N_p, N_d, 
     np.average(np.array(times))))
 plt.xlabel(r"$\alpha$")

@@ -110,7 +110,9 @@ double GaussianInterNumeric::drift_force(mat R){
 double GaussianInterNumeric::ratio(mat R, mat R_p, int k){
     double prob_R = evaluate(R)*eval_corr(R);
     double prob_R_p = evaluate(R_p)*eval_corr(R_p, k);
-    return prob_R / prob_R_p;
+	
+	double prop = prop_R_p / prop_R;
+    return prop*prop;
 }
 
 void GaussianInterNumeric::update(){

@@ -11,15 +11,14 @@ int main(int argc, char *argv[]){
     NaiveMh D;
     double beta, step, h; 
     int N_p, N_d, N_mc;
-    beta = 1; step = 0.1; h = 1e-5; 
-    N_p = 50; N_d = 1; N_mc = pow(2, 20);
+    beta = 1; step = 1; h = 1e-5; 
+	N_p = 10; N_d = 1; N_mc = 1e6;//N_mc = pow(2, 20);
     
-
-    for(double alpha = 0.3; alpha < 0.8; alpha += 0.05){
+    for(double alpha = 0.1; alpha < 1; alpha += 0.05){
         GaussianNonInterAnalytic g;
         NaiveMh D;
         string sim_type = "NM_NIA";
-        vector<double> params = {alpha, beta, h};
+        vector<double> params = {alpha, alpha*alpha, beta};
         g.set_params(params, N_d, N_p);
         //must be called or else you literally have no random numbers
         //args are alpha, beta, N_particles, N_dims, N_mccycles
@@ -33,6 +32,10 @@ int main(int argc, char *argv[]){
             "_step_" + to_string(step)+
             ".csv";
         result = D.solve(&g, filename);
+		cout << "------------------------" << endl;
+		cout << "E/N " << result/N_p << endl;
+		cout << "alpha " << alpha << endl;
+		cout << "------------------------" << endl;
         }   
     return 0;
 }
