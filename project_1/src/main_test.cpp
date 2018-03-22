@@ -9,9 +9,9 @@ int main(int argc, char *argv[]){
     // Derived object of WaveFunc class 
  
     NaiveMh D;
-    double alpha, beta, step, h; 
+    double beta, step, h; 
     int N_p, N_d, N_mc;
-    alpha = 0.5; beta = 1; step = 0.1; h = 1e-5; 
+    beta = 1; step = 0.1; h = 1e-5; 
     N_p = 50; N_d = 1; N_mc = pow(2, 20);
     
 
