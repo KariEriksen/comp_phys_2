@@ -13,11 +13,12 @@ int main(int argc, char *argv[]){
     int N_p, N_d, N_mc;
     alpha = 0.5; beta = 1; step = 0.1; h = 1e-5; 
     N_p = 50; N_d = 1; N_mc = pow(2, 20);
- 
-    for(double alpha = 0.3; alpha < 0.8; alpha += 0.05){
-        GaussianNonInterNumeric g;
-        NaiveMh D;
+    
 
+    for(double alpha = 0.3; alpha < 0.8; alpha += 0.05){
+        GaussianNonInterAnalytic g;
+        NaiveMh D;
+        string sim_type = "NM_NIA";
         vector<double> params = {alpha, beta, h};
         g.set_params(params, N_d, N_p);
         //must be called or else you literally have no random numbers
@@ -27,7 +28,7 @@ int main(int argc, char *argv[]){
         //reference must be passed or else you get static linking 
         //
         double result; 
-        string filename = "../data/NIN_a_" + to_string(alpha) + 
+        string filename = "../data/"+ sim_type+ "_a_" + to_string(alpha) + 
             "_b_" + to_string(beta) +
             "_step_" + to_string(step)+
             ".csv";

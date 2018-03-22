@@ -53,18 +53,24 @@ header_regex_obj = re.compile(header_regex)
 filenames = sorted(filenames, key = lambda x: float(alpha_regex_obj.search(x).group(1)))
 means = []
 stds = []
+times = []
 x = np.arange(0.3, 0.8, 0.05)
 
 N_p = 0
 N_mc = 0
 N_d = 0
+sim_type = "NM_NIA"
 
 for filename in filenames: 
-    if filename.startswith("IN"):
+    if filename.startswith(sim_type):
         t_filename = "../data/"+filename
+        
         f_o = open(t_filename)
         header = f_o.readline()
+        time_mc = f_o.readline()
         f_o.close()
+
+        times.append(float(time_mc))
         if N_p == 0:
             match_o = header_regex_obj.search(header)
             N_p = match_o.group(1)
@@ -79,7 +85,8 @@ for filename in filenames:
 
 means = np.array(means)/float(N_p)
 plt.errorbar(x, means, yerr = stds)
-plt.title(r"VMC with $N_P = ${} | $N_D = ${}".format(N_p, N_d))
+plt.title(sim_type + "_"+ r"VMC with $N_P = ${} | $N_D = ${}| average time[s]: {:g}".format(N_p, N_d, 
+    np.average(np.array(times))))
 plt.xlabel(r"$\alpha$")
 plt.ylabel(r"$E_L∕N_p$")
 plt.show()

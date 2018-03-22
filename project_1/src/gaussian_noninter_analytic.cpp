@@ -42,12 +42,12 @@ double GaussianNonInterAnalytic::laplace(mat R){
     return scnd_der;
 }
 
-double GaussianNonInterAnalytic::nabla(mat R){
+double GaussianNonInterAnalytic::drift_force(mat R){
     return 0;
 }
 
 
-double GaussianNonInterAnalytic::ratio(mat R, mat R_p){
+double GaussianNonInterAnalytic::ratio(mat R, mat R_p, int k){
     double eval_R = evaluate(R);
     double eval_R_p = evaluate(R_p);
 
@@ -60,4 +60,9 @@ void GaussianNonInterAnalytic::set_params(vector<double> params_i, int N_d_i, in
     N_p = N_p_i;
     params = params_i;
 
+}
+
+void GaussianNonInterAnalytic::initialize(mat R){
+}
+void GaussianNonInterAnalytic::update(){
 }
