@@ -59,67 +59,64 @@ double GaussianInterAnalytic::laplace(mat R){
     double part_2 = 0;
     double part_3 = 0;
 
-    vec rk, rj, ri;
-    vec rkj, rki;
+    vec rk = zeros<vec>(N_d);
+    vec rj = zeros<vec>(N_d);
+    vec ri = zeros<vec>(N_d);
+    vec rkj = zeros<vec>(N_d);
+    vec rki = zeros<vec>(N_d);
 
     double r_kj;
     double r_ki;
 
     double V_int = 0;
 
+    //It is now looping through particles twice! Change loop
+    //for j = k + 1, drop if test
     for(int k = 0; k < N_p; k++){
+
         //Number of dimensions
         for(int dk = 0; dk < N_d; dk++){
-            rk(k) = R(k, dk);
+            rk(dk) = R(k, dk);
         }
 
-        for(int j =  0; j < N_p; j++){
+        for(int j = (k + 1); j < N_p; j++){
 
             //Number of dimensions
             for(int dj = 0; dj < N_d; dj++){
-                rj(j) = R(j, dj);
+                rj(dj) = R(j, dj);
             }
 
             rkj = rk - rj;
+            r_kj = sqrt(sum(rkj%rkj));
 
-            r_kj = sqrt(sum(rkj*rkj));
-
-            //r_kj = sqrt(xkj_sq + ykj_sq + zkj_sq);
-            //r_kj = sqrt(sum(squared(R.row(j) - R.col(k)));
             //r_kj = D(k,j);
 
-            if (j != k){
+            sum_1 += ((sum(rkj))/r_kj)*(-a/(a*r_kj - r_kj*r_kj));
 
-                sum_1 += ((sum(rkj))/r_kj)*(-a/(a*r_kj - r_kj*r_kj));
+            part_1 = (a*(a-r_kj))/(r_kj*r_kj*(a - r_kj)*(a - r_kj));
+            part_2 = 2.0/r_kj;
+            part_3 = -a/(a*r_kj - r_kj*r_kj);
 
-                part_1 = (a*(a-r_kj))/(r_kj*r_kj*(a - r_kj)*(a - r_kj));
-                part_2 = 2.0/r_kj;
-                part_3 = -a/(a*r_kj - r_kj*r_kj);
+            sum_3 += part_1 + part_2 + part_3;
 
-                sum_3 += part_1 + part_2 + part_3;
-            }
-
-            for(int i = 0; i < N_p; i++){
+            for(int i = (k + 1); i < N_p; i++){
 
                 //Number of dimensions
                 for(int di = 0; di < N_d; di++){
-                    ri(i) = R(i, di);
+                    ri(di) = R(i, di);
                 }
 
                 rki = rk - ri;
 
-                r_ki = sqrt(sum(rki*rki));
-                //r_ki = sqrt(xki_sq + yki_sq + zki_sq);
+                r_ki = sqrt(sum(rki%rki));
                 //r_ki = D(k,i);
 
-                if (i != k){
-                    sum_2 += (-a/(a*r_ki - r_ki*r_ki))*(-a/(a*r_kj - r_kj*r_kj));
-                }
+                sum_2 += (-a/(a*r_ki - r_ki*r_ki))*(-a/(a*r_kj - r_kj*r_kj));
             }
 
             if (k < j){
                 if (r_kj < a){
-                    V_int += 1;
+                    V_int += 1e10;
                 }
                 else{
                     V_int += 0;
@@ -128,7 +125,7 @@ double GaussianInterAnalytic::laplace(mat R){
         }
     }
 
-    double term1 = -4*alpha - 2*alpha*beta + 4*alpha_sq*(sum(rk*rk));
+    double term1 = -4*alpha - 2*alpha*beta + 4*alpha_sq*(sum(rk%rk));
     double term2 = -4*alpha*(sum(rk))*sum_1;
 
     double scnd_der = term1 + term2 + sum_2 + sum_3;
@@ -143,35 +140,35 @@ double GaussianInterAnalytic::drift_force(mat R){
     double alpha = params[0];
     double a = params[3];
 
-    double xk, yk, zk;
-    double xj, yj, zj;
-    double xkj, ykj, zkj;
-    double xkj_sq, ykj_sq, zkj_sq;
+    vec rk = zeros<vec>(N_d);
+    vec rj = zeros<vec>(N_d);
+    vec rkj = zeros<vec>(N_d);
 
     double r_kj;
     double term = 0;
+    double subt = 0;
 
     for(int k = 0; k < N_p; k++){
+        //Number of dimensions
+        for(int dk = 0; dk < N_d; dk++){
+            rk(dk) = R(k, dk);
+            subt -= rk(dk);
+        }
+
         for(int j =  0; j < N_p; j++){
+            //Number of dimensions
+            for(int dj = 0; dj < N_d; dj++){
+                rk(dj) = R(j, dj);
+            }
 
-            xk = R(k,0);
-            yk = R(k,1);
-            zk = R(k,2);
+            rkj = rk - rj;
+            r_kj = sqrt(sum(rkj%rkj));
 
-            xj = R(j,0);
-            yj = R(j,1);
-            zj = R(j,2);
-
-            xkj = (xk - xj);
-            ykj = (yk - yj);
-            zkj = (zk - zj);
-
-            term = (-2*alpha*(xk - yk - zk));
+            term = (-4*alpha*(subt));
             //r_kj = D(k,j);
-            r_kj = sqrt(xkj_sq + ykj_sq + zkj_sq);
 
             if (j != k){
-                sum_1 += (-a*(xkj + ykj + zkj))/(a*r_kj*r_kj - r_kj*r_kj*r_kj);
+                sum_1 += (-a*(sum(rkj)))/(a*r_kj*r_kj - r_kj*r_kj*r_kj);
 
             }
         }
@@ -180,6 +177,11 @@ double GaussianInterAnalytic::drift_force(mat R){
     double first_der = term + sum_1;
     return first_der;
 }
+
+/*double GaussianInterAnalytic::green_function(mat R){
+    double G = 0;
+    return G;
+}*/
 
 
 double GaussianInterAnalytic::ratio(mat R, mat R_p, int k){

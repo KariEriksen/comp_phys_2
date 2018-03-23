@@ -17,6 +17,7 @@ class GaussianInterAnalytic: public WaveFunc{
         double E_l(mat R);
         double laplace(mat R);
         double drift_force(mat R);
+        //double green_function(mat R);
         void initialize(mat R);
         void update();
         double h;
