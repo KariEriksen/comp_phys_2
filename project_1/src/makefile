@@ -5,30 +5,30 @@ app.x: main_test.o
 	g++ -o app.x main_test.o vmc.o wavefunc.o gaussian_noninter_numeric.o gaussian_noninter_analytic.o naive_mh.o importance.o
 
 wavefunc.o: ../include/wavefunc.h wavefunc.cpp
-	clang wavefunc.cpp -c --std=c++11
+	clang wavefunc.cpp -c -fPIC --std=c++11
 
 gaussian_noninter_numeric.o: ../include/gaussian_noninter_numeric.h gaussian_noninter_numeric.cpp
-	clang gaussian_noninter_numeric.cpp -c --std=c++11 -I ~/armadillo/armadillo-8.400.0/include
+	clang gaussian_noninter_numeric.cpp -c -fPIC --std=c++11 -I ~/armadillo/armadillo-8.400.0/include
 
 gaussian_inter_numeric.o: ../include/gaussian_inter_numeric.h gaussian_inter_numeric.cpp
-	clang gaussian_inter_numeric.cpp -c --std=c++11 -I ~/armadillo/armadillo-8.400.0/include
+	clang gaussian_inter_numeric.cpp -c -fPIC --std=c++11 -I ~/armadillo/armadillo-8.400.0/include
 
 gaussian_noninter_analytic.o: ../include/gaussian_noninter_analytic.h gaussian_noninter_analytic.cpp
-	clang gaussian_noninter_analytic.cpp -c --std=c++11 -I ~/armadillo/armadillo-8.400.0/include
+	clang gaussian_noninter_analytic.cpp -c -fPIC --std=c++11 -I ~/armadillo/armadillo-8.400.0/include
 
 
 vmc.o: ../include/vmc.h vmc.cpp ../include/wavefunc.h wavefunc.cpp
-	clang vmc.cpp -std=c++11 -c -I ~/armadillo/armadillo-8.400.0/include
+	clang vmc.cpp -std=c++11 -c -fPIC -I ~/armadillo/armadillo-8.400.0/include
 
 importance.o: importance.cpp ../include/vmc.h vmc.cpp 
-	clang importance.cpp -c -std=c++11
+	clang importance.cpp -c -fPIC -std=c++11
 
 naive_mh.o: naive_mh.cpp ../include/vmc.h vmc.cpp 
-	clang naive_mh.cpp -c -std=c++11
+	clang naive_mh.cpp -c -fPIC -std=c++11
 
 main_test.o: main_test.cpp vmc.o gaussian_noninter_numeric.o gaussian_noninter_analytic.o wavefunc.o importance.o naive_mh.o
-	clang main_test.cpp -std=c++11 -I ~/armadillo/armadillo-8.400.0/include -c
+	clang main_test.cpp -fPIC -std=c++11 -I ~/armadillo/armadillo-8.400.0/include -c
 
 main_GIN.o: main_GIN.cpp vmc.o gaussian_inter_numeric.o wavefunc.o importance.o naive_mh.o
-	clang main_GIN.cpp -std=c++11 -I ~/armadillo/armadillo-8.400.0/include -c
+	clang main_GIN.cpp -fPIC -std=c++11 -I ~/armadillo/armadillo-8.400.0/include -c
 

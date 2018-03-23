@@ -14,6 +14,7 @@ using namespace std;
 vector<double> vmc::monte_carlo(WaveFunc *psi_t){
     vector<double> E_l; 
     E_l.push_back(psi_t -> E_l(R));
+
     for(int i = 1; i < N_mc; i++){
         double tmp = metropolis_hastings(psi_t, E_l[i-1]);
         E_l.push_back(tmp);
@@ -58,7 +59,6 @@ double vmc::solve(WaveFunc *psi_t, string filename){
      * first state has a non-zero probability to occur and thus also guarantee that any
      * proposed thate that has a < |r_i - r_j | for any particle pair is rejected
      */
-    
     
     while(evaluated == 0){
         step_init += step;
