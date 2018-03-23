@@ -20,8 +20,8 @@ class vmc{
         mt19937 *gen; //Standard mersenne_twister_engine seeded with rd()
 
     public:
-        vector<double> monte_carlo(WaveFunc *psi_t);
-        double solve(WaveFunc *psi, string filename);
+        void monte_carlo(WaveFunc *psi_t, double *E_l);
+        vector<double> solve(WaveFunc *psi, string filename);
         void generate_positions(double step_int);
         void set_params(double a, double b, int N, int dim,int mc_cycles);
     protected:
