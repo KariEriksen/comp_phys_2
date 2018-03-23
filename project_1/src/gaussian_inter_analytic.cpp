@@ -186,8 +186,9 @@ double GaussianInterAnalytic::ratio(mat R, mat R_p, int k){
     double eval_R = evaluate(R);
     double eval_R_p = evaluate(R_p);
 
-    double prop = eval_R / eval_R_p;
-    return prop;
+
+    double prop = eval_R_p / eval_R;
+    return prop*prop;
 }
 
 void GaussianInterAnalytic::update(){

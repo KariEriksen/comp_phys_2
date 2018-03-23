@@ -46,7 +46,9 @@ double GaussianNonInterNumeric::drift_force(mat R){
 double GaussianNonInterNumeric::ratio(mat R, mat R_p, int k){
     double eval_R = evaluate(R);
     double eval_R_p = evaluate(R_p);
-    return eval_R / eval_R_p;
+
+	double prop = eval_R_p / eval_R;
+    return prop*prop;
 }
 
 void GaussianNonInterNumeric::initialize(mat R){}
