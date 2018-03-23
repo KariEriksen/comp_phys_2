@@ -11,15 +11,13 @@
 using namespace arma;
 using namespace std;
 
-vector<double> vmc::monte_carlo(WaveFunc *psi_t){
-    vector<double> E_l; 
-    E_l.push_back(psi_t -> E_l(R));
+void vmc::monte_carlo(WaveFunc *psi_t, double *E_l_array){
+   E_l_array[0] = psi_t -> E_l(R);
 
     for(int i = 1; i < N_mc; i++){
-        double tmp = metropolis_hastings(psi_t, E_l[i-1]);
-        E_l.push_back(tmp);
+        double tmp = metropolis_hastings(psi_t, E_l_array[i-1]);
+        E_l_array[i] = tmp;
     }
-   return E_l;
 }
 
 void vmc::set_params(double a_in, double b_in, int N, int dim,int mc_cycles){
@@ -45,7 +43,7 @@ void vmc::generate_positions(double step_int){
  
 }
 
-double vmc::solve(WaveFunc *psi_t, string filename){
+vector<double> vmc::solve(WaveFunc *psi_t, string filename){
     // -> is dereferencing and  member access to methods of class.
     
     generate_positions(step);
@@ -68,11 +66,15 @@ double vmc::solve(WaveFunc *psi_t, string filename){
         cout << step_init << endl;
     }
     
+    double E_l_array [N_mc]; 
+    
     int start_s = clock();
-    vector<double> E_l = monte_carlo(psi_t);
+    monte_carlo(psi_t, E_l_array);
     int end_s = clock();
+
     double time_spent = (end_s - start_s)/(double (CLOCKS_PER_SEC) * 1000);
-    mat arma_e_l = mat(E_l);
+    mat arma_e_l = mat(N_mc, 1);
+    for(int i = 0; i < N_mc; i++) arma_e_l(i, 0) = E_l_array[i];
 
     string header = "# N_p: " + to_string(N_p) 
         + "| N_d: " + to_string(N_d) 
@@ -81,12 +83,12 @@ double vmc::solve(WaveFunc *psi_t, string filename){
     ofstream output_file(filename);
     
     output_file << header << endl;
-    output_file << time_spent << endl;
     arma_e_l.save(output_file, csv_ascii); 
 
     output_file.close();
     
-    return (double) as_scalar(mean(arma_e_l));
+    vector<double> retval = {(double) as_scalar(mean(arma_e_l)), time_spent};
+    return retval ;
 }
 
 
