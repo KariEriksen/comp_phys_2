@@ -1,4 +1,4 @@
-//#include <omp.h>
+#include <omp.h>
 #include "../include/gaussian_noninter_numeric.h"
 #include "../include/gaussian_noninter_analytic.h"
 #include "../include/wavefunc.h"
@@ -15,7 +15,7 @@ int main(int argc, char *argv[]){
     int N_p, N_d, N_mc, mc_exp;
     beta = 1; step = 0.1; h = 1e-4;
     if( argc < 3){
-        cout << "Wrong usage. Include N_p, N_d, mc_exp" << endl;    
+        cout << "Wrong usage" << endl;    
         exit(1);
     }
     else{
@@ -24,7 +24,7 @@ int main(int argc, char *argv[]){
     N_mc = pow(2, mc_exp);
     
     GaussianNonInterAnalytic g;
-    //GaussianNonInterNumeric u; 
+    GaussianNonInterNumeric u; 
 
     vector<vector<double>> numeric_results;
     vector<vector<double>> analytic_results; 
@@ -35,7 +35,7 @@ int main(int argc, char *argv[]){
     double *alpha_array = new double[num_sims];
     
     for(int i = 0; i < num_sims ; i++){
-        alpha_array[i] = alpha_start + i*alpha_step;
+        alpha_array[i] = alpha_start + i*alpha_step ;
     }
 
     for(int i = 0; i < num_sims; i++){
@@ -60,9 +60,7 @@ int main(int argc, char *argv[]){
         result = D.solve(&g, filename);
         analytic_results.push_back(result);
         }
-  
-	 // Numeric
-	 /*
+    
      for(int i = 0; i < num_sims; i++){
         double alpha = alpha_array[i];
         NaiveMh E;
@@ -84,12 +82,12 @@ int main(int argc, char *argv[]){
             ".csv";
         result = E.solve(&u, filename);
         numeric_results.push_back(result);
-        }
-	*/
+        }   
 
-    string meta_filename = "../data/NM_NIA_NIN_np_" + to_string(N_p)+
+    string meta_filename = "../data/NM_NIA_NIN_meta_np_" + to_string(N_p)+
         "_nd_" + to_string(N_d)+   
-        +"_meta_data.csv";
+        +"_data"
+        +".csv";
     ofstream meta_file(meta_filename);
     
     meta_file << "alpha,analytic_energy,analytic_time,numeric_energy,numeric_time" << endl;
@@ -97,7 +95,7 @@ int main(int argc, char *argv[]){
 
     for(int i = 0; i<num_sims ; i++){
         meta_file << a << "," << analytic_results[i][0] << "," << analytic_results[i][1] ;
-        //meta_file << "," << numeric_results[i][0] << "," << numeric_results[i][1] << endl;
+        meta_file << "," << numeric_results[i][0] << "," << numeric_results[i][1] << endl;
         a += alpha_step;
     }
 
