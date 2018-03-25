@@ -32,6 +32,7 @@ double GaussianNonInterNumeric::evaluate(mat R){
     ret_val = (double) as_scalar(exp(-alpha *(internal)));
     return ret_val;
 }
+
 double GaussianNonInterNumeric::laplace(mat R){
     double h = params[2];
     double lap = 0;
