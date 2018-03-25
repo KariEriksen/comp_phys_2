@@ -20,16 +20,45 @@ void GaussianInterAnalytic::initialize(mat R){
         }
     }
 }
+double GaussianInterAnalytic::eval_corr(mat R, int k = -1){
+    double a = params[3];
+    double ret_val = 1;
+    mat D_c = D;
 
-double GaussianInterAnalytic::E_l(mat R){
-    double _psi = evaluate(R);
-    double _laplace_psi, V_int = laplace(R);
-    double V_ext = 0.5 * (double) as_scalar(accu(sum(square(R))));
-
-    return - 0.5 * _laplace_psi +  V_ext + V_int;
+    if(k != -1){
+        mat r_k = R.row(k);
+        for(int i = 0;  k > i ; i++){
+            double r_ik = std::abs(sum(R.row(i) - r_k));
+            if(r_ik > a){
+                D(i, k) = r_ik;
+            }
+            else{
+                D(i, k) = 0;
+            }
+        }
+        for(int i = k; i < N_p ; i++){
+            double r_ik = std::abs(sum(R.row(i) - r_k));
+            if(r_ik > a){
+                D(k, i) = r_ik;
+            }
+            else{
+                D(k, i) = 0;
+            }
+        }
+    }
+    for(int i = 0; i < N_p; i++){
+        for (int j = (i + 1); j < N_p ; j++){
+            ret_val *= D(i, j);
+            }
+        }
+    if(k != -1){
+        D_p = D;
+        D = D_c;
+    }
+    return ret_val;
 }
 
-double GaussianInterAnalytic::evaluate(mat R){
+double GaussianInterAnalytic::eval_g(mat R){
     double alpha = params[0];
     double beta = params[2];
 
@@ -40,8 +69,21 @@ double GaussianInterAnalytic::evaluate(mat R){
     }
     double ret_val = 0;
     double internal = accu(sum(square(R_c)));
+
     ret_val = (double) as_scalar(exp(-alpha *(internal)));
     return ret_val;
+}
+
+double GaussianInterAnalytic::evaluate(mat R){
+    return eval_g(R)*eval_corr(R);
+}
+
+double GaussianInterAnalytic::E_l(mat R){
+    double _psi = evaluate(R);
+    double _laplace_psi, V_int = laplace(R);
+    double V_ext = 0.5 * (double) as_scalar(accu(sum(square(R))));
+
+    return - 0.5 * _laplace_psi +  V_ext + V_int;
 }
 
 double GaussianInterAnalytic::laplace(mat R){
@@ -177,12 +219,6 @@ double GaussianInterAnalytic::drift_force(mat R){
     double first_der = term + sum_1;
     return first_der;
 }
-
-/*double GaussianInterAnalytic::green_function(mat R){
-    double G = 0;
-    return G;
-}*/
-
 
 double GaussianInterAnalytic::ratio(mat R, mat R_p, int k){
     double eval_R = evaluate(R);
