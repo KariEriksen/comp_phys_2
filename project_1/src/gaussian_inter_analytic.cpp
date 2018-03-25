@@ -132,8 +132,8 @@ double GaussianInterAnalytic::laplace(mat R){
     return scnd_der, V_int;
 }
 
-double GaussianInterAnalytic::drift_force(mat R){
-    //Add this for the drift force to be used in importance sampling
+mat GaussianInterAnalytic::drift_force(mat R){
+    // Needs rewriting to mat return type.
 
     double sum_1 = 0;
 
@@ -175,7 +175,7 @@ double GaussianInterAnalytic::drift_force(mat R){
     }
 
     double first_der = term + sum_1;
-    return first_der;
+    return 0;
 }
 
 /*double GaussianInterAnalytic::green_function(mat R){

@@ -46,17 +46,17 @@ double GaussianNonInterAnalytic::laplace(mat R){
     return scnd_der;
 }
 
-double GaussianNonInterAnalytic::drift_force(mat R){
+mat GaussianNonInterAnalytic::drift_force(mat R){
     // Drift Force force non-interactive case.
-
+	
     double alpha = params[0];
+	double beta = params[2];
 	if(N_d == 3){
 		R.col(2) = R.col(2)*beta;
 	}
 
-	driftforce = -4*alpha*(accu(R));
-
-    return driftforce;
+	
+    return -4*alpha*R;
 }
 
 

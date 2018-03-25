@@ -55,10 +55,11 @@ double GaussianNonInterNumeric::laplace(mat R){
     return lap*fact;
 }
 
-double GaussianNonInterNumeric::drift_force(mat R){
-    double h = params[2];
-    double der = (evaluate(R + h) - evaluate(R))/h;
-    return der;
+mat GaussianNonInterNumeric::drift_force(mat R){
+	// Must be rewritten.
+    //double h = params[2];
+    //double der = (evaluate(R + h) - evaluate(R))/h;
+    return 0;
 }
 
 
