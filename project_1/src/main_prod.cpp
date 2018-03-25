@@ -24,7 +24,7 @@ int main(int argc, char *argv[]){
     N_mc = pow(2, mc_exp);
     
     GaussianNonInterAnalytic g;
-    GaussianNonInterNumeric u; 
+    //GaussianNonInterNumeric u; 
 
     vector<vector<double>> numeric_results;
     vector<vector<double>> analytic_results; 
@@ -60,7 +60,9 @@ int main(int argc, char *argv[]){
         result = D.solve(&g, filename);
         analytic_results.push_back(result);
         }
-    
+  
+	 // Numeric
+	 /*
      for(int i = 0; i < num_sims; i++){
         double alpha = alpha_array[i];
         NaiveMh E;
@@ -82,7 +84,8 @@ int main(int argc, char *argv[]){
             ".csv";
         result = E.solve(&u, filename);
         numeric_results.push_back(result);
-        }   
+        }
+	*/
 
     string meta_filename = "../data/NM_NIA_NIN_meta_data_np_" + to_string(N_p)+
         "_nd_" + to_string(N_d)+   
@@ -94,7 +97,7 @@ int main(int argc, char *argv[]){
 
     for(int i = 0; i<num_sims ; i++){
         meta_file << a << "," << analytic_results[i][0] << "," << analytic_results[i][1] ;
-        meta_file << "," << numeric_results[i][0] << "," << numeric_results[i][1] << endl;
+        //meta_file << "," << numeric_results[i][0] << "," << numeric_results[i][1] << endl;
         a += alpha_step;
     }
 
