@@ -47,7 +47,49 @@ double GaussianNonInterAnalytic::laplace(mat R){
 }
 
 double GaussianNonInterAnalytic::drift_force(mat R){
-    return 0;
+    // Drift Force copied from geussian_inter_analytic.cpp
+
+    double sum_1 = 0;
+
+    double alpha = params[0];
+    double a = params[3];
+
+    vec rk = zeros<vec>(N_d);
+    vec rj = zeros<vec>(N_d);
+    vec rkj = zeros<vec>(N_d);
+
+    double r_kj;
+    double term = 0;
+    double subt = 0;
+
+    for(int k = 0; k < N_p; k++){
+        //Number of dimensions
+        for(int dk = 0; dk < N_d; dk++){
+            rk(dk) = R(k, dk);
+            subt -= rk(dk);
+        }
+
+        for(int j =  0; j < N_p; j++){
+            //Number of dimensions
+            for(int dj = 0; dj < N_d; dj++){
+                rk(dj) = R(j, dj);
+            }
+
+            rkj = rk - rj;
+            r_kj = sqrt(sum(rkj%rkj));
+
+            term = (-4*alpha*(subt));
+            //r_kj = D(k,j);
+
+            if (j != k){
+                sum_1 += (-a*(sum(rkj)))/(a*r_kj*r_kj - r_kj*r_kj*r_kj);
+
+            }
+        }
+    }
+
+    double first_der = term + sum_1;
+    return first_der;
 }
 
 
