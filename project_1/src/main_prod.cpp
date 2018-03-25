@@ -35,7 +35,7 @@ int main(int argc, char *argv[]){
     double *alpha_array = new double[num_sims];
     
     for(int i = 0; i < num_sims ; i++){
-        alpha_array[i] = alpha_start + i*alpha_start ;
+        alpha_array[i] = alpha_start + i*alpha_step;
     }
 
     for(int i = 0; i < num_sims; i++){
@@ -87,9 +87,9 @@ int main(int argc, char *argv[]){
         }
 	*/
 
-    string meta_filename = "../data/NM_NIA_NIN_meta_data_np_" + to_string(N_p)+
+    string meta_filename = "../data/NM_NIA_NIN_np_" + to_string(N_p)+
         "_nd_" + to_string(N_d)+   
-        +".csv";
+        +"_meta_data.csv";
     ofstream meta_file(meta_filename);
     
     meta_file << "alpha,analytic_energy,analytic_time,numeric_energy,numeric_time" << endl;
