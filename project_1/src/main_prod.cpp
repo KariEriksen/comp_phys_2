@@ -1,4 +1,4 @@
-#include <omp.h>
+//#include <omp.h>
 #include "../include/gaussian_noninter_numeric.h"
 #include "../include/gaussian_noninter_analytic.h"
 #include "../include/wavefunc.h"
@@ -15,7 +15,7 @@ int main(int argc, char *argv[]){
     int N_p, N_d, N_mc, mc_exp;
     beta = 1; step = 0.1; h = 1e-4;
     if( argc < 3){
-        cout << "Wrong usage" << endl;    
+        cout << "Wrong usage. Include N_p, N_d, mc_exp" << endl;    
         exit(1);
     }
     else{
