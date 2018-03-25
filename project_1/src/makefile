@@ -1,8 +1,8 @@
 app_GIN.x: main_GIN.o
 	g++ -o app_GIN.x main_GIN.o vmc.o wavefunc.o gaussian_inter_numeric.o naive_mh.o importance.o
 
-app.x: main_test_2.o 
-	g++ -o app.x main_test_2.o vmc.o wavefunc.o gaussian_noninter_numeric.o gaussian_noninter_analytic.o naive_mh.o importance.o
+app.x: main_prod_2.o 
+	g++ -o app.x main_prod_2.o vmc.o wavefunc.o gaussian_noninter_numeric.o gaussian_noninter_analytic.o naive_mh.o importance.o
 
 wavefunc.o: ../include/wavefunc.h wavefunc.cpp
 	clang wavefunc.cpp -c -fPIC --std=c++11
@@ -22,8 +22,8 @@ importance.o: importance.cpp ../include/vmc.h vmc.cpp
 naive_mh.o: naive_mh.cpp ../include/vmc.h vmc.cpp 
 	clang naive_mh.cpp -c -fPIC -std=c++11
 
-main_test_2.o: main_test_2.cpp vmc.o gaussian_noninter_numeric.o gaussian_noninter_analytic.o wavefunc.o importance.o naive_mh.o
-	clang main_test_2.cpp -fPIC -std=c++11 -I ~/armadillo/armadillo-8.400.0/include -c
+main_prod_2.o: main_prod_2.cpp vmc.o gaussian_noninter_numeric.o gaussian_noninter_analytic.o wavefunc.o importance.o naive_mh.o
+	clang main_prod_2.cpp -fPIC -std=c++11 -I ~/armadillo/armadillo-8.400.0/include -c
 
 main_GIN.o: main_GIN.cpp vmc.o gaussian_inter_numeric.o wavefunc.o importance.o naive_mh.o
 	clang main_GIN.cpp -fPIC -std=c++11 -I ~/armadillo/armadillo-8.400.0/include -c
