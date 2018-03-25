@@ -41,11 +41,13 @@ double GaussianNonInterNumeric::laplace(mat R){
     mat Rm = R;
 
     for(int i = 0; i<N_p; i++){
+        lap += - 2*N_d * evaluate(R);
+
         for(int j = 0; j < N_d; j++){
            Rp(i, j) += h;
            Rm(i, j) += -h;
             
-           double temp = evaluate(Rp) + evaluate(Rm) - 2*evaluate(R) ;
+           double temp = evaluate(Rp) + evaluate(Rm);
            lap += temp;
            
            Rp(i, j) = R(i, j);

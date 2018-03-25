@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import pandas as pd
+import sys
 import os
 import re
 import seaborn
@@ -56,90 +57,111 @@ mask = [not f.endswith("data.csv") for f in filenames]
 filenames = sorted(filenames[mask], key = lambda x: float(alpha_regex_obj.search(x).group(1)))
 stds = [0, 0]
 
-N_p = 0
+N_ps = (1, 10, 100, 500)
 N_mc = 0
-N_d = 0
-sim_types = ["NM_NIA", "NM_NIN"]
+N_ds = (1, 2, 3)
+sim_types = [v for v in sys.argv[1:]]
 
-mean_n_times = pd.read_csv("../data/"+sim_types[0]+"_"+sim_types[1][3:]+"_meta_data.csv")
-fast = True
+fast = True 
 
-for i in range(len(sim_types)):
-    sim_type = sim_types[i]
-    tmp = []
-    for filename in filenames: 
-        if filename.startswith(sim_type):
-            t_filename = "../data/"+filename
+for N_d_i in N_ds:
+    for N_p_i in N_ps:
+        mean_n_times = pd.read_csv("../data/"+
+                sim_types[0]+
+                "_"+sim_types[1][3:]+
+                "_meta"+
+                "_np_"+str(N_p_i)+
+                "_nd_"+str(N_d_i)+
+                "_data.csv")
+        
+        for i in range(len(sim_types)):
+            sim_type = sim_types[i]
+            tmp = []
+            for filename in filenames: 
+                if filename.startswith(sim_type):
+                    t_filename = "../data/"+filename
+                    
+                    f_o = open(t_filename)
+                    header = f_o.readline()
+                    f_o.close()
+
+                    match_o = header_regex_obj.search(header)
+                    N_p = match_o.group(1)
+                    N_d = match_o.group(2)
+                    N_mc = match_o.group(3)
+
+                    if fast:
+                        break 
+                    elif int(N_p) == N_p_i and int(N_d) == N_d_i:
+                        A = loadtxt(t_filename, delimiter = "\n", skiprows = 1)
+                        tmp.append(block(A))
+            stds[i] = tmp
             
-            f_o = open(t_filename)
-            header = f_o.readline()
-            f_o.close()
 
-            if N_p == 0:
-                match_o = header_regex_obj.search(header)
-                N_p = match_o.group(1)
-                N_d = match_o.group(2)
-                N_mc = match_o.group(3)
+        fig, ax = plt.subplots(figsize=(12, 6))
 
-            if fast:
-                break 
-            A = loadtxt(t_filename, delimiter = "\n", skiprows = 1)
-            tmp.append(block(A))
-    stds[i] = tmp
-    
+        time_anal = np.average(mean_n_times["analytic_time"])
+        try:
+            time_num = np.average(mean_n_times["numeric_time"])
+            num_min_index = np.where(
+                    mean_n_times.numeric_energy == np.min(mean_n_times.numeric_energy))
+            num_min_cord = (mean_n_times.alpha[num_min_index[0][0]],
+                mean_n_times.numeric_energy[num_min_index[0][0]])
 
-fig, ax = plt.subplots(figsize=(12, 10))
-
-time_num = np.average(mean_n_times["numeric_time"])
-time_anal = np.average(mean_n_times["analytic_time"])
-t_r = time_num / time_anal
-
-anal_min_index = np.where(mean_n_times.analytic_energy == np.min(mean_n_times.analytic_energy))
-num_min_index = np.where(mean_n_times.numeric_energy == np.min(mean_n_times.numeric_energy))
-
-num_min_cord = (mean_n_times.alpha[num_min_index[0][0]],
-        mean_n_times.numeric_energy[num_min_index[0][0]])
-
-anal_min_cord = (mean_n_times.alpha[anal_min_index[0][0]],
-        mean_n_times.analytic_energy[anal_min_index[0][0]])
-
-title =  sim_types[0]+"_"+sim_types[1][3:]
-title += "_"+ r"VMC with $N_P = ${} | $N_D = ${} | $N_{{MC}}$ = {:.0e}".format(N_p, N_d, int(N_mc))
-title += r"| time ratio : $\frac{T_N}{T_A} = $" 
-title += "{:.2e}".format(t_r)
+            t_r = time_num / time_anal
+        except IndexError:
+            pass 
 
 
-if fast:
-    mean_n_times.plot("alpha", ["analytic_energy", "numeric_energy"],
-            legend = True,
-            title = title,
-            ax = ax) 
-else:
-    x = mean_n_times.alpha.values
-    num = mean_n_times.numeric_energy.values
-    anal = mean_n_times.analytic_energy.values
+        anal_min_index = np.where(
+                mean_n_times.analytic_energy == np.min(mean_n_times.analytic_energy))
+        anal_min_cord = (mean_n_times.alpha[anal_min_index[0][0]],
+                mean_n_times.analytic_energy[anal_min_index[0][0]])
 
-    plt.errorbar(x, num, yerr = np.array(stds[1], dtype = float), label = "numeric_energy")
-    plt.errorbar(x, anal, yerr = np.array(stds[0], dtype = float), label = "analytic_energy") 
-    plt.title(title)
-    plt.legend()
-
-a_min_txt = r"Analytic GS @ $\alpha = ${} with $\langle E \rangle / N_P =$ {:.2f}".format(anal_min_cord[0], anal_min_cord[1]/float(N_p))
-
-n_min_txt = r"Numeric GS @ $\alpha = ${} with $\langle E \rangle / N_P =$ {:.2f}".format(num_min_cord[0], num_min_cord[1]/float(N_p))
-
-ax.annotate(a_min_txt, xy=anal_min_cord,  xycoords='data',
-        xytext=(50, 120), textcoords='offset points',
-        arrowprops=dict(arrowstyle="->",
-                        connectionstyle="arc3,rad=0.2"))
+        title =  sim_types[0]+"_"+sim_types[1][3:]+ "_" + "VMC with"
+        title += r"$N_P = ${} | $N_D = ${} | $N_{{MC}}$ = {:.0e}".format(N_p_i, N_d_i, int(N_mc))
+        title += r"| time ratio : $\frac{T_N}{T_A} = $" 
+        title += "{:.2e}".format(t_r)
 
 
-ax.annotate(n_min_txt, xy=num_min_cord,  xycoords='data',
-        xytext=(-60, 150), textcoords='offset points',
-        arrowprops=dict(arrowstyle="->",
-                        connectionstyle="arc3,rad=0.2"))        
-plt.xlabel(r"$\alpha$")
-plt.ylabel(r"$\langle E \rangle $")
+        if fast:
+            mean_n_times.plot("alpha", ["analytic_energy", "numeric_energy"],
+                    legend = True,
+                    title = title,
+                    ax = ax) 
+        else:
+            x = mean_n_times.alpha.values
+            num = mean_n_times.numeric_energy.values
+            anal = mean_n_times.analytic_energy.values
+
+            plt.errorbar(x, num, fmt = "x-",
+                    barsabove = True,
+                    yerr = np.array(stds[1], dtype = float),
+                    label = "numeric_energy")
+            plt.errorbar(x, anal, fmt = "^-",
+                    barsabove = True,
+                    yerr = np.array(stds[0], dtype = float),
+                    label = "analytic_energy") 
+            plt.title(title)
+            plt.xticks(x, rotation = 45, size = "medium")
+            plt.legend()
+
+        a_min_txt = r"Analytic GS @ $\alpha = ${} with $\langle E \rangle / N_P =$ {:.2f}".format(anal_min_cord[0], anal_min_cord[1]/float(N_p))
+
+        n_min_txt = r"Numeric GS @ $\alpha = ${} with $\langle E \rangle / N_P =$ {:.2f}".format(num_min_cord[0], num_min_cord[1]/float(N_p))
+
+        ax.annotate(a_min_txt, xy=anal_min_cord,  xycoords='data',
+                xytext=(50, 120), textcoords='offset points',
+                arrowprops=dict(arrowstyle="->",
+                                connectionstyle="arc3,rad=0.2"))
 
 
-plt.show()
+        ax.annotate(n_min_txt, xy=num_min_cord,  xycoords='data',
+                xytext=(-60, 150), textcoords='offset points',
+                arrowprops=dict(arrowstyle="->",
+                                connectionstyle="arc3,rad=0.2"))        
+        plt.xlabel(r"$\alpha$")
+        plt.ylabel(r"$\langle E \rangle $")
+
+
+        plt.show()
