@@ -46,8 +46,9 @@ double GaussianNonInterAnalytic::laplace(mat R){
     return scnd_der;
 }
 
-double GaussianNonInterAnalytic::drift_force(mat R){
-    return 0;
+double GaussianNonInterAnalytic::drift_force(double curr_pos){
+	double alpha = params[0];
+    return -4*alpha*curr_pos;
 }
 
 

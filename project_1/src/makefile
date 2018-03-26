@@ -30,3 +30,4 @@ main_GIN.o: main_GIN.cpp vmc.o gaussian_inter_numeric.o wavefunc.o importance.o 
 
 clean:
 	\rm *.o
+	\rm ../data/*
