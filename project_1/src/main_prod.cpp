@@ -1,4 +1,4 @@
-#include <omp.h>
+//#include <omp.h>
 #include "../include/gaussian_noninter_numeric.h"
 #include "../include/gaussian_noninter_analytic.h"
 #include "../include/wavefunc.h"
@@ -10,7 +10,7 @@ using namespace arma;
 int main(int argc, char *argv[]){
     // Derived object of WaveFunc class 
  
-    NaiveMh D;
+    Importance D;
     double beta, step, h; 
     int N_p, N_d, N_mc, mc_exp;
     beta = 1; step = 0.1; h = 1e-4;
@@ -40,7 +40,7 @@ int main(int argc, char *argv[]){
 
     for(int i = 0; i < num_sims; i++){
         double alpha = alpha_array[i];
-        NaiveMh D;
+        Importance D;
         string sim_type_a = "NM_NIA";
         vector<double> params = {alpha, alpha*alpha, beta};
         g.set_params(params, N_d, N_p);
@@ -63,7 +63,7 @@ int main(int argc, char *argv[]){
     
      for(int i = 0; i < num_sims; i++){
         double alpha = alpha_array[i];
-        NaiveMh E;
+        Importance E;
         string sim_type_n = "NM_NIN";
         vector<double> params = {alpha, beta, h};
         u.set_params(params, N_d, N_p);

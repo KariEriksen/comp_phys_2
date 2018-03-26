@@ -36,8 +36,8 @@ double GaussianNonInterAnalytic::laplace(mat R){
 	double beta = params[2];
     double factor = N_d*N_p;
 	
-	if(N_d == 3){
-		R.col(2) = R.col(2)*beta;
+	if(N_d > 2){
+		R.col(2) *= beta;
 	}
 
     //This is the analytical expression for the second derivative of the
