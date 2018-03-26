@@ -174,7 +174,7 @@ double GaussianInterAnalytic::laplace(mat R){
     return scnd_der, V_int;
 }
 
-double GaussianInterAnalytic::drift_force(mat R){
+mat GaussianInterAnalytic::drift_force(mat R){
     //Add this for the drift force to be used in importance sampling
 
     double sum_1 = 0;
