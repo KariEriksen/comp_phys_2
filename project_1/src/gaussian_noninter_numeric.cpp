@@ -26,7 +26,6 @@ double GaussianNonInterNumeric::evaluate(mat R){
     double ret_val = 0;
     double internal = accu(square(R));
 	
-	Dunno why this is here?
     if(N_d >2){
         R.col(2) *= 1/beta;
     }
