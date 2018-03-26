@@ -215,9 +215,9 @@ mat GaussianInterAnalytic::drift_force(mat R){
             }
         }
     }
-
+	mat dummy(size(R));
     double first_der = term + sum_1;
-    return first_der;
+    return dummy;
 }
 
 double GaussianInterAnalytic::ratio(mat R, mat R_p, int k){
