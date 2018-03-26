@@ -1,4 +1,4 @@
-//#include <omp.h>
+#include <omp.h>
 #include "../include/gaussian_noninter_numeric.h"
 #include "../include/gaussian_noninter_analytic.h"
 #include "../include/wavefunc.h"
@@ -60,6 +60,7 @@ int main(int argc, char *argv[]){
         result = D.solve(&g, filename);
         analytic_results.push_back(result);
         }
+    
      for(int i = 0; i < num_sims; i++){
         double alpha = alpha_array[i];
         NaiveMh E;
@@ -82,6 +83,7 @@ int main(int argc, char *argv[]){
         result = E.solve(&u, filename);
         numeric_results.push_back(result);
         }   
+
     string meta_filename = "../data/NM_NIA_NIN_meta_np_" + to_string(N_p)+
         "_nd_" + to_string(N_d)+   
         +"_data"

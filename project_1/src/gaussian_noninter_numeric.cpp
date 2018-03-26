@@ -32,6 +32,7 @@ double GaussianNonInterNumeric::evaluate(mat R){
     ret_val = (double) as_scalar(exp(-alpha *(internal)));
     return ret_val;
 }
+
 double GaussianNonInterNumeric::laplace(mat R){
     double h = params[2];
     double lap = 0;
@@ -40,11 +41,13 @@ double GaussianNonInterNumeric::laplace(mat R){
     mat Rm = R;
 
     for(int i = 0; i<N_p; i++){
+        lap += - 2*N_d * evaluate(R);
+
         for(int j = 0; j < N_d; j++){
            Rp(i, j) += h;
            Rm(i, j) += -h;
             
-           double temp = evaluate(Rp) + evaluate(Rm) - 2*evaluate(R) ;
+           double temp = evaluate(Rp) + evaluate(Rm);
            lap += temp;
            
            Rp(i, j) = R(i, j);
@@ -55,11 +58,10 @@ double GaussianNonInterNumeric::laplace(mat R){
     return lap*fact;
 }
 
-mat GaussianNonInterNumeric::drift_force(mat R){
-	// Must be rewritten.
-    //double h = params[2];
-    //double der = (evaluate(R + h) - evaluate(R))/h;
-    return 0;
+double GaussianNonInterNumeric::drift_force(mat R){
+    double h = params[2];
+    double der = (evaluate(R + h) - evaluate(R))/h;
+    return der;
 }
 
 

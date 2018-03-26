@@ -59,15 +59,14 @@ vector<double> vmc::solve(WaveFunc *psi_t, string filename){
      */
     
     while(evaluated == 0){
-        step_init += step;
+        step_init += step*1e-5;
         generate_positions(step_init);
         psi_t -> initialize(R);
         evaluated = psi_t -> evaluate(R);
-        cout << step_init << endl;
     }
     
-    double E_l_array [N_mc]; 
-    
+    double *E_l_array = new double [N_mc]; 
+
     int start_s = clock();
     monte_carlo(psi_t, E_l_array);
     int end_s = clock();

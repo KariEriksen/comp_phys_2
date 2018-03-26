@@ -46,17 +46,8 @@ double GaussianNonInterAnalytic::laplace(mat R){
     return scnd_der;
 }
 
-mat GaussianNonInterAnalytic::drift_force(mat R){
-    // Drift Force force non-interactive case.
-	
-    double alpha = params[0];
-	double beta = params[2];
-	if(N_d == 3){
-		R.col(2) = R.col(2)*beta;
-	}
-
-	
-    return -4*alpha*R;
+double GaussianNonInterAnalytic::drift_force(mat R){
+    return 0;
 }
 
 
@@ -77,7 +68,6 @@ void GaussianNonInterAnalytic::set_params(vector<double> params_i, int N_d_i, in
 }
 
 void GaussianNonInterAnalytic::initialize(mat R){
-	// Initialized relative distance matrix. Not needed for non-inter.
 }
 void GaussianNonInterAnalytic::update(){
 }

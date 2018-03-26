@@ -9,7 +9,7 @@ int main(int argc, char *argv[]){
     // Derived object of WaveFunc class
     GaussianNonInterAnalytic g;
 
-    Importance D;
+    NaiveMh D;
     double alpha, alpha_sq, beta, step, h;
     int N_p, N_d, N_mc;
     alpha = 0.5; alpha_sq = alpha*alpha; beta = 1; step = 0.1; h = 1e-5;
@@ -24,11 +24,7 @@ int main(int argc, char *argv[]){
     //reference must be passed or else you get static linking
     //
     vector<double> result;
-	string filename = "../data/IN_a_" + to_string(alpha) + 
-		"_b_" + to_string(beta) +
-		"_step_" + to_string(step)+
-		".csv";
-    result = D.solve(&g, filename);
+    result = D.solve(&g);
 
     return 0;
 }

@@ -100,11 +100,10 @@ double GaussianInterNumeric::laplace(mat R){
     return scnd_der;
 }
 
-mat GaussianInterNumeric::drift_force(mat R){
-	// Needs rewriting to mat return type.
-    //double h = params[2];
-    //double der = (evaluate(R + h) - evaluate(R))/h;
-    return 0;
+double GaussianInterNumeric::drift_force(mat R){
+    double h = params[2];
+    double der = (evaluate(R + h) - evaluate(R))/h;
+    return der;
 }
 
 
