@@ -1,8 +1,8 @@
 app_GIN.x: main_GIN.o
-	g++ -o app_GIN.x main_GIN.o vmc.o wavefunc.o gaussian_inter_numeric.o naive_mh.o importance.o
+	g++ -o app_GIN.x main_GIN.o vmc.o wavefunc.o gaussian_inter_numeric.o naive_mh.o importance.o 
 
 app.x: main_prod.o 
-	g++ -o app.x main_prod.o vmc.o wavefunc.o gaussian_noninter_numeric.o gaussian_noninter_analytic.o naive_mh.o importance.o -O3
+	g++ -o app.x main_prod.o vmc.o wavefunc.o gaussian_noninter_numeric.o gaussian_noninter_analytic.o naive_mh.o importance.o -O3 -larmadillo
 
 wavefunc.o: ../include/wavefunc.h wavefunc.cpp
 	clang wavefunc.cpp -c -fPIC --std=c++11
