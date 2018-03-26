@@ -39,8 +39,8 @@ double Importance::metropolis_hastings(WaveFunc *psi_t, double prev_E_l){
     mat term2(1, N_d);
     double term3;
 
-    mat Green_prev(1, N_d);
-    mat Green_proposed(1, N_d);
+    double Green_prev;
+    double Green_proposed;
 
     for(int j = 0; j < N_p; j++){
 		term1 = R_p.row(j) - R.row(j) - 0.5*dt*F_drift;
@@ -51,7 +51,7 @@ double Importance::metropolis_hastings(WaveFunc *psi_t, double prev_E_l){
 		Green_proposed += exp((-(dot(term2,term2)))/term3);
     }
 
-	double q = (accu(Green_prev)/accu(Green_proposed))*P;
+	double q = (Green_prev/accu(Green_proposed))*P;
 
     if(eps < q){
         R = R_p;

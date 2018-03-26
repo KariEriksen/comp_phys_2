@@ -13,7 +13,7 @@ double GaussianNonInterNumeric::E_l(mat R){
     double _laplace_psi = laplace(R);
     double pot = (double) as_scalar(accu(square(R)));
     
-    return - 0.5 * _laplace_psi/_psi + 0.5 * pot ;
+    return - 0.5 * _laplace_psi/_psi + 0.5 * pot;
 }
 
 double GaussianNonInterNumeric::evaluate(mat R){
