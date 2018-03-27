@@ -6,7 +6,8 @@ using namespace arma;
 double Importance::metropolis_hastings(WaveFunc *psi_t, double prev_E_l){
     mat R_p(size(R));
     R_p = R;
-	double timestep = 0.05; // dt in [0.001,0.01] should produce stable ground state results.
+
+	double timestep = 0.05; // timestep in [0.001,0.01] should produce stable ground state results.
 	double D = 0.5; // Diffusion coefficient?
 
 	// Set up random number generators
@@ -18,10 +19,12 @@ double Importance::metropolis_hastings(WaveFunc *psi_t, double prev_E_l){
     int j = dis_r(*gen);
 	double zeta = dis_zeta(*gen);
     mat F_drift(1, N_d);
+    mat F_drift_proposed(1, N_d);
+
 
 	
 	// Move one particle (j)
-	R_p.row(j) += 0.5*F_drift*dt + zeta*sqrt(dt);
+	R_p.row(j) += 0.5*F_drift*timestep + zeta*sqrt(timestep);
 	
 	// Calculate drift force at current and proposed position
 	F_drift = psi_t -> drift_force(R.row(j));
@@ -32,12 +35,12 @@ double Importance::metropolis_hastings(WaveFunc *psi_t, double prev_E_l){
 	GreensFunction = dot(0.5*(F_drift_proposed + F_drift),
 		(D*timestep*0.5*(F_drift - F_drift_proposed) - R_p.row(j) + R.row(j)));
 
-	double q = exp(GreensFunction);
 	// Calculate ratio of proposed and current wavefunction.
     double P = psi_t -> ratio(R, R_p, j);
     P *= P;
 
-
+	// Calculate factors to compare for metropolis test
+	double q = exp(GreensFunction)*P;
     double eps = dis_p(*gen);
     if(eps < q){
         R = R_p;
