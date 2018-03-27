@@ -25,6 +25,11 @@ double Importance::metropolis_hastings(WaveFunc *psi_t, double prev_E_l){
 	// Move one particle (j)
 	R_p.row(j) += 0.5*F_drift*timestep + zeta*sqrt(timestep);
 	
+	// Make sure to scale z-direction with beta
+	if(N_d == 3){
+		R_p(j,2) *= beta;
+	}
+	
 	// Calculate drift force at current and proposed position
 	// ERROR: drift_force returns F_drift as 1x1 matrix for numerical.
 	F_drift = psi_t -> drift_force(R.row(j));
