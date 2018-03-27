@@ -17,7 +17,7 @@ double GaussianNonInterAnalytic::E_l(mat R){
 double GaussianNonInterAnalytic::evaluate(mat R){
     double alpha = params[0];
 	double alpha_sq = params[1];
-    double beta = params[2];
+    //double beta = params[2];
 
     mat R_c(size(R));
     R_c = R;
@@ -33,7 +33,7 @@ double GaussianNonInterAnalytic::laplace(mat R){
 
     double alpha = params[0];
     double alpha_sq = params[1];
-	double beta = params[2];
+	//double beta = params[2];
     double factor = N_d*N_p;
 	
 	/*if(N_d > 2){

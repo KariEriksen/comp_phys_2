@@ -7,6 +7,7 @@ double Importance::metropolis_hastings(WaveFunc *psi_t, double prev_E_l){
     mat R_p(size(R));
     R_p = R;
 
+	double beta = psi_t -> params[2];
 	double timestep = 0.05; // timestep in [0.001,0.01] should produce stable ground state results.
 	double D = 0.5; // Diffusion coefficient?
 
@@ -22,10 +23,10 @@ double Importance::metropolis_hastings(WaveFunc *psi_t, double prev_E_l){
     mat F_drift(1, N_d);
     mat F_drift_proposed(1, N_d);
 	
-	// Move one particle (j)
+	// Move one particle j
 	R_p.row(j) += 0.5*F_drift*timestep + zeta*sqrt(timestep);
 	
-	// Make sure to scale z-direction with beta
+	// Scale z-direction with beta
 	if(N_d == 3){
 		R_p(j,2) *= beta;
 	}
