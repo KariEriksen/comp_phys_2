@@ -63,7 +63,10 @@ double GaussianNonInterNumeric::laplace(mat R){
 mat GaussianNonInterNumeric::drift_force(mat R){
     double h = params[2];
 	mat der(size(R));
-    der = (evaluate(R + h) - evaluate(R))/h;
+	// Current error in eval, index out of bounds because passes 1x1 matrix
+	for(int i = 0; i < N_d; i++){
+		der(i) = (evaluate(R.col(i) + h) - evaluate(R.col(i)))/h;
+	}
     return der;
 }
 
