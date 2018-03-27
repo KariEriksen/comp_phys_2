@@ -35,6 +35,7 @@ double GaussianNonInterNumeric::evaluate(mat R){
 }
 
 double GaussianNonInterNumeric::laplace(mat R){
+
     double h = params[2];
     double lap = 0;
 

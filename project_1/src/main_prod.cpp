@@ -10,7 +10,7 @@ using namespace arma;
 int main(int argc, char *argv[]){
     // Derived object of WaveFunc class 
  
-    Importance D;
+    //Importance D;
     double beta, step, h; 
     int N_p, N_d, N_mc, mc_exp;
     beta = 1; step = 0.1; h = 1e-4;

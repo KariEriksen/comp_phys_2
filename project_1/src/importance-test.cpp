@@ -18,20 +18,21 @@ double Importance::metropolis_hastings(WaveFunc *psi_t, double prev_E_l){
 	
     int j = dis_r(*gen);
 	double zeta = dis_zeta(*gen);
+
     mat F_drift(1, N_d);
     mat F_drift_proposed(1, N_d);
-
-
 	
 	// Move one particle (j)
 	R_p.row(j) += 0.5*F_drift*timestep + zeta*sqrt(timestep);
 	
 	// Calculate drift force at current and proposed position
+	// ERROR: drift_force returns F_drift as 1x1 matrix for numerical.
 	F_drift = psi_t -> drift_force(R.row(j));
 	F_drift_proposed = psi_t -> drift_force(R_p.row(j));
 
 	// Calculate the value of greensfunction to be used in metropolis algorithm.
 	double GreensFunction = 0.0;
+
 	GreensFunction = dot(0.5*(F_drift_proposed + F_drift),
 		(D*timestep*0.5*(F_drift - F_drift_proposed) - R_p.row(j) + R.row(j)));
 

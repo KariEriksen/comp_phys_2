@@ -12,6 +12,8 @@ using namespace arma;
 using namespace std;
 
 void vmc::monte_carlo(WaveFunc *psi_t, double *E_l_array){
+
+
    E_l_array[0] = psi_t -> E_l(R);
 
     for(int i = 1; i < N_mc; i++){
