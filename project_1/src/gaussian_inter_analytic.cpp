@@ -20,16 +20,45 @@ void GaussianInterAnalytic::initialize(mat R){
         }
     }
 }
+double GaussianInterAnalytic::eval_corr(mat R, int k = -1){
+    double a = params[3];
+    double ret_val = 1;
+    mat D_c = D;
 
-double GaussianInterAnalytic::E_l(mat R){
-    double _psi = evaluate(R);
-    double _laplace_psi, V_int = laplace(R);
-    double V_ext = 0.5 * (double) as_scalar(accu(sum(square(R))));
-
-    return - 0.5 * _laplace_psi +  V_ext + V_int;
+    if(k != -1){
+        mat r_k = R.row(k);
+        for(int i = 0;  k > i ; i++){
+            double r_ik = std::abs(sum(R.row(i) - r_k));
+            if(r_ik > a){
+                D(i, k) = r_ik;
+            }
+            else{
+                D(i, k) = 0;
+            }
+        }
+        for(int i = k; i < N_p ; i++){
+            double r_ik = std::abs(sum(R.row(i) - r_k));
+            if(r_ik > a){
+                D(k, i) = r_ik;
+            }
+            else{
+                D(k, i) = 0;
+            }
+        }
+    }
+    for(int i = 0; i < N_p; i++){
+        for (int j = (i + 1); j < N_p ; j++){
+            ret_val *= D(i, j);
+        }
+    }
+    if(k != -1){
+        D_p = D;
+        D = D_c;
+    }
+    return ret_val;
 }
 
-double GaussianInterAnalytic::evaluate(mat R){
+double GaussianInterAnalytic::eval_g(mat R){
     double alpha = params[0];
     double beta = params[2];
 
@@ -40,8 +69,21 @@ double GaussianInterAnalytic::evaluate(mat R){
     }
     double ret_val = 0;
     double internal = accu(sum(square(R_c)));
+
     ret_val = (double) as_scalar(exp(-alpha *(internal)));
     return ret_val;
+}
+
+double GaussianInterAnalytic::evaluate(mat R){
+    return eval_g(R)*eval_corr(R);
+}
+
+double GaussianInterAnalytic::E_l(mat R){
+    double _psi = evaluate(R);
+    double _laplace_psi, V_int = laplace(R);
+    double V_ext = 0.5 * (double) as_scalar(accu(sum(square(R))));
+
+    return - 0.5 * _laplace_psi +  V_ext + V_int;
 }
 
 double GaussianInterAnalytic::laplace(mat R){
@@ -70,8 +112,6 @@ double GaussianInterAnalytic::laplace(mat R){
 
     double V_int = 0;
 
-    //It is now looping through particles twice! Change loop
-    //for j = k + 1, drop if test
     for(int k = 0; k < N_p; k++){
 
         //Number of dimensions
@@ -79,43 +119,50 @@ double GaussianInterAnalytic::laplace(mat R){
             rk(dk) = R(k, dk);
         }
 
-        for(int j = (k + 1); j < N_p; j++){
+        for(int j = 0; j < N_p; j++){
 
             //Number of dimensions
             for(int dj = 0; dj < N_d; dj++){
                 rj(dj) = R(j, dj);
             }
 
-            rkj = rk - rj;
-            r_kj = sqrt(sum(rkj%rkj));
+            if(j != k){
 
-            //r_kj = D(k,j);
+                rkj = rk - rj;
+                r_kj = sqrt(sum(rkj%rkj));
 
-            sum_1 += ((sum(rkj))/r_kj)*(-a/(a*r_kj - r_kj*r_kj));
+                //r_kj = D(k,j);
 
-            part_1 = (a*(a-r_kj))/(r_kj*r_kj*(a - r_kj)*(a - r_kj));
-            part_2 = 2.0/r_kj;
-            part_3 = -a/(a*r_kj - r_kj*r_kj);
+                sum_1 += ((sum(rkj))/r_kj)*(-a/(a*r_kj - r_kj*r_kj));
 
-            sum_3 += part_1 + part_2 + part_3;
+                part_1 = (a*(a-r_kj))/(r_kj*r_kj*(a - r_kj)*(a - r_kj));
+                part_2 = 2.0/r_kj;
+                part_3 = -a/(a*r_kj - r_kj*r_kj);
 
-            for(int i = (k + 1); i < N_p; i++){
+                sum_3 += part_1 + part_2 + part_3;
+
+            }
+
+            for(int i = 0; i < N_p; i++){
 
                 //Number of dimensions
                 for(int di = 0; di < N_d; di++){
                     ri(di) = R(i, di);
                 }
 
-                rki = rk - ri;
+                if(i != k){
 
-                r_ki = sqrt(sum(rki%rki));
-                //r_ki = D(k,i);
+                    rki = rk - ri;
 
-                sum_2 += (-a/(a*r_ki - r_ki*r_ki))*(-a/(a*r_kj - r_kj*r_kj));
+                    r_ki = sqrt(sum(rki%rki));
+                    //r_ki = D(k,i);
+
+                    sum_2 += (-a/(a*r_ki - r_ki*r_ki))*(-a/(a*r_kj - r_kj*r_kj));
+                }
             }
 
             if (k < j){
-                if (r_kj < a){
+                if (r_kj <= a){
                     V_int += 1e10;
                 }
                 else{
@@ -178,19 +225,13 @@ double GaussianInterAnalytic::drift_force(mat R){
     return first_der;
 }
 
-/*double GaussianInterAnalytic::green_function(mat R){
-    double G = 0;
-    return G;
-}*/
-
-
 double GaussianInterAnalytic::ratio(mat R, mat R_p, int k){
-    double eval_R = evaluate(R);
-    double eval_R_p = evaluate(R_p);
+    double eval_R = evaluate(R)*eval_corr(R, k);
+    double eval_R_p = evaluate(R_p)*eval_corr(R_p, k);
 
 
-    double prop = eval_R_p / eval_R;
-    return prop*prop;
+    double prob = (eval_R_p*eval_R_p)/(eval_R*eval_R);
+    return prob;
 }
 
 void GaussianInterAnalytic::update(){
