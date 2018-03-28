@@ -193,13 +193,13 @@ double GaussianInterAnalytic::drift_force(mat R){
 
     double r_kj;
     double term = 0;
-    double subt = 0;
+    double addt = 0;
 
     for(int k = 0; k < N_p; k++){
         //Number of dimensions
         for(int dk = 0; dk < N_d; dk++){
             rk(dk) = R(k, dk);
-            subt -= rk(dk);
+            addt += rk(dk);
         }
 
         for(int j =  0; j < N_p; j++){
@@ -211,7 +211,7 @@ double GaussianInterAnalytic::drift_force(mat R){
             rkj = rk - rj;
             r_kj = sqrt(sum(rkj%rkj));
 
-            term = (-4*alpha*(subt));
+            term = (-4*alpha*(addt));
             //r_kj = D(k,j);
 
             if (j != k){
