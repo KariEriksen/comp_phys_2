@@ -1,2 +1,11 @@
 \section{Introduction}
-Lorem ipsum dolor amet
+The aim of this project is to evaluate the case of a hard sphere trapped Bose gas using Variational Monte Carlo simulations. We want to find the ground state energy for systems containing different number of particles given a trial wave function. As the number of particles grow, so does the complexity of the wave function.
+What we are looking at is a quantum many-body-problem
+
+$$\imath \hbar \frac{\partial}{\partial x} |\Psi (t)\rangle = \hat{H} |\Psi (t)\rangle$$
+
+and with a growing exponential complexity in the wave function the more impossible the calculation of the Hamiltonian and the energy becomes. The Variatonal Monte Carlo method allows us to look for the low ground state energy, but we will be using Metropolis-Hastings algorithm and Importance Sampling to make the selection of movements of particles in the system. 
+
+Our trail wave function consist of one variational parameter, $\Psi_T(\mathbf{R};\alpha)$. We want to find the optimal value for $\alpha$ that minimizes the energy. For that we use the method of Steepest Descent. 
+For the statistical analysis and error estimates of the numerical data we have used blocking techniques.  
+

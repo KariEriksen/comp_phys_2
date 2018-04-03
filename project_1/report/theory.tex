@@ -1,2 +1,71 @@
 \section{Theory}
-Sample text without lorem ipsum (or is it?)
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\begin{document}
+
+\section{Theory}
+
+\subsection{Variational Monte Carlo}
+
+Monte Carlo simulations are widely used methods in numerical science that employs random walkers. 
+In this project we are taking a closer look at trapped bosons. We are given a trail wave function we assume is as close to the real case as possible, $\Psi_T(\mathbf{R};\alpha)$ where $\mathbf{R} = (\mathbf{R}_1, ... , \mathbf{R}_N)$ is the position of the different particles. 
+From quantum mechanics we know the probability distribution is given by the wave function. 
+
+$$P(\mathbf{R}; \alpha) = \frac{|\Psi_T(\mathbf{R};\alpha)|^2}{\int |\Psi_T(\mathbf{R};\alpha)|^2 d\mathbf{R}}$$
+
+Monte Carlo integration allow us to evaluate the integral at hand. The expectation value of the Hamiltonian is given as follows. 
+
+$$\langle \widehat{\mathbf{H}}\rangle = \frac{\int d \mathbf{R} \Psi^{\ast} (\mathbf{R})H(\mathbf{R}) \Psi(\mathbf{R})}{\int d \mathbf{R} \Psi^{\ast} (\mathbf{R}) \Psi(\mathbf{R})}$$
+
+The variational principle states that the expectation value of the Hamiltonian is an upper-bound for the ground state energy of the Hamiltonian.
+
+$$E_0 \leq \langle H \rangle$$
+
+This is what the Variational Monte Carlo method bases itself on. Given a probability distribution we can evaluate the wave function and look for a local minimum. We define the local energy by
+
+$$\widehat{\mathbf{E}}_L(\mathbf{R};\alpha) = \frac{1}{\Psi_T(\mathbf{R};\alpha)}\widehat{\mathbf{H}}\Psi_T(\mathbf{R};\alpha).$$
+
+Then the expectation value of the local energy is given by
+
+$$\langle \widehat{\mathbf{E}}_L\rangle = \int P(\mathbf{R}) \widehat{\mathbf{E}}_L d\mathbf{R} \approx \frac{1}{N} \sum_{i = 1}^N \mathbf{E_L}(x_i)$$
+
+where $N$ is the number of Monte Carlo cycles. Now we can calculate the probability distribution and the local energy. And for each cycle we propose a new configuration $\mathbf{R}_p$ for the system and hopefully we come closer to the ground state.
+
+$$\mathbf{R}_p = \mathbf{R} + r \ast \Delta \mathbf{R}$$
+
+\subsection{The Metropolis Algorithm}
+
+How we select the new configurations during the simulation is given by the Metropolis Algorithm.
+
+$P_i^{(n)} \rightarrow$ probability of finding the system in state $i$ at the n'th step.
+\\
+$j \rightarrow$ possible new step with probability $T_{i \rightarrow j}$
+\\
+$A_{i \rightarrow j} \rightarrow$ probability of acceptance. 
+\\
+We want to try and push the system towards a 
+Generate a new possible state with transition possibility 
+$T_{j \rightarrow i}$ 
+
+$1 - A_{i \rightarrow j} \rightarrow$ rejection
+
+$$P_i^{(n \rightarrow \infty)} \rightarrow p_i$$
+
+$$P_i^{(n)} = \sum_j \left[P_j^{(n-1)} T_{j \rightarrow i}A_{j \rightarrow i} + P_j^{(n-1)}T_{i \rightarrow j}(1 - A_{i \rightarrow j})\right]$$
+
+$$\sum_j [p_j T_{j \rightarrow i}A_{j \rightarrow i} - p_i T_{i \rightarrow j}A_{i \rightarrow j}] = 0$$
+
+$$\frac{A_{j \rightarrow i}}{A_{i \rightarrow j}} = \frac{p_i T_{i \rightarrow j}}{p_j T_{j \rightarrow i}}$$
+
+$$A_{j \rightarrow i} = \mathrm{min} \left( 1, \frac{p_i T_{i \rightarrow j}}{p_j T_{j \rightarrow i}}\right)$$
+
+\subsection{Importance Sampling}
+
+\subsection{Steepest Descent}
+
+We want to find the optimal value of the variational parameter, in our case, $\alpha$. For which $\alpha$ gives our wave function the lowest energy?
+
+\subsection{Blocking Method}
+
+\end{document}
+
