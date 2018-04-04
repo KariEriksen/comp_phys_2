@@ -59,7 +59,10 @@ $$A_{j \rightarrow i} = \mathrm{min} \left( 1, \frac{p_i T_{i \rightarrow j}}{p_
 \subsection{Numerical differentiation}
 To evaluate the local energy of the system as defined in the project it necessary to compute the second derivative of the trial wavefunction $\psi_T$. We've chosen to implement the numerical differentiation as a finite difference approximation. Let $\mathbf{R}$ be the row major $N \times D$ matrix where $N$ is the number of particles and $D$ is their dimension. Then the second derivative can be found by the procedure listed as algorithm \ref{alg:nd}
 
-\begin{algorithm}
+
+Since the derivative involves three function calls for each particle the numerical derivative will obviously be quite computationally expensive. It is noted  that the differentiation could be substantially optimized from the version included in the code, but is outside the scope of this project. 
+
+\begin{algorithm}[H]
 \KwData{matrix $\mathbf{R}$}
 \KwResult{float $\nabla ^2 \psi_T (R)$}
 \BlankLine
@@ -82,13 +85,36 @@ $\mathbf{R_m} = \mathbf{R}$\\
 \caption{Numerical differentiation of the second order of the trial wavefunction on a system $\mathbf{R}$}\label{alg:nd}
 \end{algorithm} 
 
-Since the derivative involves three function calls for each particle the numerical derivative will obviously be quite computationally expensive. It is noted  that the differentiation could be substantially optimized from the version included in the code, but is outside the scope of this project. 
 
 \subsection{Importance Sampling}
 
-\subsection{Steepest Descent}
+\subsection{Gradient Descent}
+Like most problems in physics the variational quantum problem is one of optimization. In this project we are optimizing the expectation value of the energy over the parameter $\alpha$. In the naive implementation we simply span a reasonable range of $\alpha$ \footnote{an implementation of which can be seen in the file \lstinline{main_b.cpp}}. For a multi-parameter variational problem this approach is too computationally expensive to implement in most cases. To remedy this problem iterative gradient methods have been developed to make more intelligent choices for the variational parameters. In this project we have opted to implement a simple gradient descent method. The gradient descent is ordinarily presented as 
 
-We want to find the optimal value of the variational parameter, in our case, $\alpha$. For which $\alpha$ gives our wave function the lowest energy?
+\begin{equation}
+\alpha_{i+1} = \alpha_i -\gamma \frac{\partial \langle E_L^i \rangle}{\partial \alpha}
+\end{equation}
+
+\noindent Where we have opted to update the parameter $\gamma$ iteratively by the Barzilai-Borwein formula 
+
+\begin{equation}
+\gamma_i = \left |(\alpha_{i+1} - \alpha) \cdot \frac{1}{\expect{E_L}^{i+1} - \expect{E_L}^i}\right|
+\end{equation}
+
+\noindent We also introduce the notation $\frac{\partial \langle E_L^i \rangle}{\partial \alpha} = \expect{E_L}^\alpha_{i}$ for brevity, and the same notation will be used for the tiral wavefunction $\psi_T$. The partial derivative itself can be found by the equation\footnote{The equation was retrieved from the lecture notes} 
+
+\begin{equation}
+\expect{E_l}^\alpha_{i} = 2 \left(\expect{\frac{\psi^\alpha}{\psi} E_L}^i - \expect{\frac{\psi^\alpha}{\psi}}\expect{E_L}^i \right)
+\end{equation} 
+
+\noindent Wherein the fraction of the partial derivative of the wavefunction by the wavefunction must be derived, which is trivial with the ansatz of the wavefunction. 
+
+
+\begin{align}
+\frac{\psi^\alpha}{\psi} &= \frac{\psi \prod_i^N (x_i^2 + y_i^2 + \beta z^2_i)}{\psi} \\
+&= \prod_i^N (x_i^2 + y_i^2 + \beta z^2_i)
+\end{align}
+\noindent This holds for both the interactive and non-interactive case since the correlation wavefunction, $f(r_i, r_j)$, does not have any dependence on $\alpha$
 
 \subsection{Blocking Method}
 

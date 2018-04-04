@@ -1,10 +1,12 @@
 \subsection*{Appendix A - Problem 1}
 
+\setlength\parindent{0pt}
+
 The local energy is given by
 
 $$E_L(\mathbf{r})=\frac{1}{\Psi_T(\mathbf{r})}\hat{H}\Psi_T(\mathbf{r})$$
 
-with trail wave equation
+with trial wave equation
 
 $$\Psi_T(\mathbf{r}) = \prod_{i} g(\alpha, \beta, \mathbf{r_i}) \prod_{i<j} f(a, |\mathbf{r_i} - \mathbf{r_j}|)$$
 
@@ -35,42 +37,45 @@ $$
 
 First we solve only the harmonic oscillator (a=0) and we use $\beta = 1$ for one particle in 1D.
 
-And for one particle the trail wave equation and Hamiltonian becomes
+And for one particle the trial wave equation, Hamiltonian and local energy becomes
 
-$$\Psi_T(\mathbf{r}) = g(\alpha, x) = e^{-\alpha x_i^2},$$
-
-$$\hat{H} = \left( \frac{-\hbar^2}{2m} \nabla^2 + \frac{1}{2} m\omega_{ho}^2 x^2\right)$$
-
-$$E_L = \frac{1}{e^{-\alpha x^2}}\left( \frac{-\hbar^2}{2m} \nabla^2 (e^{-\alpha x^2}) + \frac{1}{2} m\omega_{ho}^2 x^2(e^{-\alpha x^2})\right)$$
-
-\begin{align*}
+\begin{align}
+\Psi_T(\mathbf{r}) &= g(\alpha, x) = e^{-\alpha x_i^2}, \\
+\hat{H} &= \left( \frac{-\hbar^2}{2m} \nabla^2 + \frac{1}{2} m\omega_{ho}^2 x^2\right) \\
+E_L &= \frac{1}{e^{-\alpha x^2}}\left( \frac{-\hbar^2}{2m} \nabla^2 (e^{-\alpha x^2}) + \frac{1}{2} m\omega_{ho}^2 x^2(e^{-\alpha x^2})\right)
+\end{align}
+We then need  to compute the laplacian of the trial wave-function. 
+\begin{align}
 \nabla^2(e^{-\alpha x^2}) &= \frac{d^2 e^{-\alpha x^2}}{dx^2}\\
 &= \frac{d}{dx} \left(\frac{de^{-\alpha x^2}}{dx}\right)\\
 &= \frac{d}{dx} (-2\alpha x \cdot e^{-\alpha x^2})\\
 &= (4\alpha^2 x^2 - 2\alpha)e^{-\alpha x^2} 
-\end{align*}
+\end{align}
+Finally, the local energy becomes 
 
-$$E_L = \frac{e^{-\alpha x^2}}{e^{-\alpha x^2}}\left( \frac{-\hbar^2}{2m}  (4\alpha^2 x^2 - 2\alpha) + \frac{1}{2} m\omega_{ho}^2 x^2\right)$$
-
-$$E_L = \frac{-\hbar^2}{2m}(4\alpha^2 x^2 - 2\alpha) + \frac{1}{2} m\omega_{ho}^2 x^2$$
-
+\begin{align}
+E_L &= \frac{e^{-\alpha x^2}}{e^{-\alpha x^2}}\left( \frac{-\hbar^2}{2m}  (4\alpha^2 x^2 - 2\alpha) + \frac{1}{2} m\omega_{ho}^2 x^2\right) \\
+E_L &= \frac{-\hbar^2}{2m}(4\alpha^2 x^2 - 2\alpha) + \frac{1}{2} m\omega_{ho}^2 x^2
+\end{align}
 Solving the same problem for one particle in 2D and 3D we get something similar, 
 
-$$E_L = (\frac{-\hbar^2}{2m})4\alpha^2 (x^2 + y^2) - 4\alpha + \frac{1}{2} m\omega_{ho}^2 (x^2 + y^2),$$
-
-$$E_L = (\frac{-\hbar^2}{2m})4\alpha^2 (x^2 + y^2 + z^2) - 6\alpha + \frac{1}{2} m\omega_{ho}^2 (x^2 + y^2 + z^2).$$
-
+\begin{align}
+E_L &= (\frac{-\hbar^2}{2m})4\alpha^2 (x^2 + y^2) - 4\alpha + \frac{1}{2} m\omega_{ho}^2 (x^2 + y^2),\\
+E_L &= (\frac{-\hbar^2}{2m})4\alpha^2 (x^2 + y^2 + z^2) - 6\alpha + \frac{1}{2} m\omega_{ho}^2 (x^2 + y^2 + z^2)
+\end{align}
 We can now easily see that the local energy energy for N number of particles in 1D, 2D and 3D becomes
 
-$$E_L = \sum_i^N (\frac{-\hbar^2}{2m})4\alpha^2 (x^2) - 2\alpha + \frac{1}{2} m\omega_{ho}^2 (x^2),$$
-
-$$E_L = \sum_i^N (\frac{-\hbar^2}{2m})4\alpha^2 (x^2 + y^2) - 4\alpha + \frac{1}{2} m\omega_{ho}^2 (x^2 + y^2),$$
-
-$$E_L = \sum_i^N (\frac{-\hbar^2}{2m})4\alpha^2 (x^2 + y^2 + \beta^2 z^2) - 4\alpha -2\alpha \beta + \frac{1}{2} m\omega_{ho}^2 (x^2 + y^2 + \beta z^2),$$
+\begin{equation}\label{eq:el_ni}
+\begin{split}
+\text{1D: }E_L &= \sum_i^N (\frac{-\hbar^2}{2m})[4\alpha^2 (x^2) - 2\alpha] + \frac{1}{2} m\omega_{ho}^2 (x^2),\\
+\text{2D: }E_L &= \sum_i^N (\frac{-\hbar^2}{2m})[4\alpha^2 (x^2 + y^2) - 4\alpha] + \frac{1}{2} m\omega_{ho}^2 (x^2 + y^2)\\
+\text{3D: }E_L &= \sum_i^N (\frac{-\hbar^2}{2m})[4\alpha^2 (x^2 + y^2 + \beta^2 z^2) - 4\alpha -2\alpha \beta] + \frac{1}{2} m\omega_{ho}^2 (x^2 + y^2 + \beta z^2)
+\end{split}
+\end{equation}
 
 since the energy is simply the sum of the derivatives of each particle.
 
-Now we can try to solve the complete problem. The trail wave function is now
+Now we can try to solve the complete problem. The trial wave function is now
 
 $$\Psi_T(\mathbf{r}) = \prod_{i} g(\alpha, \beta, \mathbf{r_i}) \prod_{i<j} f(a, |\mathbf{r_i} - \mathbf{r_j}|)$$
 
@@ -109,7 +114,7 @@ $$\nabla_k \prod_{i} \phi (\mathbf{r_i}) \exp \left(\sum_{i<j}u(r_{ij})\right) =
 &=\exp \left(\sum_{i<j}u(r_{ij})\right) \sum_{i\ne k} \nabla_k u(r_{kj})
 \end{align*}
 
-And the first derivative of the trail wave equation is
+And the first derivative of the trial wave equation is
 
 $$\nabla_k \Psi_T(\mathbf{r}) = \nabla_k \phi(r_k) \left[\prod_{i\ne k} \phi(\mathbf{r_i})\right] \exp \left(\sum_{i<j}u(r_{ij})\right) +  \prod_{i} \phi (\mathbf{r_i}) \exp \left(\sum_{i<j}u(r_{ij})\right) \sum_{j\ne k} \nabla_k u(r_{kj}).$$
 
