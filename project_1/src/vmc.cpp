@@ -11,16 +11,24 @@
 using namespace arma;
 using namespace std;
 
-void vmc::monte_carlo(WaveFunc *psi_t, double *E_l_array){
-   E_l_array[0] = psi_t -> E_l(R);
+void vmc::monte_carlo(WaveFunc *psi_t, metadata *exp_vals){
+   exp_vals -> exp_E[0] = psi_t -> E_l(R);
 
     for(int i = 1; i < N_mc; i++){
-        double tmp = metropolis_hastings(psi_t, E_l_array[i-1]);
-        E_l_array[i] = tmp;
+        double tmp = metropolis_hastings(psi_t, exp_vals -> exp_E[i-1]);
+        exp_vals -> exp_E[i] = tmp;
+        if(compute_extra){
+            double prod_r_cur = (double) as_scalar(accu(square(R)));
+            exp_vals -> prod_R[i] = prod_r_cur;
+            exp_vals -> prod_R_exp_E[i] = prod_r_cur * tmp;
+        }
     }
 }
 
-void vmc::set_params(double a_in, double b_in, int N, int dim,int mc_cycles){
+void vmc::set_params(double a_in, double b_in, 
+        int N, int dim,int mc_cycles,
+        bool meta_bool
+    ){
     a = a_in;
     b = b_in;
     N_p = N;
@@ -28,6 +36,7 @@ void vmc::set_params(double a_in, double b_in, int N, int dim,int mc_cycles){
     N_d = dim;
     R = mat(N_p, N_d);
     gen = new mt19937(rd());
+    compute_extra = meta_bool;
 }
 
 void vmc::generate_positions(double step_int){
@@ -65,15 +74,30 @@ vector<double> vmc::solve(WaveFunc *psi_t, string filename){
         evaluated = psi_t -> evaluate(R);
     }
     
-    double *E_l_array = new double [N_mc]; 
+    metadata all_exp;
+    all_exp.exp_E = new double [N_mc]; 
+    
+    if(compute_extra){
+        all_exp.prod_R = new double [N_mc];
+        all_exp.prod_R_exp_E = new double [N_mc];
+    }
 
     int start_s = clock();
-    monte_carlo(psi_t, E_l_array);
+    monte_carlo(psi_t, &all_exp);
     int end_s = clock();
 
     double time_spent = (end_s - start_s)/(double (CLOCKS_PER_SEC) * 1000);
+
     mat arma_e_l = mat(N_mc, 1);
-    for(int i = 0; i < N_mc; i++) arma_e_l(i, 0) = E_l_array[i];
+    mat arma_prod_r= mat(N_mc, 1);
+    mat arma_prod_r_el= mat(N_mc, 1);
+
+    for(int i = 0; i < N_mc; i++) arma_e_l(i, 0) = all_exp.exp_E[i];
+    
+    if(compute_extra){
+        for(int i = 0; i < N_mc; i++) arma_prod_r(i, 0) = all_exp.prod_R[i];
+        for(int i = 0; i < N_mc; i++) arma_prod_r_el(i, 0) = all_exp.prod_R_exp_E[i];
+    } 
 
     string header = "# N_p: " + to_string(N_p) 
         + "| N_d: " + to_string(N_d) 
@@ -86,8 +110,17 @@ vector<double> vmc::solve(WaveFunc *psi_t, string filename){
 
     output_file.close();
     
-    vector<double> retval = {(double) as_scalar(mean(arma_e_l)), time_spent};
+    vector<double> retval;
+    if(compute_extra){
+         retval = {(double) as_scalar(mean(arma_e_l)),
+                                  (double) as_scalar(mean(arma_prod_r)),
+                                  (double) as_scalar(mean(arma_prod_r_el)),
+                                  time_spent
+                                 };
+    }
+    else{
+        retval = {(double) as_scalar(mean(arma_e_l)), time_spent};
+    }
     return retval ;
 }
-
 
