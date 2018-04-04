@@ -9,9 +9,17 @@
 using namespace std;
 using namespace arma;
 
+struct metadata{
+    double *exp_E;
+    double *prod_R; 
+    double *prod_R_exp_E;
+};
+
+
 class vmc{
     public:
-        double step;       
+        double step;
+        bool compute_extra; 
         double a, b;
         int N_p, N_mc, N_d;
    protected:
@@ -20,10 +28,10 @@ class vmc{
         mt19937 *gen; //Standard mersenne_twister_engine seeded with rd()
 
     public:
-        void monte_carlo(WaveFunc *psi_t, double *E_l);
+        void monte_carlo(WaveFunc *psi_t, metadata *exp_vals);
         vector<double> solve(WaveFunc *psi, string filename);
         void generate_positions(double step_int);
-        void set_params(double a, double b, int N, int dim,int mc_cycles);
+        void set_params(double a, double b, int N, int dim,int mc_cycles, bool meta_bool = false);
     protected:
         virtual double metropolis_hastings(WaveFunc *psi_t, double prev_E_l) = 0;
 };
