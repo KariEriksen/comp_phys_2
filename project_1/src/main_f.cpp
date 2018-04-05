@@ -9,6 +9,8 @@ int main(int argc, char *argv[]){
     NaiveMh D;
     double beta, step, h; 
     int N_p, N_d, N_mc, mc_exp;
+    double alpha_start;
+
     beta = 1; step = 1; h = 1e-4;
     if( argc < 3){
         cout << "Wrong usage" << endl;    
@@ -16,6 +18,7 @@ int main(int argc, char *argv[]){
     }
     else{
         N_p = atoi(argv[1]); N_d = atoi(argv[2]); mc_exp = atoi(argv[3]);
+        alpha_start = atof(argv[4]);
     }
     N_mc = pow(2, mc_exp);
     int N_mc_iter = 1e5; 
@@ -25,8 +28,8 @@ int main(int argc, char *argv[]){
     vector<vector<double>> numeric_results;
     vector<vector<double>> analytic_results; 
     
-    double alpha_start = 0.2;
     double gamma = 1;
+    double s_km, y_km;
 
     int max_sims = 40;
     int k = 0;
@@ -56,8 +59,9 @@ int main(int argc, char *argv[]){
         double exp_prod_rsquared = result[1];
         double exp_prod_rsquared_el = result[2];
 
+        cout << "-------------------------" << endl;
         E_der = 2*(exp_prod_rsquared_el - exp_E * exp_prod_rsquared);
-        if(k == 0) gamma = 1/(100*log10(E_der));
+        if(k == 0) gamma = E_der/1000;
 
         gradient_array[k] = E_der;
         alpha_array[k] = alpha; 
@@ -66,12 +70,25 @@ int main(int argc, char *argv[]){
         if(abs(E_der) < epsilon) break;
 
         if(k >0){
-            double s_km = alpha_array[k] - alpha_array[k-1];
-            double y_km = gradient_array[k] - gradient_array[k-1];
+            s_km = alpha_array[k] - alpha_array[k-1];
+            y_km = gradient_array[k] - gradient_array[k-1];
             gamma_array[k] = s_km/y_km;
         }  
+        
+        cout << "a " << alpha_array[k] << " | g " << gradient_array[k] << endl; 
+        cout << "da " << s_km << endl;  
+        cout << "de " << y_km << endl;
+        cout << "gamma " << gamma_array[k] << endl;
+        cout << "iter " << k << endl;
 
         alpha += - gamma_array[k] * E_der;
+        if(abs(alpha - alpha_array[k]) < epsilon) break;
+
+        if(alpha < 1e-2){
+            alpha = 1e-1;
+            gamma_array[k] = (alpha_array[k] - alpha)/E_der;
+        }
+
         analytic_results.push_back(result); 
         
         k ++;
@@ -87,7 +104,9 @@ int main(int argc, char *argv[]){
         }
         j++;
     }
-
+    
+    cout << "start alpha: " << alpha_start << endl;
+    cout << "number of iterations: " << k << endl;
     cout << "Optimal alpha: " << min_alpha << endl;
     cout << "Optimal energy: " << min_energy << endl;
 
