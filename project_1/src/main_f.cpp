@@ -26,17 +26,20 @@ int main(int argc, char *argv[]){
     vector<vector<double>> analytic_results; 
     
     double alpha_start = 0.2;
-    double gamma;
+    double gamma = 1;
 
-    int max_sims = 20;
-    int sim_n = 0;
+    int max_sims = 40;
+    int k = 0;
 
     double E_der = 0;
     double alpha = alpha_start;
+    double epsilon = 1e-6;
 
     double *alpha_array = new double[max_sims];
+    double *gamma_array = new double[max_sims];
+    double *gradient_array = new double[max_sims];
 
-    while((sim_n < max_sims)){
+    while(k < max_sims){
         NaiveMh D;
         string sim_type_a = "GD_NM_NIA";
         vector<double> params = {alpha, alpha*alpha, beta};
@@ -46,47 +49,47 @@ int main(int argc, char *argv[]){
         D.set_params(alpha, beta, N_p, N_d, N_mc_iter, true);
         D.step = step;
         //reference must be passed or else you get static linking 
-        //
         vector<double> result;
         string filename = "../data/temp.csv";
         result = D.solve(&g, filename);
-
         double exp_E = result[0];
         double exp_prod_rsquared = result[1];
         double exp_prod_rsquared_el = result[2];
-        double temp_ed = (double) E_der; 
-        double tmp_a = (double) alpha; 
-        alpha_array[sim_n] = tmp_a;
 
         E_der = 2*(exp_prod_rsquared_el - exp_E * exp_prod_rsquared);
-        if(sim_n == 0) gamma = 1/(100*log10(E_der));
+        if(k == 0) gamma = 1/(100*log10(E_der));
 
-        cout << "-------------------------------------" << endl;
-        cout << "exp E: " << exp_E << " | old_alpha: " << alpha << " | gamma: " << gamma<<endl; 
+        gradient_array[k] = E_der;
+        alpha_array[k] = alpha; 
+        gamma_array[k] = gamma;
 
-        alpha +=  gamma * E_der;
+        if(abs(E_der) < epsilon) break;
 
-        if(sim_n>0) gamma = abs((alpha - tmp_a) * (1 / (E_der - temp_ed)));
-        
-        cout << "new alpha: " << alpha ;
-        cout << "| E_der : " << E_der  << endl;
+        if(k >0){
+            double s_km = alpha_array[k] - alpha_array[k-1];
+            double y_km = gradient_array[k] - gradient_array[k-1];
+            gamma_array[k] = s_km/y_km;
+        }  
+
+        alpha += - gamma_array[k] * E_der;
         analytic_results.push_back(result); 
-        cout << "-------------------------------------" << endl;
-
-        sim_n ++;
+        
+        k ++;
     }
-
     double min_alpha = 1e8;
     double min_energy = 1e8;
-
-    for(int i = 0; i<max_sims ; i++){
-        if(analytic_results[i][0] < min_energy){
-            min_alpha = alpha_array[i];
-            min_energy = analytic_results[i][0];
+    
+    int j = 0;
+    for(auto it = begin(analytic_results); it != end(analytic_results); ++it){
+        if(it[0][0] < min_energy) {
+            min_alpha = alpha_array[j];
+            min_energy = it[0][0];
         }
+        j++;
     }
 
     cout << "Optimal alpha: " << min_alpha << endl;
     cout << "Optimal energy: " << min_energy << endl;
+
     return 0;
 }
