@@ -121,10 +121,10 @@ Like most problems in physics the variational quantum problem is one of optimiza
 \alpha_{i+1} = \alpha_i -\gamma \frac{\partial \langle E_L^i \rangle}{\partial \alpha}
 \end{equation}
 
-\noindent Where we have opted to update the parameter $\gamma$ iteratively by the Barzilai-Borwein formula 
+\noindent Where we have opted to update the parameter $\gamma$ iteratively by the Barzilai-Borwein formula which is a method that uses an iterative approach to the step size $\gamma$ derived in much the same manner as for quasi-Newton methods\cite{OptTeory}. The only constraint we have to enforce is that $0 < \alpha$. In the algorithm we have a simple rule  that checks the sign of $\alpha$ and makes a correction if it is out-of-bounds. For $i > 0$ the step size $\gamma_i$ is then given as: 
 
 \begin{equation}
-\gamma_i = \left |(\alpha_{i+1} - \alpha) \cdot \frac{1}{\expect{E_L}^{i+1} - \expect{E_L}^i}\right|
+\gamma_i = (\alpha_{i+1} - \alpha) \cdot \frac{1}{\expect{E_L}^{i+1} - \expect{E_L}^i}
 \end{equation}
 
 \noindent We also introduce the notation $\frac{\partial \langle E_L^i \rangle}{\partial \alpha} = \expect{E_L}^\alpha_{i}$ for brevity, and the same notation will be used for the tiral wavefunction $\psi_T$. The partial derivative itself can be found by the equation\footnote{The equation was retrieved from the lecture notes} 
@@ -140,7 +140,8 @@ Like most problems in physics the variational quantum problem is one of optimiza
 \frac{\psi^\alpha}{\psi} &= \frac{\psi \prod_i^N (x_i^2 + y_i^2 + \beta z^2_i)}{\psi} \\
 &= \prod_i^N (x_i^2 + y_i^2 + \beta z^2_i)
 \end{align}
-\noindent This holds for both the interactive and non-interactive case since the correlation wavefunction, $f(r_i, r_j)$, does not have any dependence on $\alpha$
+\noindent This holds for both the interactive and non-interactive case since the correlation wavefunction, $f(r_i, r_j)$, does not have any dependence on $\alpha$\\
+In the program the only addition to make is the computation of two additional expecation values\footnote{implemented in \lstinline{vmc.cpp}}. Empirically we've also seen that we can reduce the number of MC-cycles quite drastically and still get a good convergence to the optimal $\alpha$. In summary gradient descent and other associated methods allows for a radical speedup in estimation of the optimal values of the variational parameters. The implementation of this method can be found in the file \lstinline{main_f.cpp}.
 
 
 \subsection{Blocking Method}
