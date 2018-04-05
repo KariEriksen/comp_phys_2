@@ -131,9 +131,7 @@ double GaussianInterAnalytic::laplace(mat R){
                 rkj = rk - rj;
                 r_kj = sqrt(sum(rkj%rkj));
 
-                //r_kj = D(k,j);
-
-                sum_1 += ((sum(rkj))/r_kj)*(-a/(a*r_kj - r_kj*r_kj));
+                sum_1 += -4*alpha*(sum(rk%rkj)/r_kj)*(-a/(a*r_kj - r_kj*r_kj));
 
                 part_1 = (a*(a-r_kj))/(r_kj*r_kj*(a - r_kj)*(a - r_kj));
                 part_2 = 2.0/r_kj;
@@ -153,11 +151,9 @@ double GaussianInterAnalytic::laplace(mat R){
                 if(i != k){
 
                     rki = rk - ri;
-
                     r_ki = sqrt(sum(rki%rki));
-                    //r_ki = D(k,i);
 
-                    sum_2 += (-a/(a*r_ki - r_ki*r_ki))*(-a/(a*r_kj - r_kj*r_kj));
+                    sum_2 += (sum(rki%rkj))/(r_ki*r_kj)*(-a/(a*r_ki - r_ki*r_ki))*(-a/(a*r_kj - r_kj*r_kj));
                 }
             }
 
@@ -173,9 +169,8 @@ double GaussianInterAnalytic::laplace(mat R){
     }
 
     double term1 = -4*alpha - 2*alpha*beta + 4*alpha_sq*(sum(rk%rk));
-    double term2 = -4*alpha*(sum(rk))*sum_1;
 
-    double scnd_der = term1 + term2 + sum_2 + sum_3;
+    double scnd_der = term1 + sum_1 + sum_2 + sum_3;
     return scnd_der, V_int;
 }
 
