@@ -1,7 +1,5 @@
 \section{Theory}
 
-\section{Theory}
-
 \subsection{Variational Monte Carlo}
 
 Monte Carlo simulations are widely used methods in numerical science that employs random walkers. 
@@ -32,63 +30,91 @@ $$\mathbf{R}_p = \mathbf{R} + r \ast \Delta \mathbf{R}$$
 
 \subsection{The Metropolis Algorithm}
 
-How we select the new configurations during the simulation is given by the Metropolis Algorithm.
-
+How we select the new configurations during the simulation is given by the Metropolis Algorithm. 
+Ideally we would have a transition probability matrix which told us how likely it would be for each particle to move in the configuration space. Since we don't we try and model it.
+We define the following entities:
+\\
+\\
 $P_i^{(n)} \rightarrow$ probability of finding the system in state $i$ at the n'th step.
 \\
-$j \rightarrow$ possible new step with probability $T_{i \rightarrow j}$
+$j \rightarrow$ possible new step
 \\
 $A_{i \rightarrow j} \rightarrow$ probability of acceptance. 
 \\
-We want to try and push the system towards a 
-Generate a new possible state with transition possibility 
-$T_{j \rightarrow i}$ 
+$T_{j \rightarrow i} \rightarrow$ probability of making the transition  
+\\
+\\
+Now we can say that a transition probability matrix can be constructed by $T_{j \rightarrow i}A_{j \rightarrow i}.$ The probability of finding the system in state $i$ at step $n$ is
 
-$1 - A_{i \rightarrow j} \rightarrow$ rejection
+\begin{equation}\label{eq:prob}
+P_i^{(n)} = \sum_j \left[P_j^{(n-1)} T_{j \rightarrow i}A_{j \rightarrow i} + P_j^{(n-1)}T_{i \rightarrow j}(1 - A_{i \rightarrow j})\right].
+\end{equation}
+
+We want to push the system towards high density regional space of $P_i^{(n)}$. /We want to select states according to the probability distribution. In that way to converge to the desired stationary distribution $p_i$.
 
 $$P_i^{(n \rightarrow \infty)} \rightarrow p_i$$
 
-$$P_i^{(n)} = \sum_j \left[P_j^{(n-1)} T_{j \rightarrow i}A_{j \rightarrow i} + P_j^{(n-1)}T_{i \rightarrow j}(1 - A_{i \rightarrow j})\right]$$
+Using this statement and the fact that the sum over all possible transitional probabilities is one we can rewrite the above equation \ref{eq:prob}.
 
 $$\sum_j [p_j T_{j \rightarrow i}A_{j \rightarrow i} - p_i T_{i \rightarrow j}A_{i \rightarrow j}] = 0$$
 
-$$\frac{A_{j \rightarrow i}}{A_{i \rightarrow j}} = \frac{p_i T_{i \rightarrow j}}{p_j T_{j \rightarrow i}}$$
+In order to stop at the configuration where we have reached equilibrium we us the condition of detailed balance, and it gives us 
+
+\begin{algorithm}
+\KwData{matrix $\mathbf{R}$}
+\KwResult{float $\mathbf{E}_L$}
+number of MC-cycles $N$\;
+initialize $\mathbf{R}$\;
+calculate $|\Psi_T(\mathbf{R})|^2$\;
+\For{i in $[0, N]$}{
+    $\mathbf{R}_p = \mathbf{R} + r \ast \Delta \mathbf{R}$\;
+    calculate $\omega = \frac{|\Psi_T(\mathbf{R}_p)|^2}{|\Psi_T(\mathbf{R})|^2}$\;
+    \eIf{$q \leq \omega$}{
+        accept new move\;
+    }
+    {reject new move\;
+    }
+    update energy, $\mathbf{E}_L$\;
+}
+ \caption{Monte Carlo with Metropolis-Hastings}\label{alg:metro}
+\end{algorithm}
+
+$$\frac{A_{j \rightarrow i}}{A_{i \rightarrow j}} = \frac{p_i T_{i \rightarrow j}}{p_j T_{j \rightarrow i}}.$$
+
+We choose to accept when the acceptance is bigger than 1. 
 
 $$A_{j \rightarrow i} = \mathrm{min} \left( 1, \frac{p_i T_{i \rightarrow j}}{p_j T_{j \rightarrow i}}\right)$$
 
-\subsection{Numerical differentiation}
-To evaluate the local energy of the system as defined in the project it necessary to compute the second derivative of the trial wavefunction $\psi_T$. We've chosen to implement the numerical differentiation as a finite difference approximation. Let $\mathbf{R}$ be the row major $N \times D$ matrix where $N$ is the number of particles and $D$ is their dimension. Then the second derivative can be found by the procedure listed as algorithm \ref{alg:nd}
+What we must calculate is equation \ref{eq:ratio}. And an example of the code is given further down, in Algorithm \ref{alg:metro}
 
-
-Since the derivative involves three function calls for each particle the numerical derivative will obviously be quite computationally expensive. It is noted  that the differentiation could be substantially optimized from the version included in the code, but is outside the scope of this project. 
-
-\begin{algorithm}[H]
-\KwData{matrix $\mathbf{R}$}
-\KwResult{float $\nabla ^2 \psi_T (R)$}
-\BlankLine
-$\Delta = 0$ \\
-$\mathbf{R_p} = \mathbf{R}$\\
-$\mathbf{R_m} = \mathbf{R}$\\
-\BlankLine
-\For{$i$ in $[0, N-1]$}{
-	\For{$j$ in $[0, D-1]$}{
-		$\mathbf{R_p}(i,j) += h$ \\
-		$\mathbf{R_m}(i,j) -= h$ \\
-		$\Delta = \psi_T(\mathbf{R_p}) + \psi_T(\mathbf{R_m}) - 2 \psi_T(\mathbf{R})$\\
-
-		$\mathbf{R_p}(i,j) -= h$ \\
-		$\mathbf{R_m}(i,j) += h$ \\
-	}
-}
-\KwRet{$\frac{\Delta}{h^2} $}
-\BlankLine
-\caption{Numerical differentiation of the second order of the trial wavefunction on a system $\mathbf{R}$}\label{alg:nd}
-\end{algorithm} 
-
+\begin{equation}\label{eq:ratio}
+\frac{p_i T_{i \rightarrow j}}{p_j T_{j \rightarrow i}} = \frac{|\Psi_T(\mathbf{R}_p)|^2}{|\Psi_T(\mathbf{R})|^2}
+\end{equation}
 
 \subsection{Importance Sampling}
 
+Now we move to an extension of the Metropolis algorithm, the Importance sampling. This method provides us with a better way of suggesting new moves. The expression for the new move, $y$, is given by the solution of the Langevin equation. It reads 
+
+$$y = x + D F(x) \Delta t + \xi \sqrt{\Delta t},$$
+
+where $\xi$ is a gaussian random variable, $D$ is the diffusion coefficient and is $\frac{1}{2}$ and $\Delta t$ is the time step which take values between $[0.001, 0.01]$.
+$F(x)$ is the drift force and is given by the gradient of the wave function. 
+
+$$F = 2 \frac{1}{\Psi_T} \nabla \Psi_T$$
+
+It is the drift force that ensures us we move particles towards regions of configuration space where the trail wave function is large. This method increases the efficiency of our program, since the standard Metropolis can suggest new moves in every direction with same probability. 
+From the solution of the Fokker-Planck equation we get a new transition probability, the Green's function. 
+
+$$G(y, x, \Delta t) = \frac{1}{(4 \pi D \Delta t)^{3N/2}} \exp (-(y - x - D F(x) \Delta t)^2/4 D \Delta t)$$
+
+Now equation \ref{eq:ratio} from Metropolis algorithm changes to 
+
+$$\frac{p_i T_{i \rightarrow j}}{p_j T_{j \rightarrow i}} = \frac{G(x, y, \Delta t)|\Psi_T(y)|^2}{G(y, x, \Delta t)|\Psi_T(x)|^2},$$
+
+and we must calculate the drift force in order to find new moves and the Green's function to accept/reject these moves.
+
 \subsection{Gradient Descent}
+
 Like most problems in physics the variational quantum problem is one of optimization. In this project we are optimizing the expectation value of the energy over the parameter $\alpha$. In the naive implementation we simply span a reasonable range of $\alpha$ \footnote{an implementation of which can be seen in the file \lstinline{main_b.cpp}}. For a multi-parameter variational problem this approach is too computationally expensive to implement in most cases. To remedy this problem iterative gradient methods have been developed to make more intelligent choices for the variational parameters. In this project we have opted to implement a simple gradient descent method. The gradient descent is ordinarily presented as 
 
 \begin{equation}
@@ -116,5 +142,48 @@ Like most problems in physics the variational quantum problem is one of optimiza
 \end{align}
 \noindent This holds for both the interactive and non-interactive case since the correlation wavefunction, $f(r_i, r_j)$, does not have any dependence on $\alpha$
 
+
 \subsection{Blocking Method}
+
+For the statistical analysis and error estimates we have used the technique of blocking. \
+We are looking for the expectation value of the ground state energy of our system. In order to say something about how accurate these results are we want to look at the standard deviation. 
+
+If our samples where uncorrelated we could calculate the standard deviation through the following equation 
+$$\sigma = \sqrt{\frac{1}{n - 1} \left(\langle E_L^2\rangle - \langle E_L \rangle^2\right)}.$$
+
+It can be showed that for correlated samples the equation for the standard deviation is
+$$\sigma = \sqrt{\frac{1 + 2 \tau / \Delta t}{n - 1} \left(\langle E_L^2\rangle - \langle E_L \rangle^2\right)}$$
+
+where $\tau$ is the time between one sample and the next uncorrelated sample and $\Delta t$ is the time between each sample.\
+If we knew what $\tau$ was we could simply find our $\sigma$, but since we don't we use blocking to find it. The method is simple enough, we divide our samples of data into blocks and calculating the mean of each block. So if we have an amount of samples of $\langle E_L \rangle$, we divide these into $M$ blocks and calculate the mean. By plotting the standard deviation as function of the block size we can keep blocking and blocking until we see that the std. dev. stops increasing, and this is where the blocks are uncorrelated. Now we have an estimate for $\tau$ and thus the standard deviation.
+
+
+\subsection{Numerical differentiation}
+To evaluate the local energy of the system as defined in the project it necessary to compute the second derivative of the trial wavefunction $\psi_T$. We've chosen to implement the numerical differentiation as a finite difference approximation. Let $\mathbf{R}$ be the row major $N \times D$ matrix where $N$ is the number of particles and $D$ is their dimension. Then the second derivative can be found by the procedure listed as algorithm \ref{alg:nd}
+
+\begin{algorithm}
+\KwData{matrix $\mathbf{R}$}
+\KwResult{float $\nabla ^2 \psi_T (R)$}
+\BlankLine
+$\Delta = 0$ \\
+$\mathbf{R_p} = \mathbf{R}$\\
+$\mathbf{R_m} = \mathbf{R}$\\
+\BlankLine
+\For{$i$ in $[0, N-1]$}{
+	\For{$j$ in $[0, D-1]$}{
+		$\mathbf{R_p}(i,j) += h$ \\
+		$\mathbf{R_m}(i,j) -= h$ \\
+		$\Delta = \psi_T(\mathbf{R_p}) + \psi_T(\mathbf{R_m}) - 2 \psi_T(\mathbf{R})$\\
+
+		$\mathbf{R_p}(i,j) -= h$ \\
+		$\mathbf{R_m}(i,j) += h$ \\
+	}
+}
+\KwRet{$\frac{\Delta}{h^2} $}
+\BlankLine
+\caption{Numerical differentiation of the second order of the trial wavefunction on a system $\mathbf{R}$}\label{alg:nd}
+\end{algorithm} 
+
+Since the derivative involves three function calls for each particle the numerical derivative will obviously be quite computationally expensive. It is noted  that the differentiation could be substantially optimized from the version included in the code, but is outside the scope of this project. 
+
 
