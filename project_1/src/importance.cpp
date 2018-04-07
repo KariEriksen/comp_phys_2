@@ -9,8 +9,8 @@ double Importance::metropolis_hastings(WaveFunc *psi_t, double prev_E_l){
 	double dt = 0.05; // dt in [0.001,0.01] should produce stable ground state results.
 
     uniform_int_distribution<int> dis_r(0, N_p - 1);
-    uniform_real_distribution<double> dis_step(-1, 1);
-    uniform_real_distribution<double> dis_p(0, 1);
+    uniform_real_distribution<double> dis_step(-1.0, 1.0);
+    uniform_real_distribution<double> dis_p(0.0, 1.0);
 	normal_distribution<double> dis_zeta(0.0, 1.0);
 
 	// Pick particle j to move.
@@ -39,12 +39,14 @@ double Importance::metropolis_hastings(WaveFunc *psi_t, double prev_E_l){
     double Green_proposed = 0.0;
 
 	// Calculate greens functions
-	term1 = R_p.row(j) - R.row(j) - 0.5*dt*F_drift;
-	term2 = R.row(j) - R_p.row(j) - 0.5*dt*F_drift_proposed;
-	term3 = 2*dt;
+	for(int i = 0; i < N_d; i++){
+		term1 = R_p(j,i) - R(j,i) - 0.5*dt*F_drift(i);
+		term2 = R(j,i) - R_p(j,i) - 0.5*dt*F_drift_proposed(i);
+		term3 = 2*dt;
 
-	Green_prev = accu(exp((-square(term1))/term3));
-	Green_proposed = accu(exp((-square(term2))/term3));
+		Green_prev += accu(exp(-(term1*term1)/term3));
+		Green_proposed += accu(exp(-(term2*term2)/term3));
+	}
 
 	double q = P*Green_prev/Green_proposed;
     double eps = dis_p(*gen);
