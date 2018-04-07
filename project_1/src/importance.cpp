@@ -11,8 +11,7 @@ double Importance::metropolis_hastings(WaveFunc *psi_t, double prev_E_l){
     uniform_int_distribution<int> dis_r(0, N_p - 1);
     uniform_real_distribution<double> dis_step(-1, 1);
     uniform_real_distribution<double> dis_p(0, 1);
-	
-	normal_distribution<> dis_zeta(0, 1);
+	normal_distribution<double> dis_zeta(0.0, 1.0);
 	
 
 
@@ -23,7 +22,6 @@ double Importance::metropolis_hastings(WaveFunc *psi_t, double prev_E_l){
    
 	R_p.row(j) += 0.5*F_drift*dt + zeta*sqrt(dt);
 
-    double eps = dis_p(*gen);
     double P = psi_t -> ratio(R, R_p, j);
     P *= P;
 
@@ -51,8 +49,8 @@ double Importance::metropolis_hastings(WaveFunc *psi_t, double prev_E_l){
 		Green_proposed += exp((-(dot(term2,term2)))/term3);
     }
 
-	double q = (Green_prev/accu(Green_proposed))*P;
-
+	double q = (accu(Green_prev)/accu(Green_proposed))*P;
+    double eps = dis_p(*gen);
     if(eps < q){
         R = R_p;
         psi_t -> update();
