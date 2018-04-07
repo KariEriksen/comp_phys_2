@@ -12,10 +12,10 @@ double Importance::metropolis_hastings(WaveFunc *psi_t, double prev_E_l){
     uniform_real_distribution<double> dis_step(-1, 1);
     uniform_real_distribution<double> dis_p(0, 1);
 	normal_distribution<double> dis_zeta(0.0, 1.0);
-	
 
 
     int j = dis_r(*gen);
+	
 	double zeta = dis_zeta(*gen);
     mat F_drift(1, N_d);
 	F_drift = psi_t -> drift_force(R.row(j));
@@ -40,9 +40,9 @@ double Importance::metropolis_hastings(WaveFunc *psi_t, double prev_E_l){
     double Green_prev;
     double Green_proposed;
 
-    for(int j = 0; j < N_p; j++){
-		term1 = R_p.row(j) - R.row(j) - 0.5*dt*F_drift;
-		term2 = R.row(j) - R_p.row(j) - 0.5*dt*F_drift_proposed;
+    for(int i = 0; i < N_p; i++){
+		term1 = R_p.row(i) - R.row(i) - 0.5*dt*F_drift;
+		term2 = R.row(i) - R_p.row(i) - 0.5*dt*F_drift_proposed;
 		term3 = 2*dt;
 
 		Green_prev += exp((-(dot(term1,term1)))/term3);
