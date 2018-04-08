@@ -1,7 +1,7 @@
 \section{Results}
 \subsection*{\textbf{1b):} Developing your code and \textbf{1d):} A better statistical analysis}
 
-The results of the simulations are included in the appendix as figures \ref{fig:1b_1} \ref{fig:1b_10}, \ref{fig:1b_100} and \ref{fig:1b_500}. The results were produced with the code in the repository\footnote{at commit \lstinline{b0ff612bc6666335b106af5e22a7a13a13c7cff7}}. Errors in the expectation value for the energy in the plots are computed with the blocking method\footnote{the implementation is a copy of the code from LINK TO THE GITHUB WITH MARIUS'S CODE}. 
+The results of the simulations are included in the appendix as figures \ref{fig:1b_1} \ref{fig:1b_10}, \ref{fig:1b_100} and \ref{fig:1b_500}. The results were produced with the code in the repository\footnote{at commit \lstinline{b0ff612bc6666335b106af5e22a7a13a13c7cff7}}. Errors in the expectation value for the energy in the plots are computed with the blocking method\footnote{the blocking implementation is a copy of the code in Ref. \cite{ComphysGit}}. 
 The exact answer for the minimum of the expecation value of the energy can be derived quote easily from \ref{eq:el_ni}. The minimum of the local energy has to be where the kinetic and potential energies cancel exactly. In the case of the 3d particle we see the following after imposing natural units. 
 
 \begin{align}
@@ -22,3 +22,12 @@ In general the energy in the non-interactive case at the variational minimum for
 \mathfrak{min}(\expect{E[\alpha]}) = 0.5 \cdot N \cdot D  
 \end{equation}
 Where $N$ is the number of particles and $D$ is their dimension. From the figures referenced in the beginning of this section it is clear that both the numerical and analytic solutions converge to the correct solution.
+
+\subsection*{\textbf{1f:} Finding the best parameter}
+Applying the gradient descent method to tune the variational parameter resulted in satisfying convergence to the optimal value for the variational parameter $\alpha$. The simulation results are included in figure \ref{fig:gd_nm_nia}\footnote{The simulations were produced with the file \lstinline{mainf_f.cpp} at commit \lstinline{2d03030ec5a711383d582dde23869483d122c6b6}}
+
+
+\begin{figure}
+\includegraphics{figures/GD_NM_NIA.pdf}
+\caption{Finding the optimal $\alpha$ with GD. This plot show the number of iterations it took to reach the minimum for the non-interactive spherical trap.}\label{fig:gd_nm_nia}
+\end{figure} 
