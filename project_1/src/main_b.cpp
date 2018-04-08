@@ -9,7 +9,7 @@ using namespace arma;
 int main(int argc, char *argv[]){
     // Derived object of WaveFunc class 
  
-    Importance D;
+    NaiveMh D;
     double beta, step, h; 
     int N_p, N_d, N_mc, mc_exp;
     beta = 1; step = 1; h = 1e-4;
@@ -39,8 +39,8 @@ int main(int argc, char *argv[]){
 
     for(int i = 0; i < num_sims; i++){
         double alpha = alpha_array[i];
-        Importance D;
-        string sim_type_a = "IM_NIA";
+        NaiveMh D;
+        string sim_type_a = "NM_NIA";
         vector<double> params = {alpha, alpha*alpha, beta};
         g.set_params(params, N_d, N_p);
         //must be called or else you literally have no random numbers
@@ -62,8 +62,8 @@ int main(int argc, char *argv[]){
     
      for(int i = 0; i < num_sims; i++){
         double alpha = alpha_array[i];
-        Importance E;
-        string sim_type_n = "IM_NIN";
+        NaiveMh E;
+        string sim_type_n = "NM_NIN";
         vector<double> params = {alpha, beta, h};
         u.set_params(params, N_d, N_p);
         //must be called or else you literally have no random numbers
@@ -83,7 +83,7 @@ int main(int argc, char *argv[]){
         numeric_results.push_back(result);
         }   
 
-    string meta_filename = "../data/IM_NIA_NIN_meta_np_" + to_string(N_p)+
+    string meta_filename = "../data/NM_NIA_NIN_meta_np_" + to_string(N_p)+
         "_nd_" + to_string(N_d)+   
         +"_data"
         +".csv";

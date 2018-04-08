@@ -6,7 +6,7 @@ using namespace arma;
 double Importance::metropolis_hastings(WaveFunc *psi_t, double prev_E_l){
     mat R_p(size(R));
     R_p = R;
-	double dt = 0.05; // dt in [0.001,0.01] should produce stable ground state results.
+	double dt = 0.001; // dt in [0.001,0.01] should produce stable ground state results.
 
     uniform_int_distribution<int> dis_r(0, N_p - 1);
     uniform_real_distribution<double> dis_step(-1.0, 1.0);
