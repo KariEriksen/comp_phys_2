@@ -35,21 +35,22 @@ int main(int argc, char *argv[]){
     int k = 0;
 
     double E_der = 0;
-    double alpha = alpha_start;
     double epsilon = 1e-6;
 
     double *alpha_array = new double[max_sims];
     double *gamma_array = new double[max_sims];
     double *gradient_array = new double[max_sims];
 
+    alpha_array[0] = alpha_start;
+    
     while(k < max_sims){
         NaiveMh D;
         string sim_type_a = "GD_NM_NIA";
-        vector<double> params = {alpha, alpha*alpha, beta};
+        vector<double> params = {alpha_array[k], alpha_array[k]*alpha_array[k], beta};
         g.set_params(params, N_d, N_p);
         //must be called or else you literally have no random numbers
         //args are alpha, beta, N_particles, N_dims, N_mccycles
-        D.set_params(alpha, beta, N_p, N_d, N_mc_iter, true);
+        D.set_params(alpha_array[k], beta, N_p, N_d, N_mc_iter, true);
         D.step = step;
         //reference must be passed or else you get static linking 
         vector<double> result;
@@ -61,15 +62,13 @@ int main(int argc, char *argv[]){
 
         cout << "-------------------------" << endl;
         E_der = 2*(exp_prod_rsquared_el - exp_E * exp_prod_rsquared);
-        if(k == 0) gamma = E_der/1000;
-
-        gradient_array[k] = E_der;
-        alpha_array[k] = alpha; 
-        gamma_array[k] = gamma;
+ 
+        gradient_array[k] = (double) E_der;
 
         if(abs(E_der) < epsilon) break;
 
-        if(k >0){
+        if(k == 0) gamma_array[k] = E_der/1000;
+        else{
             s_km = alpha_array[k] - alpha_array[k-1];
             y_km = gradient_array[k] - gradient_array[k-1];
             gamma_array[k] = s_km/y_km;
@@ -81,12 +80,12 @@ int main(int argc, char *argv[]){
         cout << "gamma " << gamma_array[k] << endl;
         cout << "iter " << k << endl;
 
-        alpha += - gamma_array[k] * E_der;
-        if(abs(alpha - alpha_array[k]) < epsilon) break;
+        alpha_array[k+1] = alpha_array[k] - gamma_array[k] * E_der;
+        if(abs(alpha_array[k+1] - alpha_array[k]) < epsilon) break;
 
-        if(alpha < 1e-2){
-            alpha = 1e-1;
-            gamma_array[k] = (alpha_array[k] - alpha)/E_der;
+        if(alpha_array[k+1] < 1e-2){
+            alpha_array[k+1] = 1e-1;
+            gamma_array[k] = (alpha_array[k] - alpha_array[k+1])/E_der;
         }
 
         analytic_results.push_back(result); 
@@ -105,10 +104,11 @@ int main(int argc, char *argv[]){
         j++;
     }
     
-    cout << "start alpha: " << alpha_start << endl;
-    cout << "number of iterations: " << k << endl;
-    cout << "Optimal alpha: " << min_alpha << endl;
-    cout << "Optimal energy: " << min_energy << endl;
+    string filename = "../data/GD_NM_NIA_np_"+to_string(N_d)+"_nd_"+to_string(N_d);
+    filename += "_sa_"+to_string(alpha_start)+".csv"; 
+    ofstream fo(filename);
+    for(int i = 0; i<j; i++)fo << alpha_array[i] << "\n";
+    fo.close();
 
     return 0;
 }
