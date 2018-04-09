@@ -13,10 +13,12 @@ void GaussianInterAnalytic::initialize(mat R){
     D = mat(N_p, N_p);
     D.zeros();
     for(int i = 0; i < N_p; i ++ ){
-        mat temp_outer = R.row(i);
+        rowvec temp_outer = R.row(i);
         for(int j = (i+1) ; j < N_p; j++){
-            mat temp_inner = R.row(j);
-            D(i, j) = 1 - a/(std::abs((double) accu(sum(temp_outer - temp_inner))));
+            rowvec temp_inner = R.row(j);
+            //D(i, j) = 1 - a/(std::abs((double) accu(sum(temp_outer - temp_inner))));
+            rowvec temp = temp_outer - temp_inner;
+            D(i, j) = 1 - a/(sqrt(sum(temp%temp)));
         }
     }
 }
@@ -26,20 +28,20 @@ double GaussianInterAnalytic::eval_corr(mat R, int k = -1){
     mat D_c = D;
 
     if(k != -1){
-        mat r_k = R.row(k);
+        rowvec r_k = R.row(k);
         for(int i = 0;  k > i ; i++){
-            double r_ik = std::abs(sum(R.row(i) - r_k));
+            double r_ik = sqrt(sum((R.row(i) - r_k)%(R.row(i) - r_k)));
             if(r_ik > a){
-                D(i, k) = r_ik;
+                D(i, k) = 1 - a/(r_ik);
             }
             else{
                 D(i, k) = 0;
             }
         }
         for(int i = k; i < N_p ; i++){
-            double r_ik = std::abs(sum(R.row(i) - r_k));
+            double r_ik = sqrt(sum((R.row(i) - r_k)%(R.row(i) - r_k)));
             if(r_ik > a){
-                D(k, i) = r_ik;
+                D(k, i) = 1 -a/r_ik;
             }
             else{
                 D(k, i) = 0;
@@ -87,7 +89,6 @@ double GaussianInterAnalytic::E_l(mat R){
 }
 
 double GaussianInterAnalytic::laplace(mat R){
-
     double alpha = params[0];
     double alpha_sq = params[1];
     double beta = params[2];
@@ -174,27 +175,22 @@ double GaussianInterAnalytic::laplace(mat R){
     return scnd_der, V_int;
 }
 
-double GaussianInterAnalytic::drift_force(mat R){
-    //Add this for the drift force to be used in importance sampling
-
-    double sum_1 = 0;
-
+vec GaussianInterAnalytic::drift_force(mat R){
     double alpha = params[0];
     double a = params[3];
 
     vec rk = zeros<vec>(N_d);
     vec rj = zeros<vec>(N_d);
     vec rkj = zeros<vec>(N_d);
+    vec deri_phi_k = zeros<vec>(N_d);
+    vec deri_u_k = zeros<vec>(N_d);
 
     double r_kj;
-    double term = 0;
-    double addt = 0;
 
     for(int k = 0; k < N_p; k++){
         //Number of dimensions
         for(int dk = 0; dk < N_d; dk++){
             rk(dk) = R(k, dk);
-            addt += rk(dk);
         }
 
         for(int j =  0; j < N_p; j++){
@@ -206,17 +202,16 @@ double GaussianInterAnalytic::drift_force(mat R){
             rkj = rk - rj;
             r_kj = sqrt(sum(rkj%rkj));
 
-            term = (-4*alpha*(addt));
-            //r_kj = D(k,j);
+            deri_phi_k = (-4*alpha*(rk));
 
             if (j != k){
-                sum_1 += (-a*(sum(rkj)))/(a*r_kj*r_kj - r_kj*r_kj*r_kj);
+                deri_u_k += -a/(a*r_kj*r_kj - r_kj*r_kj*r_kj)*rkj;
 
             }
         }
     }
 
-    double first_der = term + sum_1;
+    vec first_der = deri_phi_k + deri_u_k;
     return first_der;
 }
 
