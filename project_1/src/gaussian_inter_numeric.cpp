@@ -9,7 +9,9 @@ using namespace arma;
 GaussianInterNumeric::GaussianInterNumeric() : WaveFunc(){}
 
 void GaussianInterNumeric::initialize(mat R){
+    cout << "init" <<endl;
     double a = params[3];
+
     D = mat(N_p, N_p);
     D.zeros();
     for(int i = 0; i < N_p; i ++ ){
@@ -21,6 +23,7 @@ void GaussianInterNumeric::initialize(mat R){
     }
 }
 double GaussianInterNumeric::eval_corr(mat R, int k = -1){
+    cout << "eval_corr" << endl;
     double a = params[3];
     double ret_val = 1;
     mat D_c = D;
@@ -79,6 +82,7 @@ double GaussianInterNumeric::evaluate(mat R){
 }
 
 double GaussianInterNumeric::E_l(mat R){
+    cout << "EL" << endl;
 
     /*
      * since the sampling guarantees that no state in which any |r_i - rj| 
@@ -93,11 +97,27 @@ double GaussianInterNumeric::E_l(mat R){
 
 
 double GaussianInterNumeric::laplace(mat R){
+    cout << "laplace " << endl;
     double h = params[2];
-    double scnd_der = (evaluate(R-h)
-            - 2* evaluate(R)
-            + evaluate(R + h))/(h*h) ;
-    return scnd_der;
+    double lap = 0;
+
+    mat Rp = R;
+    mat Rm = R;
+
+    for(int i = 0; i<N_p; i++){
+        for(int j = 0; j < N_d; j++){
+           Rp(i, j) += h;
+           Rm(i, j) += -h;
+            
+           double temp = evaluate(Rp) + evaluate(Rm) - 2*evaluate(R) ;
+           lap += temp;
+           
+           Rp(i, j) = R(i, j);
+           Rm(i, j) = R(i, j);
+        }
+    } 
+    double fact = 1/(h*h);
+    return lap*fact;
 }
 
 double GaussianInterNumeric::drift_force(mat R){
@@ -111,7 +131,7 @@ double GaussianInterNumeric::ratio(mat R, mat R_p, int k){
     double prob_R = evaluate(R)*eval_corr(R);
     double prob_R_p = evaluate(R_p)*eval_corr(R_p, k);
 	
-	double prop = prop_R_p / prop_R;
+    double prop = prob_R_p / prob_R;
     return prop*prop;
 }
 

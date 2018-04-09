@@ -1,5 +1,5 @@
 #include "../include/wavefunc.h"
-#include "../include/gaussian_noninter_analytic.h"
+#include "../include/gaussian_inter_numeric.h"
 #include "../include/vmc.h"
 
 using namespace std;
@@ -23,12 +23,15 @@ int main(int argc, char *argv[]){
     N_mc = pow(2, mc_exp);
     int N_mc_iter = 1e5; 
     
-    GaussianNonInterAnalytic g;
+    GaussianInterNumeric g;
+
+    mat E;
+    E = mat(N_p, N_p);
+    E.zeros();
 
     vector<vector<double>> numeric_results;
     vector<vector<double>> analytic_results; 
     
-    double gamma = 1;
     double s_km, y_km;
 
     int max_sims = 40;
@@ -66,7 +69,6 @@ int main(int argc, char *argv[]){
         gradient_array[k] = (double) E_der;
 
         if(abs(E_der) < epsilon) break;
-
         if(k == 0) gamma_array[k] = E_der/1000;
         else{
             s_km = alpha_array[k] - alpha_array[k-1];
