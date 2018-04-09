@@ -87,7 +87,6 @@ double GaussianInterAnalytic::E_l(mat R){
 }
 
 double GaussianInterAnalytic::laplace(mat R){
-
     double alpha = params[0];
     double alpha_sq = params[1];
     double beta = params[2];
@@ -175,26 +174,21 @@ double GaussianInterAnalytic::laplace(mat R){
 }
 
 double GaussianInterAnalytic::drift_force(mat R){
-    //Add this for the drift force to be used in importance sampling
-
-    double sum_1 = 0;
-
     double alpha = params[0];
     double a = params[3];
 
     vec rk = zeros<vec>(N_d);
     vec rj = zeros<vec>(N_d);
     vec rkj = zeros<vec>(N_d);
+    vec deri_phi_k = zeros<vec>(N_d);
+    vec deri_u_k = zeros<vec>(N_d);
 
     double r_kj;
-    double term = 0;
-    double addt = 0;
 
     for(int k = 0; k < N_p; k++){
         //Number of dimensions
         for(int dk = 0; dk < N_d; dk++){
             rk(dk) = R(k, dk);
-            addt += rk(dk);
         }
 
         for(int j =  0; j < N_p; j++){
@@ -206,17 +200,16 @@ double GaussianInterAnalytic::drift_force(mat R){
             rkj = rk - rj;
             r_kj = sqrt(sum(rkj%rkj));
 
-            term = (-4*alpha*(addt));
-            //r_kj = D(k,j);
+            deri_phi_k = (-4*alpha*(rk));
 
             if (j != k){
-                sum_1 += (-a*(sum(rkj)))/(a*r_kj*r_kj - r_kj*r_kj*r_kj);
+                deri_u_k += -a/(a*r_kj*r_kj - r_kj*r_kj*r_kj)*rkj;
 
             }
         }
     }
 
-    double first_der = term + sum_1;
+    vector<double> first_der = deri_phi_k + deri_u_k;
     return first_der;
 }
 

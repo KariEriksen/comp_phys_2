@@ -13,16 +13,21 @@ using namespace std;
 
 void vmc::monte_carlo(WaveFunc *psi_t, metadata *exp_vals){
    exp_vals -> exp_E[0] = psi_t -> E_l(R);
+   int c = 0;
 
     for(int i = 1; i < N_mc; i++){
         double tmp = metropolis_hastings(psi_t, exp_vals -> exp_E[i-1]);
         exp_vals -> exp_E[i] = tmp;
+        if(tmp == exp_vals -> exp_E[i-1]){
+            c ++;
+        }
         if(compute_extra){
             double prod_r_cur = (double) as_scalar(accu(square(R)));
             exp_vals -> prod_R[i] = prod_r_cur;
             exp_vals -> prod_R_exp_E[i] = prod_r_cur * tmp;
         }
     }
+    cout << "prosent" << "   " << (double) c/N_mc << endl;
 }
 
 void vmc::set_params(double a_in, double b_in, 
