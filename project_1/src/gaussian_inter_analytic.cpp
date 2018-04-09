@@ -13,10 +13,12 @@ void GaussianInterAnalytic::initialize(mat R){
     D = mat(N_p, N_p);
     D.zeros();
     for(int i = 0; i < N_p; i ++ ){
-        mat temp_outer = R.row(i);
+        rowvec temp_outer = R.row(i);
         for(int j = (i+1) ; j < N_p; j++){
-            mat temp_inner = R.row(j);
-            D(i, j) = 1 - a/(std::abs((double) accu(sum(temp_outer - temp_inner))));
+            rowvec temp_inner = R.row(j);
+            //D(i, j) = 1 - a/(std::abs((double) accu(sum(temp_outer - temp_inner))));
+            rowvec temp = temp_outer - temp_inner;
+            D(i, j) = 1 - a/(sqrt(sum(temp%temp)));
         }
     }
 }
@@ -26,20 +28,20 @@ double GaussianInterAnalytic::eval_corr(mat R, int k = -1){
     mat D_c = D;
 
     if(k != -1){
-        mat r_k = R.row(k);
+        rowvec r_k = R.row(k);
         for(int i = 0;  k > i ; i++){
-            double r_ik = std::abs(sum(R.row(i) - r_k));
+            double r_ik = sqrt(sum((R.row(i) - r_k)%(R.row(i) - r_k)));
             if(r_ik > a){
-                D(i, k) = r_ik;
+                D(i, k) = 1 - a/(r_ik);
             }
             else{
                 D(i, k) = 0;
             }
         }
         for(int i = k; i < N_p ; i++){
-            double r_ik = std::abs(sum(R.row(i) - r_k));
+            double r_ik = sqrt(sum((R.row(i) - r_k)%(R.row(i) - r_k)));
             if(r_ik > a){
-                D(k, i) = r_ik;
+                D(k, i) = 1 -a/r_ik;
             }
             else{
                 D(k, i) = 0;
@@ -173,7 +175,7 @@ double GaussianInterAnalytic::laplace(mat R){
     return scnd_der, V_int;
 }
 
-double GaussianInterAnalytic::drift_force(mat R){
+vec GaussianInterAnalytic::drift_force(mat R){
     double alpha = params[0];
     double a = params[3];
 
@@ -209,7 +211,7 @@ double GaussianInterAnalytic::drift_force(mat R){
         }
     }
 
-    vector<double> first_der = deri_phi_k + deri_u_k;
+    vec first_der = deri_phi_k + deri_u_k;
     return first_der;
 }
 
