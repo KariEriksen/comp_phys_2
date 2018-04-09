@@ -9,56 +9,67 @@ using namespace arma;
 GaussianInterNumeric::GaussianInterNumeric() : WaveFunc(){}
 
 void GaussianInterNumeric::initialize(mat R){
-    cout << "init" <<endl;
     double a = params[3];
 
-    D = mat(N_p, N_p);
-    D.zeros();
     for(int i = 0; i < N_p; i ++ ){
         mat temp_outer = R.row(i);
         for(int j = (i+1) ; j < N_p; j++){
             mat temp_inner = R.row(j);
-            D(i, j) = 1 - a/(std::abs((double) accu(sum(temp_outer - temp_inner))));
+            mat temp = temp_inner - temp_outer;
+            double dist = (double) sqrt(accu(square(temp)));
+            D(i, j) = 1 - a/dist;
         }
     }
 }
 double GaussianInterNumeric::eval_corr(mat R, int k = -1){
-    cout << "eval_corr" << endl;
     double a = params[3];
     double ret_val = 1;
-    mat D_c = D;
-
+    
     if(k != -1){
-        mat r_k = R.row(k);
+        D_p = D;
+
+        mat temp_outer = R.row(k);
         for(int i = 0;  k > i ; i++){
-            double r_ik = std::abs(sum(R.row(i) - r_k));
-            if(r_ik > a){
-                D(i, k) = r_ik;
+            mat temp_inner = R.row(i);
+            mat temp = temp_inner - temp_outer;
+            double dist = (double) sqrt(accu(square(temp)));
+            if(dist > a){
+                D_p(i, k) = 1 - a/dist;
             }
             else{
-                D(i, k) = 0;
+                D_p(i, k) = 0;
             }
         }
+
         for(int i = k; i < N_p ; i++){
-            double r_ik = std::abs(sum(R.row(i) - r_k));
-            if(r_ik > a){
-                D(k, i) = r_ik;
+            mat temp_inner = R.row(i);
+            mat temp = temp_inner - temp_outer;
+            double dist = (double) sqrt(accu(square(temp)));
+    
+            if(dist > a){
+                D_p(k, i) = 1 - a/dist;
             }
             else{
-                D(k, i) = 0;
+                D_p(k, i) = 0;
             }       
         }
+
+        for(int i = 0; i < N_p; i++){
+                for (int j = (i + 1); j < N_p ; j++){
+                    ret_val *= D_p(i, j);
+                    }
+                }
+        return ret_val;
+
     }
-    for(int i = 0; i < N_p; i++){
-        for (int j = (i + 1); j < N_p ; j++){
-            ret_val *= D(i, j);
+    else{
+        for(int i = 0; i < N_p; i++){
+            for (int j = (i + 1); j < N_p ; j++){
+                ret_val *= D(i, j);
+                }
             }
-        }
-    if(k != -1){ 
-        D_p = D;
-        D = D_c; 
-    }
     return ret_val;
+    }
 }
 
 double GaussianInterNumeric::eval_g(mat R){
@@ -78,17 +89,18 @@ double GaussianInterNumeric::eval_g(mat R){
 }
 
 double GaussianInterNumeric::evaluate(mat R){
-    return eval_g(R)*eval_corr(R);
+    double tmp = eval_corr(R); 
+    return eval_g(R)*tmp;
 }
 
 double GaussianInterNumeric::E_l(mat R){
-    cout << "EL" << endl;
 
     /*
      * since the sampling guarantees that no state in which any |r_i - rj| 
      * is zero the internal potential is taken to be zero as a consequence.
     '*/
-    double _psi = evaluate(R);
+    double tmp = eval_corr(R); 
+    double _psi = eval_g(R) *tmp;
     double _laplace_psi = laplace(R);
     double V_ext = 0.5 * (double) as_scalar(accu(sum(square(R))));
     
@@ -97,7 +109,6 @@ double GaussianInterNumeric::E_l(mat R){
 
 
 double GaussianInterNumeric::laplace(mat R){
-    cout << "laplace " << endl;
     double h = params[2];
     double lap = 0;
 
@@ -128,9 +139,9 @@ double GaussianInterNumeric::drift_force(mat R){
 
 
 double GaussianInterNumeric::ratio(mat R, mat R_p, int k){
-    double prob_R = evaluate(R)*eval_corr(R);
-    double prob_R_p = evaluate(R_p)*eval_corr(R_p, k);
-	
+    double prob_R = eval_g(R)*eval_corr(R);
+    double prob_R_p = eval_g(R_p)*eval_corr(R_p, k);
+    
     double prop = prob_R_p / prob_R;
     return prop*prop;
 }
@@ -142,5 +153,9 @@ void GaussianInterNumeric::update(){
 void GaussianInterNumeric::set_params(vector<double> params_i, int N_d_i, int N_p_i){
     N_d = N_d_i;
     N_p = N_p_i;
+    // alpha, beta, h, a
     params = params_i;
+    
+    D = mat(N_p, N_p, fill::zeros);
+    D_p = mat(N_p, N_p, fill::zeros);
 }
