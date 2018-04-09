@@ -137,7 +137,7 @@ double GaussianInterAnalytic::laplace(mat R){
                 part_2 = 2.0/r_kj;
                 part_3 = -a/(a*r_kj - r_kj*r_kj);
 
-                sum_3 += part_1 + part_2 + part_3;
+                sum_3 += part_1 + part_2*part_3;
 
             }
 
