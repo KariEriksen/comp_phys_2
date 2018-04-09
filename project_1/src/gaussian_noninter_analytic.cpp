@@ -46,7 +46,7 @@ double GaussianNonInterAnalytic::laplace(mat R){
     return scnd_der;
 }
 
-double GaussianNonInterAnalytic::drift_force(mat R){
+vec GaussianNonInterAnalytic::drift_force(mat R){
     return 0;
 }
 
