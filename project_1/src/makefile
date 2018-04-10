@@ -1,10 +1,13 @@
-FLAGS = -O3 -fPIC --std=c++11 
+FLAGS = -O3 -fPIC --std=c++11 -larmadillo
 
 app_b.x: main_b.o 
 	g++ -o app_b.x main_b.o vmc.o wavefunc.o gaussian_noninter_numeric.o gaussian_noninter_analytic.o naive_mh.o -O3
 
 app_f.x: main_f.o
-	g++ -o app_f.x main_f.o vmc.o wavefunc.o gaussian_inter_numeric.o naive_mh.o
+	g++ -o app_f.x main_f.o vmc.o wavefunc.o gaussian_noninter_analytic.o naive_mh.o
+
+app_test2.x: main_test_2.o
+	g++ -o app_test2.x main_test_2.o vmc.o wavefunc.o gaussian_inter_analytic.o naive_mh.o 
 
 wavefunc.o: ../include/wavefunc.h wavefunc.cpp
 	clang wavefunc.cpp -c $(FLAGS) 
@@ -14,6 +17,9 @@ gaussian_noninter_numeric.o: ../include/gaussian_noninter_numeric.h gaussian_non
 
 gaussian_noninter_analytic.o: ../include/gaussian_noninter_analytic.h gaussian_noninter_analytic.cpp
 	clang gaussian_noninter_analytic.cpp -c $(FLAGS) 
+
+gaussian_inter_analytic.o: ../include/gaussian_inter_analytic.h gaussian_inter_analytic.cpp
+	clang gaussian_inter_analytic.cpp -c $(FLAGS) 
 
 vmc.o: ../include/vmc.h vmc.cpp ../include/wavefunc.h wavefunc.cpp
 	clang vmc.cpp -std=c++11 -c $(FLAGS) 
@@ -27,9 +33,11 @@ naive_mh.o: naive_mh.cpp ../include/vmc.h vmc.cpp
 main_b.o: main_b.cpp vmc.o gaussian_noninter_numeric.o gaussian_noninter_analytic.o wavefunc.o naive_mh.o
 	clang main_b.cpp $(FLAGS)  -c
 
-main_f.o: main_f.cpp vmc.o gaussian_inter_numeric.o wavefunc.o naive_mh.o
+main_f.o: main_f.cpp vmc.o gaussian_noninter_analytic wavefunc.o naive_mh.o
 	clang main_f.cpp --std=c++11 -c
+
+main_test_2.o: main_test_2.cpp vmc.o gaussian_inter_analytic.o wavefunc.o naive_mh.o
+	clang main_test_2.cpp -c $(FLAGS)
 
 clean:
 	rm *.o
-
