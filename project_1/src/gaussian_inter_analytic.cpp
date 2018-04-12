@@ -10,12 +10,16 @@ GaussianInterAnalytic::GaussianInterAnalytic() : WaveFunc(){}
 
 void GaussianInterAnalytic::initialize(mat R){
     double a = params[3];
+    double beta = params[2];
 
     for(int i = 0; i < N_p; i ++ ){
         mat temp_outer = R.row(i);
         for(int j = (i+1) ; j < N_p; j++){
             mat temp_inner = R.row(j);
             mat temp = temp_inner - temp_outer;
+            if(N_d > 2){
+                temp(2) *= beta;
+            }
             double dist = (double) sqrt(accu(square(temp)));
             D(i, j) = 1 - a/dist;
         }
@@ -135,6 +139,9 @@ double GaussianInterAnalytic::laplace(mat R){
         for(int dk = 0; dk < N_d; dk++){
             rk(dk) = R(k, dk);
         }
+        if(N_d > 2){
+            rk(2) *= beta;
+        }
 
         psi_l = -4*alpha - 2*alpha*beta + 4*alpha_sq*(sum(rk%rk));
         psi_d = -2*alpha*rk;
@@ -144,6 +151,9 @@ double GaussianInterAnalytic::laplace(mat R){
             //Number of dimensions
             for(int dj = 0; dj < N_d; dj++){
                 rj(dj) = R(j, dj);
+            }
+            if(N_d > 2){
+                rj(2) *= beta;
             }
 
             if(j != k){
@@ -167,6 +177,9 @@ double GaussianInterAnalytic::laplace(mat R){
                     //Number of dimensions
                     for(int di = 0; di < N_d; di++){
                         ri(di) = R(i, di);
+                    }
+                    if(N_d > 2){
+                        ri(2) *= beta;
                     }
 
                     if(i != k){
