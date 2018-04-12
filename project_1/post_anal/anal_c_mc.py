@@ -34,7 +34,7 @@ stds = [0, 0]
 
 N_ps = (10,)
 N_mc = 0
-N_ds = (3,)
+N_ds = (2,)
 sim_types = [v for v in sys.argv[1:]]
 
 for N_d_i in N_ds:
@@ -68,7 +68,7 @@ for N_d_i in N_ds:
                     if alpha == 0.4:
                         plotter_func(A, N_d, N_p, N_mc, alpha,sim_type)
 
-filename = ""
+filename = "2"
 for simtype in sim_types:
     filename += "_"+simtype
 plt.xlabel("MC cycles")

@@ -62,7 +62,7 @@ stds = [0, 0]
 
 N_ps = (10,)
 N_mc = 0
-N_ds = (3,)
+N_ds = (2,)
 sim_types = [v for v in sys.argv[1:]]
 
 fast = False 

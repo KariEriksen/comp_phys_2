@@ -1,5 +1,5 @@
 N_mc="17";
-for N_d in "3"
+for N_d in "2"
 do
 for N_p in "10"
 do
