@@ -9,7 +9,6 @@ using namespace arma;
 int main(int argc, char *argv[]){
     // Derived object of WaveFunc class 
  
-    Importance D;
     double beta, step, h; 
     int N_p, N_d, N_mc, mc_exp;
     beta = 1; step = 1; h = 1e-4;
@@ -22,6 +21,8 @@ int main(int argc, char *argv[]){
     }
     N_mc = pow(2, mc_exp);
     
+    Importance D;
+    Importance E;
     GaussianNonInterAnalytic g;
     GaussianNonInterNumeric u; 
 
@@ -39,7 +40,6 @@ int main(int argc, char *argv[]){
 
     for(int i = 0; i < num_sims; i++){
         double alpha = alpha_array[i];
-        Importance D;
         string sim_type_a = "IM_NIA";
         vector<double> params = {alpha, alpha*alpha, beta};
         g.set_params(params, N_d, N_p);
@@ -62,7 +62,6 @@ int main(int argc, char *argv[]){
     
      for(int i = 0; i < num_sims; i++){
         double alpha = alpha_array[i];
-        Importance E;
         string sim_type_n = "IM_NIN";
         vector<double> params = {alpha, beta, h};
         u.set_params(params, N_d, N_p);
