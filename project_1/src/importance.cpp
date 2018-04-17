@@ -32,7 +32,7 @@ double Importance::metropolis_hastings(WaveFunc *psi_t, double prev_E_l){
 	
 	
     double P = psi_t -> ratio(R, R_p, j);
-    P *= P;
+    //P *= P; // Ratio already calculates P^2
 
 	// Calculate drift force for particle j in proposed position
 	mat F_drift_proposed(1, N_d);
