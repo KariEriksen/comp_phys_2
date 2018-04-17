@@ -1,6 +1,5 @@
 #include "../include/gaussian_noninter_numeric.h"
 #include "../include/wavefunc.h"
-
 #include <armadillo>
 
 using namespace std;
@@ -18,17 +17,8 @@ double GaussianNonInterNumeric::E_l(mat R){
 
 double GaussianNonInterNumeric::evaluate(mat R){
     double alpha = params[0];
-    //double beta = params[1];
-
-    /*if(N_d > 2){
-        R.col(2) *= beta;
-    }*/
     double ret_val = 0;
     double internal = accu(square(R));
-	
-    /*if(N_d >2){
-        R.col(2) *= 1/beta;
-    }*/
 	
     ret_val = (double) as_scalar(exp(-alpha *(internal)));
     return ret_val;

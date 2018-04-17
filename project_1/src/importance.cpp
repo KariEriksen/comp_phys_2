@@ -31,7 +31,6 @@ double Importance::metropolis_hastings(WaveFunc *psi_t, double prev_E_l){
 	R_p.row(j) += 0.5*F_drift*dt + zeta*sqrt(dt);
 	
 	
-
     double P = psi_t -> ratio(R, R_p, j);
     P *= P;
 
