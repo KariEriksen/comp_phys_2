@@ -131,7 +131,7 @@ double GaussianInterNumeric::laplace(mat R){
     return lap*fact;
 }
 
-double GaussianInterNumeric::drift_force(mat R){
+mat GaussianInterNumeric::drift_force(mat R){
     double h = params[2];
     double der = (evaluate(R + h) - evaluate(R))/h;
     return der;
