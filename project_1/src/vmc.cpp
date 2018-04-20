@@ -13,11 +13,27 @@ using namespace std;
 
 void vmc::monte_carlo(WaveFunc *psi_t, metadata *exp_vals){
    exp_vals -> exp_E[0] = psi_t -> E_l(R);
+   mat square_R;
+
+   if(compute_extra || compute_obd)
+       square_R = square(R);
+       if(compute_extra){
+            double prod_r_cur = (double) as_scalar(accu(square_R)); 
+            exp_vals -> prod_R[0] = prod_r_cur;
+            exp_vals -> prod_R_exp_E[0] = prod_r_cur * exp_vals -> exp_E[0];
+       }
+       if(compute_obd){
+            /*r = sqrt(x^2 + y^2)*/
+            mat all_radii= sqrt(sum(square_R, 1));
+            count_obd(all_radii, *exp_vals);
+       }
 
     for(int i = 1; i < N_mc; i++){
         double tmp = metropolis_hastings(psi_t, exp_vals -> exp_E[i-1]);
         exp_vals -> exp_E[i] = tmp;
-        if(compute_extra){
+
+        if(compute_extra || compute_obd){
+
             double prod_r_cur = (double) as_scalar(accu(square(R)));
             exp_vals -> prod_R[i] = prod_r_cur;
             exp_vals -> prod_R_exp_E[i] = prod_r_cur * tmp;
@@ -27,7 +43,8 @@ void vmc::monte_carlo(WaveFunc *psi_t, metadata *exp_vals){
 
 void vmc::set_params(double a_in, double b_in, 
         int N, int dim,int mc_cycles,
-        bool meta_bool
+        bool meta_bool,
+        bool obd_bool
     ){
     a = a_in;
     b = b_in;
@@ -37,6 +54,7 @@ void vmc::set_params(double a_in, double b_in,
     R = mat(N_p, N_d);
     gen = new mt19937(rd());
     compute_extra = meta_bool;
+    compute_obd = obd_bool;
 }
 
 void vmc::generate_positions(double step_int){
@@ -52,9 +70,24 @@ void vmc::generate_positions(double step_int){
  
 }
 
+void vmc::count_obd(mat radii, metadata* all_exp){
+    
+    for(int i = 0; i < N_p ; i++){
+        double tmp_rad = radii[i];
+        for(int j = 0; j < obd_n_bins - 1; j++){
+            if(tmp_rad > obd_bins[j] && tmp_rad < obd_bins[j+1])
+                all_exp -> obd[j] += 1;
+                break;
+        }
+    }
+}
+
+
 vector<double> vmc::solve(WaveFunc *psi_t, string filename){
     // -> is dereferencing and  member access to methods of class.
     
+    obd_n_bins = 100;
+
     generate_positions(step);
     psi_t -> initialize(R);
     double evaluated = psi_t -> evaluate(R);
@@ -82,6 +115,17 @@ vector<double> vmc::solve(WaveFunc *psi_t, string filename){
         all_exp.prod_R_exp_E = new double [N_mc];
     }
 
+    if(compute_obd){
+        all_exp.obd = new int[obd_n_bins];
+        obd_bins = new double[obd_n_bins];
+
+        double outer_limit = 5;
+        
+        for(int i = 0; i<obd_n_bins; i++){
+            obd_bins[i] = i * outer_limit / obd_n_bins;
+        }
+    }
+
     int start_s = clock();
     monte_carlo(psi_t, &all_exp);
     int end_s = clock();
@@ -99,6 +143,7 @@ vector<double> vmc::solve(WaveFunc *psi_t, string filename){
         for(int i = 0; i < N_mc; i++) arma_prod_r_el(i, 0) = all_exp.prod_R_exp_E[i];
     } 
 
+    
     string header = "# N_p: " + to_string(N_p) 
         + "| N_d: " + to_string(N_d) 
         + "| N_mc: " + to_string(N_mc) ;
