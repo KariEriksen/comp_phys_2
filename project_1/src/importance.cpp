@@ -3,6 +3,7 @@
 
 using namespace arma;
 
+const double PI = 3.141592653589793;
 double Importance::metropolis_hastings(WaveFunc *psi_t, double prev_E_l){
     mat R_p(size(R));
     R_p = R;
@@ -32,7 +33,6 @@ double Importance::metropolis_hastings(WaveFunc *psi_t, double prev_E_l){
 	
 	
     double P = psi_t -> ratio(R, R_p, j);
-    //P *= P; // Ratio already calculates P^2
 
 	// Calculate drift force for particle j in proposed position
 	mat F_drift_proposed(1, N_d);
@@ -51,9 +51,13 @@ double Importance::metropolis_hastings(WaveFunc *psi_t, double prev_E_l){
 		term2 = R(j,i) - R_p(j,i) - 0.5*dt*F_drift_proposed(i);
 		term3 = 2*dt;
 
-		Green_prev += accu(exp(-(term1*term1)/term3));
-		Green_proposed += accu(exp(-(term2*term2)/term3));
+		Green_prev += accu(-(term1*term1)/term3);
+		Green_proposed += accu(-(term2*term2)/term3);
 	}
+	// Scale by term 4 after loop to save some flops
+	double term4 = 1/pow((2*PI*dt),(3*N_p/2));
+	Green_prev *= term4;
+	Green_proposed *= term4;
 
 	double q = P*Green_prev/Green_proposed;
     double eps = dis_p(*gen);
