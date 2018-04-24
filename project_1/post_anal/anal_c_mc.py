@@ -13,9 +13,18 @@ import numpy as np
 
 def plotter_func(A, N_d, N_p, N_mc, alphas,sim_type):
 
-    lab = sim_type + str(N_d) + "D|" + str(N_p) + r" p|\alpha " + str(alphas)
+    lab = sim_type + str(int(N_d)) + "D|" + str(int(N_p)) + r" p|\alpha " + str(alphas)
     cycles = np.arange(int(N_mc))
+
     plt.plot(cycles, A, label=lab)
+    figname = sim_type + "_" + str(int(N_d)) + "D_" + str(int(N_p)) + "P"
+    
+    plt.xlabel("MC cycles")
+    plt.ylabel("E_L")
+    plt.legend()
+    plt.savefig(figname+".png")
+    plt.clf()
+    plt.cla()
     return
 
 
@@ -32,9 +41,9 @@ mask = [not f.endswith("data.csv") for f in filenames]
 filenames = sorted(filenames[mask], key = lambda x: float(alpha_regex_obj.search(x).group(1)))
 stds = [0, 0]
 
-N_ps = (10,)
+N_ps = (1,10)
 N_mc = 0
-N_ds = (1,)
+N_ds = (1,2,3)
 sim_types = [v for v in sys.argv[1:]]
 
 for N_d_i in N_ds:
@@ -68,12 +77,3 @@ for N_d_i in N_ds:
                     if alpha == 0.4:
                         plotter_func(A, N_d, N_p, N_mc, alpha,sim_type)
 
-filename = ""
-for d in N_ds:
-    filename += str(d) + "_"
-for simtype in sim_types:
-    filename += "_"+simtype
-plt.xlabel("MC cycles")
-plt.ylabel("Polyfit E_L")
-plt.legend()
-plt.savefig(filename+".png")
