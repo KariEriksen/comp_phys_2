@@ -43,8 +43,8 @@ double Importance::metropolis_hastings(WaveFunc *psi_t, double prev_E_l){
 
 	// Calculate greens functions
 	for(int i = 0; i < N_d; i++){
-		Greens += 0.5*(F_drift_proposed(j,i) + F_drift(j,i))*
-			(0.5*dt*0.5*(F_drift(j,i)-F_drift_proposed(j,i)-R_p(j,i) + R(j,i)));
+		Greens += 0.5*(F_drift_proposed(i) + F_drift(i))*
+			(0.5*dt*0.5*(F_drift(i) - F_drift_proposed(i)) - R_p(j,i) + R(j,i));
 
 	}
 	// Scale by term 4 after loop to save some flops
