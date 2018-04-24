@@ -7,7 +7,7 @@ const double PI = 3.141592653589793;
 double Importance::metropolis_hastings(WaveFunc *psi_t, double prev_E_l){
     mat R_p(size(R));
     R_p = R;
-	double dt = 0.001; // dt in [0.001,0.01] should produce stable ground state results.
+	double dt = 0.005; // dt in [0.001,0.01] should produce stable ground state results.
 	double beta = psi_t -> params[2];
 
     uniform_int_distribution<int> dis_r(0, N_p - 1);
