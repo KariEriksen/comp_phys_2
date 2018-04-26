@@ -50,6 +50,12 @@ main_test_2.o: main_test_2.cpp
 
 app_test2.o: main_test_2.o $(gia) $(mh) $(depend_all)
 	g++ -o test2.x main_test_2.o $(gia) $(mh) $(depend_all) $(FLAGS)
+
+main_g.o: main_g.cpp 
+	clang main_g.cpp $(FLAGS) -c
+
+app_g.x: main_g.o $(gnia) $(mh) $(depend_all)
+	g++ -o app_g.x main_g.o $(gnia) $(mh) $(depend_all) $(FLAGS)
 	
 clean:
 	rm -f *.x
