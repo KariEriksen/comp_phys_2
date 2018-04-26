@@ -23,11 +23,7 @@ int main(int argc, char *argv[]){
     N_mc = pow(2, mc_exp);
     int N_mc_iter = 1e5; 
     
-    GaussianInterNumeric g;
-
-    mat E;
-    E = mat(N_p, N_p);
-    E.zeros();
+    WaveFunc* g = new GaussianInterNumeric ();
 
     vector<vector<double>> numeric_results;
     vector<vector<double>> analytic_results; 
@@ -36,6 +32,8 @@ int main(int argc, char *argv[]){
 
     int max_sims = 40;
     int k = 0;
+    
+    double a = 0.0043;
 
     double E_der = 0;
     double epsilon = 1e-6;
@@ -43,14 +41,16 @@ int main(int argc, char *argv[]){
     double *alpha_array = new double[max_sims];
     double *gamma_array = new double[max_sims];
     double *gradient_array = new double[max_sims];
-
+    
     alpha_array[0] = alpha_start;
     
     while(k < max_sims){
         NaiveMh D;
         string sim_type_a = "GD_NM_NIA";
-        vector<double> params = {alpha_array[k], alpha_array[k]*alpha_array[k], beta};
-        g.set_params(params, N_d, N_p);
+        vector<double> params = {alpha_array[k], beta, h, a};
+
+        g -> set_params(params, N_d, N_p);
+        
         //must be called or else you literally have no random numbers
         //args are alpha, beta, N_particles, N_dims, N_mccycles
         D.set_params(alpha_array[k], beta, N_p, N_d, N_mc_iter, true);
@@ -58,7 +58,8 @@ int main(int argc, char *argv[]){
         //reference must be passed or else you get static linking 
         vector<double> result;
         string filename = "../data/temp.csv";
-        result = D.solve(&g, filename);
+        result = D.solve(g, filename);
+
         double exp_E = result[0];
         double exp_prod_rsquared = result[1];
         double exp_prod_rsquared_el = result[2];
@@ -106,7 +107,7 @@ int main(int argc, char *argv[]){
         j++;
     }
     
-    string filename = "../data/GD_NM_NIA_np_"+to_string(N_d)+"_nd_"+to_string(N_d);
+    string filename = "../data/GD_NM_IN_np_"+to_string(N_d)+"_nd_"+to_string(N_d);
     filename += "_sa_"+to_string(alpha_start)+".csv"; 
     ofstream fo(filename);
     for(int i = 0; i<j; i++)fo << alpha_array[i] << "\n";
