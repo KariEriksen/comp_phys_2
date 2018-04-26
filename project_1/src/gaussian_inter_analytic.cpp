@@ -77,9 +77,10 @@ double GaussianInterAnalytic::eval_g(mat R){
 
     mat R_c(size(R));
     R_c = R;
-    if(N_d > 2){
+    /*
+	if(N_d > 2){
         R_c.col(2) *= beta;
-    }
+    }*/
     double ret_val = 0;
     double internal = accu(sum(square(R_c)));
 
