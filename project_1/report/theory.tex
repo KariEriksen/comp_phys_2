@@ -124,7 +124,7 @@ Like most problems in physics the variational quantum problem is one of optimiza
 \noindent Where we have opted to update the parameter $\gamma$ iteratively by the Barzilai-Borwein formula which is a method that uses an iterative approach to the step size $\gamma$ derived in much the same manner as for quasi-Newton methods\cite{OptTeory}. The only constraint we have to enforce is that $0 < \alpha$. In the algorithm we have a simple rule  that checks the sign of $\alpha$ and makes a correction if it is out-of-bounds. For $i > 0$ the step size $\gamma_i$ is then given as: 
 
 \begin{equation}
-\gamma_i = (\alpha_{i+1} - \alpha) \cdot \frac{1}{\expect{E_L}^{i+1} - \expect{E_L}^i}
+\gamma_i = (\alpha_{i+1} - \alpha_i) \cdot \frac{1}{\expect{E_L}^{i+1} - \expect{E_L}^i}
 \end{equation}
 
 \noindent We also introduce the notation $\frac{\partial \langle E_L^i \rangle}{\partial \alpha} = \expect{E_L}^\alpha_{i}$ for brevity, and the same notation will be used for the tiral wavefunction $\psi_T$. The partial derivative itself can be found by the equation\footnote{The equation was retrieved from the lecture notes} 
