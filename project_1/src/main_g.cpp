@@ -1,6 +1,7 @@
 #include "../include/vmc.h"
 #include "../include/wavefunc.h"
 #include "../include/gaussian_noninter_analytic.h"
+#include "../include/gaussian_inter_analytic.h"
 
 #include <armadillo>
 
@@ -9,9 +10,8 @@ using namespace arma;
 
 
 int main(int argc, char *argv[]){
-    NaiveMh D; 
     double beta, step; 
-    double alpha = 0.3;
+    double alpha = 0.4;
     int N_p, N_d, N_mc, mc_exp;
  
     if( argc < 3){
@@ -26,22 +26,36 @@ int main(int argc, char *argv[]){
     step = 0.1;
     
     GaussianNonInterAnalytic g; 
-    string filename = "test.csv";
+    GaussianInterAnalytic u;
 
-    vector<double> params = {alpha, alpha*alpha, beta};
-    g.set_params(params, N_d, N_p);
-    //must be called or else you literally have no random numbers
-    //args are alpha, beta, N_particles, N_dims, N_mccycles
-    D.set_params(alpha, beta, N_p, N_d, N_mc,
-            false, 
-            true);
-    D.step = step;
-    //reference must be passed or else you get static linking 
-    //
-    vector<double> result; 
+    vector<string> inter_type = {"NIA", "IA"};
     
-    result = D.solve(&g, filename); 
+    for(int i = 0; i < 2; i++){
 
+        NaiveMh D; 
+
+        string filename = "NM_"+inter_type[i]+"_a_"+ 
+            to_string(alpha) + 
+            "_b_" + to_string(beta) + 
+            "_step_" + to_string(step) + 
+            "_np_" + to_string(N_p) +
+            "_nd_" + to_string(N_d) + ".csv" ;
+
+        vector<double> params = {alpha, alpha*alpha, beta};
+        g.set_params(params, N_d, N_p);
+        //must be called or else you literally have no random numbers
+        //args are alpha, beta, N_particles, N_dims, N_mccycles
+        D.set_params(alpha, beta, N_p, N_d, N_mc,
+                false, 
+                true);
+        D.step = step;
+        //reference must be passed or else you get static linking 
+        //
+        vector<double> result; 
+        
+        if(i == 0) result = D.solve(&g, filename); 
+        else result = D.solve(&u, filename);
+    }
 
 }
 
