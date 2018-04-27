@@ -11,7 +11,7 @@ GaussianInterAnalytic::GaussianInterAnalytic() : WaveFunc(){}
 void GaussianInterAnalytic::initialize(mat R){
     double a = params[3];
     double beta = params[2];
-
+    
     for(int i = 0; i < N_p; i ++ ){
         mat temp_outer = R.row(i);
         for(int j = (i+1) ; j < N_p; j++){
@@ -21,10 +21,12 @@ void GaussianInterAnalytic::initialize(mat R){
                 temp(2) *= beta;
             }
             double dist = (double) sqrt(accu(square(temp)));
+
             D(i, j) = 1 - a/dist;
         }
     }
 }
+
 double GaussianInterAnalytic::eval_corr(mat R, int k = -1){
     double a = params[3];
     double ret_val = 1;
@@ -97,8 +99,6 @@ double GaussianInterAnalytic::evaluate(mat R){
 }
 
 double GaussianInterAnalytic::E_l(mat R){
-    double tmp = eval_corr(R);
-    double _psi = eval_g(R) *tmp;
     double _laplace_psi = laplace(R);
     double V_ext = 0.5 * (double) as_scalar(accu(sum(square(R))));
 
@@ -129,9 +129,6 @@ double GaussianInterAnalytic::laplace(mat R){
         double psi_l = 0;
         double part_1 = 0;
         double part_2 = 0;
-        double part_3 = 0;
-        double part_4 = 0;
-        double part_5 = 0;
         double part_6 = 0;
 
         vec sum_1 = zeros<vec>(N_d);
@@ -160,17 +157,16 @@ double GaussianInterAnalytic::laplace(mat R){
 
                 rkj = rk - rj;
                 r_kj = sqrt(sum(rkj%rkj));
-                double d_u_rkj = -a/(a*r_kj - r_kj*r_kj);
+
+                double r_kj_sq  = r_kj * r_kj;
+                double d_u_rkj = -a/(a*r_kj - r_kj_sq);
 
                 sum_1 += (rkj)/r_kj*(d_u_rkj);
 
-                part_1 = (a*(a-2*r_kj))/(r_kj*r_kj*(a - r_kj)*(a - r_kj));
+                part_1 = (a*(a-2*r_kj))/(r_kj_sq*(a - r_kj)*(a - r_kj));
                 part_2 = 2.0/r_kj;
-                part_3 = -a/(a*r_kj - r_kj*r_kj);
 
-                sum_3 += part_1 + part_2*part_3;
-
-
+                sum_3 += part_1 + part_2*d_u_rkj;
 
                 for(int i = 0; i < N_p; i++){
 
@@ -187,11 +183,9 @@ double GaussianInterAnalytic::laplace(mat R){
                         rki = rk - ri;
                         r_ki = sqrt(sum(rki%rki));
                         double d_u_rki = -a/(a*r_ki - r_ki*r_ki);
-                        part_4 = d_u_rki;
-                        part_5 = d_u_rkj;
                         part_6 = (sum(rki%rkj))/(r_ki*r_kj);
 
-                        sum_2 += part_4*part_5*part_6;
+                        sum_2 += d_u_rki*d_u_rkj*part_6;
                     }
                 }
             }
@@ -259,14 +253,12 @@ void GaussianInterAnalytic::update(){
 void GaussianInterAnalytic::set_params(vector<double> params_i, int N_d_i, int N_p_i){
     N_d = N_d_i;
     N_p = N_p_i;
+
+    // alpha alpha_sq beta a
     params = params_i;
 
     D = mat(N_p, N_p, fill::zeros);
     D_p = mat(N_p, N_p, fill::zeros);
 }
-
-
-
-
 
 
