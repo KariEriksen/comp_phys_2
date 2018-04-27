@@ -34,12 +34,14 @@ void vmc::monte_carlo(WaveFunc *psi_t, metadata *exp_vals){
         double tmp = metropolis_hastings(psi_t, exp_vals -> exp_E[i-1]);
 
         if(compute_extra || compute_obd){
-            square_R = (tmp == exp_vals -> exp_E[i-1]) ? square_R : square(R);
+            if(exp_vals -> exp_E[i-1] != tmp){
+                square_R = square(R);
+            } 
 
             if(compute_extra){
                 double prod_r_cur = (double) as_scalar(accu(square_R)); 
                 exp_vals -> prod_R[i] = prod_r_cur;
-                exp_vals -> prod_R_exp_E[i] = prod_r_cur * exp_vals -> exp_E[i];
+                exp_vals -> prod_R_exp_E[i] = prod_r_cur * tmp;
             }
             if(compute_obd){
                 /*r = sqrt(x^2 + y^2)*/
@@ -107,13 +109,12 @@ void vmc::count_obd(mat radii, metadata* all_exp){
 vector<double> vmc::solve(WaveFunc *psi_t, string filename){
     // -> is dereferencing and  member access to methods of class.
     
-    obd_n_bins = 600;
+    obd_n_bins = 100;
 
     generate_positions(step);
     psi_t -> initialize(R);
     double evaluated = psi_t -> evaluate(R);
     double step_init = step;
-    
     /*
      *Accepting a state in which a particle pair is closer than the permitted
      * distance "a" is unphysical, and a waste of MC-cycles. We guarantee that the
