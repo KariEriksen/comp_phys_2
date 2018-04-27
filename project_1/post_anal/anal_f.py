@@ -1,17 +1,19 @@
 import numpy as np 
 import pandas as pd
+import numpy as np
 
 import matplotlib.pyplot as plt 
-import seaborn as sns 
+import seaborn as sns
 
 sns.set()
 
-obd_df =  np.loadtxt("../data/fuckyou.csv", delimiter=",")
 
+f1 = "../data/GD_NM_IA_np_5_nd_3_sa_0.400000.csv"
+f2 = "../data/GD_NM_IA_np_5_nd_3_sa_0.300000.csv"
+f3 = "../data/GD_NM_IA_np_5_nd_3_sa_0.600000.csv"
 
-plt.hist(x = obd_df[:,1], bins = obd_df[:,0])
-plt.xlabel(r"radius $r$")
-plt.ylabel(r"density $\rho(r)$")  
-plt.show()
+fn = [f1, f2, f3]
+arrays = []
 
-
+for fname in fn:
+	arrays.append(np.loadtxt(fname, delimiter = ","))
