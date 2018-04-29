@@ -1,5 +1,4 @@
-#include "../include/gaussian_noninter_numeric.h"
-#include "../include/gaussian_noninter_analytic.h"
+#include "../include/gaussian_inter_analytic.h"
 #include "../include/wavefunc.h"
 #include "../include/vmc.h"
 
@@ -11,7 +10,7 @@ int main(int argc, char *argv[]){
 
 	double beta, step, h, a; 
 	int N_p, N_d, N_mc, mc_exp;
-	beta = 1; step = 1; h = 1e-4; a = 1.0;
+	beta = 1; step = 1; h = 1e-4; a = 0.0043;
 	if( argc < 3){
 		cout << "Wrong usage" << endl;    
 		exit(1);
@@ -57,19 +56,19 @@ int main(int argc, char *argv[]){
 		analytic_results.push_back(result);
 	}
 
-	string meta_filename = "../data/IM_NIA_NIN_meta_np_" + to_string(N_p)+
+	string meta_filename = "../data/IM_INA_meta_np_" + to_string(N_p)+
 		"_nd_" + to_string(N_d)+   
 		+"_data"
 		+".csv";
 	ofstream meta_file(meta_filename);
 
-	meta_file << "alpha,analytic_energy,analytic_time,numeric_energy,numeric_time" << endl;
-	double a = alpha_start;
+	meta_file << "alpha,analytic_energy,analytic_time" << endl;
+	double as = alpha_start;
 
 	for(int i = 0; i<num_sims ; i++){
-		meta_file << a << "," << analytic_results[i][0] << "," << analytic_results[i][1] ;
-		meta_file << "," << numeric_results[i][0] << "," << numeric_results[i][1] << endl;
-		a += alpha_step;
+		meta_file << as << "," << analytic_results[i][0] << "," << analytic_results[i][1] ;
+		//meta_file << "," << numeric_results[i][0] << "," << numeric_results[i][1] << endl;
+		as += alpha_step;
 	}
 
 	meta_file.close();

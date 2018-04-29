@@ -73,7 +73,7 @@ double GaussianInterAnalytic::eval_corr(mat R, int k = -1){
 }
 double GaussianInterAnalytic::eval_g(mat R){
     double alpha = params[0];
-    double beta = params[2];
+    //double beta = params[2];
 
     mat R_c(size(R));
     R_c = R;
@@ -191,7 +191,7 @@ double GaussianInterAnalytic::laplace(mat R){
     return laplace_return;
 }
 
-mat GaussianInterAnalytic::drift_force(mat R){
+mat GaussianInterAnalytic::drift_force(mat R, int j){
     double alpha = params[0];
     double a = params[3];
 
@@ -228,7 +228,7 @@ mat GaussianInterAnalytic::drift_force(mat R){
     }
 
     mat first_der = deri_phi_k + deri_u_k;
-    return first_der;
+    return first_der.row(j);
 }
 
 double GaussianInterAnalytic::ratio(mat R, mat R_p, int k){
@@ -252,9 +252,5 @@ void GaussianInterAnalytic::set_params(vector<double> params_i, int N_d_i, int N
     D = mat(N_p, N_p, fill::zeros);
     D_p = mat(N_p, N_p, fill::zeros);
 }
-
-
-
-
 
 
