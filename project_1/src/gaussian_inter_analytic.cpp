@@ -191,7 +191,9 @@ double GaussianInterAnalytic::laplace(mat R){
     return laplace_return;
 }
 
-mat GaussianInterAnalytic::drift_force(mat R, int j){
+mat GaussianInterAnalytic::drift_force(mat R, int particle){
+	// Returns the drift force for particle j
+	int interesting_particle = particle;
     double alpha = params[0];
     double a = params[3];
 
@@ -228,7 +230,7 @@ mat GaussianInterAnalytic::drift_force(mat R, int j){
     }
 
     mat first_der = deri_phi_k + deri_u_k;
-    return first_der.row(j);
+    return first_der.row(interesting_particle);
 }
 
 double GaussianInterAnalytic::ratio(mat R, mat R_p, int k){

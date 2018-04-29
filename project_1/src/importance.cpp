@@ -23,9 +23,7 @@ double Importance::metropolis_hastings(WaveFunc *psi_t, double prev_E_l){
 	}
 
 	// Calculate drift force for that particle.
-	// TODO: Send full R to drift-force together with int j.
-	// Non-interactive calculates only for one row and returns that row
-	// Interactive calculates for whole matrix and returns relevant row.
+	// TODO: Make sure it actually works.
     mat F_drift(1, N_d);
 	F_drift = psi_t -> drift_force(R, j);
 
