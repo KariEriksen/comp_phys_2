@@ -37,9 +37,9 @@ double GaussianNonInterAnalytic::laplace(mat R){
     return scnd_der;
 }
 
-mat GaussianNonInterAnalytic::drift_force(mat R){
+mat GaussianNonInterAnalytic::drift_force(mat R, int j){
 	double alpha = params[0];
-    return -4*alpha*R;
+    return -4*alpha*R.row(j);
 }
 
 
