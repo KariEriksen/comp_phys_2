@@ -31,3 +31,24 @@ Applying the gradient descent method to tune the variational parameter resulted 
 \includegraphics{figures/GD_NM_NIA.pdf}
 \caption{Finding the optimal $\alpha$ with GD. This plot show the number of iterations it took to reach the minimum for the non-interactive spherical trap.}\label{fig:gd_nm_nia}
 \end{figure} 
+
+\subsection*{\textbf{1e:} The repulsive interaction}
+
+\begin{table}[]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+    \hline
+         $N$ & $\alpha$ & $\sigma^2$ & $\langle E_L \rangle$ & $\frac{\langle E_L \rangle}{N}$ & CPU-time [sek] \\
+         \hline
+         10 & 0.480013 & 1.73405e-06 & 21.643 & 2.1643 & 12.31 \\
+         \hline
+         50 & 0.480127 & 1.75833e-06 & 111.066 & 2.2213 & 1253.91\\
+         \hline
+         100 & 0.480279 & 1.75902e-06 & 228.682 & 2.2868 & 9854.01 \\
+         \hline
+    \end{tabular}
+    \caption{VMC with Metropolis sampling. Calculations done in 3 dimensions with number of cycles $N_{MC} = 10^{6}$ for an elliptical trap, $\beta = 2.82843$ with interaction, $a = 0.0043$. Step length $t = 0.5$.}
+    \label{tab:Re.int.}
+\end{table}
+
+Comment to be added to discussion: we see that the expectation value of the local energy increases by a small amount. This is consistent with what we see in Fig. 2 in (ref. to paper in Physics by J.L. DuBois). 
