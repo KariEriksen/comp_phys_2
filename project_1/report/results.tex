@@ -24,10 +24,19 @@ In general the energy in the non-interactive case at the variational minimum for
 Where $N$ is the number of particles and $D$ is their dimension. From the figures referenced in the beginning of this section it is clear that both the numerical and analytic solutions converge to the correct solution.
 
 \subsection*{\textbf{1f:} Finding the best parameter}
-Applying the gradient descent method to tune the variational parameter resulted in satisfying convergence to the optimal value for the variational parameter $\alpha$. The simulation results are included in figure \ref{fig:gd_nm_nia}\footnote{The simulations were produced with the file \lstinline{mainf_f.cpp} at commit \lstinline{2d03030ec5a711383d582dde23869483d122c6b6}}
+Applying the gradient descent method to tune the variational parameter resulted in satisfying convergence to the optimal value for the variational parameter $\alpha$. The simulation results are included in figure \ref{fig:gd_nm_nia}\footnote{The simulations were produced with the file \lstinline{mainf_f.cpp} at commit \lstinline{2d03030ec5a711383d582dde23869483d122c6b6}}. After the convergence was shown to be satisfactory for the non-interactive case simulations were run for the hamiltonian with interaction \footnote{commit \lstinline{f285327a7d95349a874aafe16d8ecd5f48c5cef5}}. The result shows for the variational parameter as  $\alpha_{min} \approx 0.4988\ldots$. These findings are illustrated in figure \ref{fig:gd_nm_ia}. 
 
 
 \begin{figure}
 \includegraphics{figures/GD_NM_NIA.pdf}
 \caption{Finding the optimal $\alpha$ with GD. This plot show the number of iterations it took to reach the minimum for the non-interactive spherical trap.}\label{fig:gd_nm_nia}
 \end{figure} 
+
+\begin{figure}
+\includegraphics{figures/GD_NM_IA.pdf}
+\caption{Finding the optimal $\alpha$ with GD. This plot shows the first central moment for the local energy on the y-axis, the variational parameter on the x axis and the GD iteration number on the z-axis for the interactive spherical trap. We observe that the GD algorithm finds a satisfyingly stable minimum with few iterations}\label{fig:gd_nm_ia}
+\end{figure} 
+
+\subsection*{\textbf{1g:} Onebody densities}
+
+The onebody density was computed the counting of particles in areas around the origo. The origo was chosen as it is the natural focal point of particles in the harmonic oscillator as formulated in the project. The bins were equipartitioned by a set step length trivially determined as $\Delta L = L/n_{bins}$ where $L$ denotes the endpoint of the interval and $n_{bins}$ the total number of bins. The implementation of the algorithm can be found in \lstinline{vmc.cpp}. A simulation was run to compute the onebody densities for both the interactive and non-interacitve case for the respective minimas of the variational parameter $\alpha$. 
