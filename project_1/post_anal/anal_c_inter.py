@@ -123,7 +123,6 @@ for N_d_i in N_ds:
         anal_min_cord = (mean_n_times.alpha[anal_min_index[0][0]],
                 mean_n_times.analytic_energy[anal_min_index[0][0]])
         
-        # removed +"_"+sim_types[1][3:] from title
         title =  sim_types[0]+ "_" + "VMC with "
         title += r"$N_P = ${} | $N_D = ${} | $N_{{MC}}$ = {:.0e}".format(N_p_i, N_d_i, int(N_mc))
         title += r"| time_analytic : ${T_A} = $" 
@@ -149,6 +148,7 @@ for N_d_i in N_ds:
             errs = np.array(stds[0], dtype=float)
             print(type(errs))
             print(np.shape(errs))
+            print(anal," ",x)
 
             plt.errorbar(x, anal, fmt = "^-",
                     barsabove = True,

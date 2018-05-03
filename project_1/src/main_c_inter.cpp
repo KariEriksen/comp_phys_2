@@ -66,7 +66,7 @@ int main(int argc, char *argv[]){
 	double as = alpha_start;
 
 	for(int i = 0; i<num_sims ; i++){
-		meta_file << as << "," << analytic_results[i][0] << "," << analytic_results[i][1] ;
+		meta_file << as << "," << analytic_results[i][0] << "," << analytic_results[i][1] << endl;
 		//meta_file << "," << numeric_results[i][0] << "," << numeric_results[i][1] << endl;
 		as += alpha_step;
 	}
