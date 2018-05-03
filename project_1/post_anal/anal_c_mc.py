@@ -22,8 +22,7 @@ def plotter_func(A, N_d, N_p, N_mc, alphas,sim_type):
     plt.xlabel("MC cycles")
     plt.ylabel("E_L")
     plt.legend()
-    plt.show()
-    #plt.savefig(figname+".png")
+    plt.savefig(figname+".png")
     plt.clf()
     plt.cla()
     return

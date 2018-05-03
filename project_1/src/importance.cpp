@@ -6,7 +6,7 @@ using namespace arma;
 double Importance::metropolis_hastings(WaveFunc *psi_t, double prev_E_l){
     mat R_p(size(R));
     R_p = R;
-	double dt = 0.01; // dt in [0.001,0.01] should produce stable ground state results.
+	double dt = psi_t -> params[4];
 	double beta = psi_t -> params[2];
 
     uniform_int_distribution<int> dis_r(0, N_p - 1);
@@ -47,8 +47,6 @@ double Importance::metropolis_hastings(WaveFunc *psi_t, double prev_E_l){
 			(0.5*dt*0.5*(F_drift(i) - F_drift_proposed(i)) - R_p(j,i) + R(j,i));
 
 	}
-	// Scale by term 4 after loop to save some flops
-	//double term4 = 1/pow((2*PI*dt),(3*N_p/2));
 	Greens = exp(Greens);
 
     double eps = dis_p(*gen);
