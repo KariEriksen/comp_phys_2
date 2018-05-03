@@ -22,7 +22,8 @@ def plotter_func(A, N_d, N_p, N_mc, alphas,sim_type):
     plt.xlabel("MC cycles")
     plt.ylabel("E_L")
     plt.legend()
-    plt.savefig(figname+".png")
+    plt.show()
+    #plt.savefig(figname+".png")
     plt.clf()
     plt.cla()
     return
@@ -43,14 +44,14 @@ stds = [0, 0]
 
 N_ps = (10,)
 N_mc = 0
-N_ds = (3,)
+N_ds = (2,3)
 sim_types = [v for v in sys.argv[1:]]
 
 for N_d_i in N_ds:
     for N_p_i in N_ps:
         mean_n_times = pd.read_csv("../data/"+
+                #"_"+sim_types[1][3:]+
                 sim_types[0]+
-                "_"+sim_types[1][3:]+
                 "_meta"+
                 "_np_"+str(N_p_i)+
                 "_nd_"+str(N_d_i)+

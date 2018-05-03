@@ -58,7 +58,7 @@ header_regex_obj = re.compile(header_regex)
 
 mask = [not f.endswith("data.csv") for f in filenames]
 filenames = sorted(filenames[mask], key = lambda x: float(alpha_regex_obj.search(x).group(1)))
-stds = [0, 0]
+stds = [0]
 
 N_ps = (10,)
 N_mc = 0
@@ -77,9 +77,10 @@ for N_d_i in N_ds:
                 "_nd_"+str(N_d_i)+
                 "_data.csv")
         
+        sim_type = sim_types[0]
+        tmp = []
+        
         for i in range(len(sim_types)):
-            sim_type = sim_types[i]
-            tmp = []
             for filename in filenames: 
                 if filename.startswith(sim_type):
                     t_filename = "../data/"+filename
@@ -125,27 +126,33 @@ for N_d_i in N_ds:
         # removed +"_"+sim_types[1][3:] from title
         title =  sim_types[0]+ "_" + "VMC with "
         title += r"$N_P = ${} | $N_D = ${} | $N_{{MC}}$ = {:.0e}".format(N_p_i, N_d_i, int(N_mc))
-        title += r"| time ratio : $\frac{T_N}{T_A} = $" 
-        title += "{:.2e}".format(t_r)
+        title += r"| time_analytic : ${T_A} = $" 
+        title += "{:.2e}".format(time_anal)
 
 
         if fast:
-            mean_n_times.plot("alpha", ["analytic_energy", "numeric_energy"],
+            mean_n_times.plot("alpha", ["analytic_energy"],
                     legend = True,
                     title = title,
                     ax = ax) 
         else:
             x = mean_n_times.alpha.values
-            num = mean_n_times.numeric_energy.values
+            #num = mean_n_times.numeric_energy.values
             anal = mean_n_times.analytic_energy.values
 
+            '''
             plt.errorbar(x, num, fmt = "x-",
                     barsabove = True,
                     yerr = np.array(stds[1], dtype = float),
                     label = "numeric_energy")
+            '''
+            errs = np.array(stds[0], dtype=float)
+            print(type(errs))
+            print(np.shape(errs))
+
             plt.errorbar(x, anal, fmt = "^-",
                     barsabove = True,
-                    yerr = np.array(stds[0], dtype = float),
+                    yerr = errs,
                     label = "analytic_energy") 
             plt.title(title)
             plt.xticks(x, rotation = 45, size = "medium")
@@ -153,22 +160,23 @@ for N_d_i in N_ds:
 
         a_min_txt = r"Analytic GS @ $\alpha = ${} with $\langle E \rangle / N_P =$ {:.2f}".format(anal_min_cord[0], anal_min_cord[1]/float(N_p_i))
 
-        n_min_txt = r"Numeric GS @ $\alpha = ${} with $\langle E \rangle / N_P =$ {:.2f}".format(num_min_cord[0], num_min_cord[1]/float(N_p_i))
+        #n_min_txt = r"Numeric GS @ $\alpha = ${} with $\langle E \rangle / N_P =$ {:.2f}".format(num_min_cord[0], num_min_cord[1]/float(N_p_i))
 
         ax.annotate(a_min_txt, xy=anal_min_cord,  xycoords='data',
                 xytext=(50, 120), textcoords='offset points',
                 arrowprops=dict(arrowstyle="->",
                                 connectionstyle="arc3,rad=0.2"))
 
-
+        '''
         ax.annotate(n_min_txt, xy=num_min_cord,  xycoords='data',
                 xytext=(-60, 150), textcoords='offset points',
                 arrowprops=dict(arrowstyle="->",
                                 connectionstyle="arc3,rad=0.2"))        
+        '''
         plt.xlabel(r"$\alpha$")
         plt.ylabel(r"$\langle E \rangle $")
 
-        figname = sim_types[0]+"_"+sim_types[1][3:] 
+        figname = sim_types[0]
         figname += "_np_" + str(N_p_i) + "_nd_" + str(N_d_i) + "_c.pdf" 
         plt.savefig("../report/figures/" + figname)
         plt.clf()

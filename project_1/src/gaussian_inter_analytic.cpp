@@ -196,14 +196,14 @@ mat GaussianInterAnalytic::drift_force(mat R, int particle_index){
     double alpha = params[0];
     double a = params[3];
 
-    vec rk = zeros<vec>(N_d);
-    vec rj = zeros<vec>(N_d);
-    vec rkj = zeros<vec>(N_d);
-    vec deri_phi_k = zeros<vec>(N_d);
-    vec deri_u_k = zeros<vec>(N_d);
+    rowvec rk = zeros<rowvec>(N_d);
+    rowvec rj = zeros<rowvec>(N_d);
+    rowvec rkj = zeros<rowvec>(N_d);
+    rowvec deri_phi_k = zeros<rowvec>(N_d);
+    rowvec deri_u_k = zeros<rowvec>(N_d);
 
     double r_kj;
-    deri_phi_k = -4*alpha*(R.row(j));
+    deri_phi_k = -4*alpha*(R.row(particle_index));
 
     for(int k = 0; k < N_p; k++){
         //Number of dimensions
