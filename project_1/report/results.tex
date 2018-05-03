@@ -63,3 +63,7 @@ Applying the gradient descent method to tune the variational parameter resulted 
 
 The onebody density was computed the counting of particles in areas around the origo. The origo was chosen as it is the natural focal point of particles in the harmonic oscillator as formulated in the project. The bins were equipartitioned by a set step length trivially determined as $\Delta L = L/n_{bins}$ where $L$ denotes the endpoint of the interval and $n_{bins}$ the total number of bins. The implementation of the algorithm can be found in \lstinline{vmc.cpp}. A simulation was run to compute the onebody densities for both the interactive and non-interacitve case for the respective minimas of the variational parameter $\alpha$. 
 
+\begin{figure}
+\includegraphics{figures/obd_i_ni.pdf}
+\caption{With the optimal parameters for alpha the onebody densities are computed and shown above. We observe that the jastrow factor has a large and pronounced effect on the relative distribution of particles. Additionally we note that for the non-interactive case we expect a density that approximates a delta function as figuratively all bosons will be in the HO ground state.}\label{fig:obd_i_ni}
+\end{figure} 
