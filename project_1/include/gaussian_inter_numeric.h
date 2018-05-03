@@ -19,7 +19,7 @@ class GaussianInterNumeric: public WaveFunc{
         double evaluate(mat R);
         double E_l(mat R);
         double laplace(mat R);
-        mat drift_force(mat R);
+        mat drift_force(mat R, int j);
         void update();
         void initialize(mat R);
         double h;

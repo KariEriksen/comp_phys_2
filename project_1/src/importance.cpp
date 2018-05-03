@@ -19,7 +19,7 @@ double Importance::metropolis_hastings(WaveFunc *psi_t, double prev_E_l){
 
 	// Scale z-position of moved particle with beta
 	if(N_d == 3){
-		R_p(j,2) *= beta;
+		R_p.col(2) *= beta;
 	}
 
 	// Calculate drift force for that particle.
@@ -36,7 +36,7 @@ double Importance::metropolis_hastings(WaveFunc *psi_t, double prev_E_l){
 
 	// Calculate drift force for particle j in proposed position
 	mat F_drift_proposed(1, N_d);
-	F_drift_proposed = psi_t -> drift_force(R_p.row(j));
+	F_drift_proposed = psi_t -> drift_force(R, j);
 
 
     double Greens = 0.0;
