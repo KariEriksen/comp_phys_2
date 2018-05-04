@@ -53,10 +53,7 @@ filenames = np.array(os.listdir("../data/"))
 alpha_regex = r".+_a_(0.\d{6}).+"
 alpha_regex_obj = re.compile(alpha_regex)
 
-dt_regex = r"dt_(\d.\d+)"
-dt_regex_obj = re.compile(dt_regex)
-
-header_regex =r"# N_p:(\s\d+)\| N_d:(\s\d+)\| N_mc:(\s\d+)\| dt:(\d.\d+)"
+header_regex =r"# N_p:(\s\d+)\| N_d:(\s\d+)\| N_mc:(\s\d+)\| dt:(\s\d.\d+)"
 header_regex_obj = re.compile(header_regex)
 
 mask = [not f.endswith("data.csv") for f in filenames]
@@ -64,7 +61,6 @@ filenames = sorted(filenames[mask], key = lambda x: float(alpha_regex_obj.search
 stds = [0]
 
 dts = (0.000100,0.001000, 0.010000, 0.100000, 1.000000)
-print(dts)
 N_ps = (10,)
 N_mc = 0
 N_ds = (2, 3)
