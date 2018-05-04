@@ -1,5 +1,6 @@
 #include "../include/gaussian_noninter_numeric.h"
 #include "../include/wavefunc.h"
+
 #include <armadillo>
 
 using namespace std;
@@ -12,20 +13,27 @@ double GaussianNonInterNumeric::E_l(mat R){
     double _laplace_psi = laplace(R);
     double pot = (double) as_scalar(accu(square(R)));
     
-    return - 0.5 * _laplace_psi/_psi + 0.5 * pot;
+    return - 0.5 * _laplace_psi/_psi + 0.5 * pot ;
 }
 
 double GaussianNonInterNumeric::evaluate(mat R){
     double alpha = params[0];
+    double beta = params[1];
+
+    if(N_d > 2){
+        R.col(2) *= beta;
+    }
     double ret_val = 0;
     double internal = accu(square(R));
-	
+
+    if(N_d >2){
+        R.col(2) *= 1/beta;
+    }
     ret_val = (double) as_scalar(exp(-alpha *(internal)));
     return ret_val;
 }
 
 double GaussianNonInterNumeric::laplace(mat R){
-
     double h = params[2];
     double lap = 0;
 
@@ -50,13 +58,9 @@ double GaussianNonInterNumeric::laplace(mat R){
     return lap*fact;
 }
 
-mat GaussianNonInterNumeric::drift_force(mat R, int j){
+mat GaussianNonInterNumeric::drift_force(mat R){
     double h = params[2];
-	mat current = R.row(j);
-	mat der(size(current));
-	for(int i = 0; i < N_d; i++){
-		der(i) = (evaluate(current.col(i) + h) - evaluate(current.col(i)))/h;
-	}
+    double der = (evaluate(R + h) - evaluate(R))/h;
     return der;
 }
 

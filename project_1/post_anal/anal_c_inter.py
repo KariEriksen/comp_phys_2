@@ -60,13 +60,13 @@ mask = [not f.endswith("data.csv") for f in filenames]
 filenames = sorted(filenames[mask], key = lambda x: float(alpha_regex_obj.search(x).group(1)))
 stds = [0]
 
-dts = (0.000100,0.001000, 0.010000, 0.100000, 1.000000)
+dts = (0.0001,0.001, 0.01, 0.1, 1.0)
 N_ps = (10,)
 N_mc = 0
 N_ds = (2, 3)
 sim_types = [v for v in sys.argv[1:]]
 
-fast = False 
+fast = True
 for N_d_i in N_ds:
     for N_p_i in N_ps:
 
