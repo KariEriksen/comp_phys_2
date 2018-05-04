@@ -53,21 +53,25 @@ filenames = np.array(os.listdir("../data/"))
 alpha_regex = r".+_a_(0.\d{6}).+"
 alpha_regex_obj = re.compile(alpha_regex)
 
-header_regex =r"# N_p:(\s\d+)\| N_d:(\s\d+)\| N_mc:(\s\d+)"
+dt_regex = r"dt_(\d.\d+)"
+dt_regex_obj = re.compile(dt_regex)
+
+header_regex =r"# N_p:(\s\d+)\| N_d:(\s\d+)\| N_mc:(\s\d+)\| dt:(\d.\d+)"
 header_regex_obj = re.compile(header_regex)
 
 mask = [not f.endswith("data.csv") for f in filenames]
 filenames = sorted(filenames[mask], key = lambda x: float(alpha_regex_obj.search(x).group(1)))
 stds = [0]
 
-dts = (0.001, 0.01, 0.1, 1.0)
+dts = (0.000100,0.001000, 0.010000, 0.100000, 1.000000)
+print(dts)
 N_ps = (10,)
 N_mc = 0
 N_ds = (2, 3)
 sim_types = [v for v in sys.argv[1:]]
 
 fast = False 
-for dt in dts:
+for dt_i in dts:
     for N_d_i in N_ds:
         for N_p_i in N_ps:
             mean_n_times = pd.read_csv("../data/"+
@@ -76,6 +80,7 @@ for dt in dts:
                     "_meta"+
                     "_np_"+str(N_p_i)+
                     "_nd_"+str(N_d_i)+
+                    "_dt_{:.6f}".format(dt_i)+
                     "_data.csv")
             
             sim_type = sim_types[0]
@@ -94,10 +99,12 @@ for dt in dts:
                         N_p = match_o.group(1)
                         N_d = match_o.group(2)
                         N_mc = match_o.group(3)
+                        dt = match_o.group(4)
+                        
 
                         if fast:
                             break 
-                        elif int(N_p) == N_p_i and int(N_d) == N_d_i:
+                        elif int(N_p) == N_p_i and int(N_d) == N_d_i and float(dt) == dt_i:
                             A = loadtxt(t_filename, delimiter = "\n", skiprows = 1)
                             tmp.append(block(A))
                 stds[i] = tmp
@@ -147,9 +154,9 @@ for dt in dts:
                         label = "numeric_energy")
                 '''
                 errs = np.array(stds[0], dtype=float)
-                print(type(errs))
-                print(np.shape(errs))
-                print(anal," ",x)
+                #print(type(errs))
+                #print(np.shape(errs))
+                #print(anal," ",x)
 
                 plt.errorbar(x, anal, fmt = "^-",
                         barsabove = True,
@@ -178,6 +185,6 @@ for dt in dts:
     plt.ylabel(r"$\langle E \rangle $")
 
     figname = sim_types[0]
-    figname += "_np_" + str(N_p_i) + "_nd_" + str(N_d_i) + "_dt_" + str(dt) + ".pdf" 
+    figname += "_np_" + str(N_p_i) + "_nd_" + str(N_d_i) + "_dt_" + str(dt_i) + ".pdf" 
     plt.savefig("../report/figures/" + figname)
     plt.clf()

@@ -80,6 +80,7 @@ vector<double> vmc::solve(WaveFunc *psi_t, string filename){
     string header = "# N_p: " + to_string(N_p) 
         + "| N_d: " + to_string(N_d) 
         + "| N_mc: " + to_string(N_mc) ;
+        + "| dt: " + to_string(dt) ;
 
     ofstream output_file(filename);
     

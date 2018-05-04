@@ -48,7 +48,7 @@ int main(int argc, char *argv[]){
 		//
 		vector<double> result; 
 		string filename = "../data/"+ sim_type_a+ "_a_" + to_string(alpha) + 
-			"_b_" + to_string(beta) +
+			"_b_" + to_string(beta)+
 			"_step_" + to_string(step)+
 			"_np_" + to_string(N_p)+
 			"_nd_" + to_string(N_d)+
@@ -60,6 +60,7 @@ int main(int argc, char *argv[]){
 
 	string meta_filename = "../data/IM_INA_meta_np_" + to_string(N_p)+
 		"_nd_" + to_string(N_d)+   
+		"_dt_" + to_string(dt)+   
 		+"_data"
 		+".csv";
 	ofstream meta_file(meta_filename);
