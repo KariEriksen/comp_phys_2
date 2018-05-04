@@ -1,4 +1,4 @@
-FLAGS =  -g -fPIC --std=c++11 -larmadillo
+FLAGS =  -g -fPIC --std=c++11 -larmadillo -O3
 depend_all = wavefunc.o vmc.o
 
 gin = gaussian_inter_numeric.o
@@ -39,11 +39,11 @@ main_b.o: main_b.cpp
 app_b.x: main_b.o $(gnin) $(gnia) $(mh) $(depend_all)
 	g++ -o app_b.x main_b.o $(FLAGS) $(gnin) $(gnia) $(mh) $(depend_all)
 
-main_f.o: main_f.cpp $(gia) $(mh) $(depend_all)
+main_f.o: main_f.cpp $(gnia) $(gia) $(mh) $(depend_all)
 	clang main_f.cpp $(FLAGS) -c
 
-app_f.x: main_f.o $(gnia) $(mh) $(depend_all)
-	g++ -o app_f.x main_f.o $(FLAGS) $(gnia) $(mh) $(depend_all)
+app_f.x: main_f.o $(gia) $(gnia) $(mh) $(depend_all)
+	g++ -o app_f.x main_f.o $(gnia) $(gia) $(mh) $(FLAGS) $(depend_all)
 
 main_test_2.o: main_test_2.cpp 
 	clang main_test_2.cpp $(FLAGS) -c
@@ -54,9 +54,9 @@ app_test2.o: main_test_2.o $(gia) $(mh) $(depend_all)
 main_g.o: main_g.cpp 
 	clang main_g.cpp $(FLAGS) -c
 
-app_g.x: main_g.o $(gnia) $(mh) $(depend_all)
-	g++ -o app_g.x main_g.o $(gnia) $(mh) $(depend_all) $(FLAGS)
+app_g.x: main_g.o $(gnia) $(gia) $(mh) $(depend_all)
+	g++ -o app_g.x main_g.o $(gnia) $(gia) $(mh) $(depend_all) $(FLAGS)
 	
 clean:
-	rm -f *.x
+	rm -f *.o
 
