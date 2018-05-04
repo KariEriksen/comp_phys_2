@@ -29,6 +29,12 @@ Where $N$ is the number of particles and $D$ is their dimension. From the figure
 
 \subsection*{\textbf{1e:} The repulsive interaction}
 
+
+In Table \ref{tab:Re.int.} we see the results for the case of the elliptical trap with a repulsive interaction. We have used the Hamiltonian in Equation \ref{eq:elliptical} to solve this case. The analytic solution of the local energy can be found in Appendix 1. The code that was used to find these results can be found \lstinline{gaussian_inter_analytic.cpp}\footnote{at commit \lstinline{d1c9ec9cc5640e7030b18adbabc802d2414dba75}}.
+We have used $a = 0.0043$ and $\beta = 2.82843$. We see that the expectation value of the local energy increases slowly as we increase the number of particles. It can seem that this is the case of the variational parameter $\alpha$ as well. 
+As for the CPU-time it increases rapidly. Already for 100 particles we are closing in one 3 hours.
+
+
 \begin{table}[]
     \centering
     \begin{tabular}{|c|c|c|c|c|c|}
@@ -45,8 +51,6 @@ Where $N$ is the number of particles and $D$ is their dimension. From the figure
     \caption{VMC with Metropolis sampling. Calculations done in 3 dimensions with number of cycles $N_{MC} = 10^{6}$ for an elliptical trap, $\beta = 2.82843$ with interaction, $a = 0.0043$. Step length $t = 0.5$.}
     \label{tab:Re.int.}
 \end{table}
-
-Comment to be added to discussion: we see that the expectation value of the local energy increases by a small amount. This is consistent with what we see in Fig. 2 in (ref. to paper in Physics by J.L. DuBois). 
 
 
 \subsection*{\textbf{1f:} Finding the best parameter}
