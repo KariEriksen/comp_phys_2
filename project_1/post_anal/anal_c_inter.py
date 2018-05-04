@@ -28,7 +28,7 @@ def block(x):
         s[i] = var(x)
         # perform blocking transformation
         x = 0.5*(x[0::2] + x[1::2])
-   
+
     # generate the test observator M_k from the theorem
     M = (cumsum( ((gamma/s)**2*2**arange(1,d+1)[::-1])[::-1] )  )[::-1]
 
@@ -67,9 +67,11 @@ N_ds = (2, 3)
 sim_types = [v for v in sys.argv[1:]]
 
 fast = False 
-for dt_i in dts:
-    for N_d_i in N_ds:
-        for N_p_i in N_ps:
+for N_d_i in N_ds:
+    for N_p_i in N_ps:
+
+        fig, ax = plt.subplots(figsize=(9, 7))
+        for dt_i in dts:
             mean_n_times = pd.read_csv("../data/"+
                     #"_"+sim_types[1][3:]+
                     sim_types[0]+
@@ -78,15 +80,15 @@ for dt_i in dts:
                     "_nd_"+str(N_d_i)+
                     "_dt_{:.6f}".format(dt_i)+
                     "_data.csv")
-            
+
             sim_type = sim_types[0]
             tmp = []
-            
+
             for i in range(len(sim_types)):
                 for filename in filenames: 
                     if filename.startswith(sim_type):
                         t_filename = "../data/"+filename
-                        
+
                         f_o = open(t_filename)
                         header = f_o.readline()
                         f_o.close()
@@ -96,7 +98,7 @@ for dt_i in dts:
                         N_d = match_o.group(2)
                         N_mc = match_o.group(3)
                         dt = match_o.group(4)
-                        
+
 
                         if fast:
                             break 
@@ -104,9 +106,9 @@ for dt_i in dts:
                             A = loadtxt(t_filename, delimiter = "\n", skiprows = 1)
                             tmp.append(block(A))
                 stds[i] = tmp
-                
 
-            fig, ax = plt.subplots(figsize=(9, 7))
+            # Moved one loop further out.
+            #fig, ax = plt.subplots(figsize=(9, 7))
 
             time_anal = np.average(mean_n_times["analytic_time"])
             '''
@@ -126,7 +128,7 @@ for dt_i in dts:
                     mean_n_times.analytic_energy == np.min(mean_n_times.analytic_energy))
             anal_min_cord = (mean_n_times.alpha[anal_min_index[0][0]],
                     mean_n_times.analytic_energy[anal_min_index[0][0]])
-            
+
             title =  sim_types[0]+ "_" + "VMC with "
             title += r"$N_P = ${} | $N_D = ${} | $N_{{MC}}$ = {:.0e}".format(N_p_i, N_d_i, int(N_mc))
             title += r"| time_analytic : ${T_A} = $" 
@@ -149,15 +151,11 @@ for dt_i in dts:
                         yerr = np.array(stds[1], dtype = float),
                         label = "numeric_energy")
                 '''
-                errs = np.array(stds[0], dtype=float)
-                #print(type(errs))
-                #print(np.shape(errs))
-                #print(anal," ",x)
 
                 plt.errorbar(x, anal, fmt = "^-",
                         barsabove = True,
-                        yerr = errs,
-                        label = "analytic_energy: dt = " + str(dt)) 
+                        yerr = np.array(stds[0], dtype=float),
+                        label = "analytic_energy: dt = " + str(dt_i)) 
                 plt.title(title)
                 plt.xticks(x, rotation = 45, size = "medium")
                 plt.legend()
@@ -166,10 +164,10 @@ for dt_i in dts:
 
             #n_min_txt = r"Numeric GS @ $\alpha = ${} with $\langle E \rangle / N_P =$ {:.2f}".format(num_min_cord[0], num_min_cord[1]/float(N_p_i))
 
-            ax.annotate(a_min_txt, xy=anal_min_cord,  xycoords='data',
-                    xytext=(50, 120), textcoords='offset points',
-                    arrowprops=dict(arrowstyle="->",
-                                    connectionstyle="arc3,rad=0.2"))
+            #ax.annotate(a_min_txt, xy=anal_min_cord,  xycoords='data',
+            #        xytext=(50, 120), textcoords='offset points',
+            #        arrowprops=dict(arrowstyle="->",
+            #            connectionstyle="arc3,rad=0.2"))
 
             '''
             ax.annotate(n_min_txt, xy=num_min_cord,  xycoords='data',
@@ -177,10 +175,10 @@ for dt_i in dts:
                     arrowprops=dict(arrowstyle="->",
                                     connectionstyle="arc3,rad=0.2"))        
             '''
-    plt.xlabel(r"$\alpha$")
-    plt.ylabel(r"$\langle E \rangle $")
+        plt.xlabel(r"$\alpha$")
+        plt.ylabel(r"$\langle E \rangle $")
 
-    figname = sim_types[0]
-    figname += "_np_" + str(N_p_i) + "_nd_" + str(N_d_i) + "_dt_" + str(dt_i) + ".pdf" 
-    plt.savefig("../report/figures/" + figname)
-    plt.clf()
+        figname = sim_types[0]
+        figname += "_np_" + str(N_p_i) + "_nd_" + str(N_d_i) + "_dt" + ".pdf" 
+        plt.savefig("../report/figures/tmp/" + figname)
+        plt.clf()
