@@ -1,8 +1,12 @@
 \section{Results}
+\subsection*{\textbf{1a):} Local energy}
+The local energy is  derived and presented in appendix \ref{app:el}
+
+
 \subsection*{\textbf{1b):} Developing your code and \textbf{1d):} A better statistical analysis}
 
-The results of the simulations are included in the appendix as figures \ref{fig:1b_1} \ref{fig:1b_10}, \ref{fig:1b_100} and \ref{fig:1b_500}. The results were produced with the code in the repository\footnote{at commit \lstinline{b0ff612bc6666335b106af5e22a7a13a13c7cff7}}. Errors in the expectation value for the energy in the plots are computed with the blocking method\footnote{the blocking implementation is a copy of the code in Ref. \cite{ComphysGit}}. 
-The exact answer for the minimum of the expecation value of the energy can be derived quote easily from \ref{eq:el_ni}. The minimum of the local energy has to be where the kinetic and potential energies cancel exactly. In the case of the 3d particle we see the following after imposing natural units. 
+The results of the simulations are included in the appendix \ref{app:fig}as figures \ref{fig:1b_1} \ref{fig:1b_10}, \ref{fig:1b_100} and \ref{fig:1b_500}. The results were produced with the file \lstinline{main_b.cpp}\footnote{at commit \lstinline{b0ff612bc6666335b106af5e22a7a13a13c7cff7}}. Errors in the expectation value for the energy in the plots are computed with the blocking method\footnote{the blocking implementation is a copy of the code in Ref. \cite{ComphysGit}}. The errors are presented as errorbars in the plots referenced above.
+The exact answer for the minimum of the expecation value of the energy can be derived from equation \ref{eq:el_ni}. The minimum of the local energy has to be where the kinetic and potential energies cancel exactly. In the case of the 3d particle we see the following after imposing units in terms of the characteristic lengths and frequencies of the harmonic oscillator. 
 
 \begin{align}
 \mathfrak{min}(E_L)  \implies \left(\frac{1}{2}\right)[4\alpha^2 (x^2 + y^2 + \beta^2 z^2) ] &= \frac{1}{2} (x^2 + y^2 + \beta z^2) \\
@@ -12,7 +16,7 @@ The exact answer for the minimum of the expecation value of the energy can be de
 With $\alpha$ at the minimum we then expect the following values for $\expect{E}$
 \begin{equation}
 \begin{split}
-\text{1D: }E_L |_{\alpha = 0.5} &= \sum_i^N \alpha = N_ \alpha,\\
+\text{1D: }E_L |_{\alpha = 0.5} &= \sum_i^N \alpha = N \alpha,\\
 \text{2D: }E_L|_{\alpha = 0.5} &= \sum_i^N  2\alpha = 2N \alpha \\
 \text{3D: }E_L|_{\alpha = 0.5} &= \sum_i^N  2\alpha + \alpha \beta  = 3N\alpha
 \end{split}
@@ -21,7 +25,7 @@ In general the energy in the non-interactive case at the variational minimum for
 \begin{equation}
 \mathfrak{min}(\expect{E[\alpha]}) = 0.5 \cdot N \cdot D  
 \end{equation}
-Where $N$ is the number of particles and $D$ is their dimension. From the figures referenced in the beginning of this section it is clear that both the numerical and analytic solutions converge to the correct solution.
+Where $N$ is the number of particles and $D$ is their dimension. From the figures referenced in the beginning of this section it is clear that both the numerical and analytic solutions have a minimum at that  agrees with the analytical solution. The intervals  were chosen such that the known optimum for $\alpha$ was included, this information in in general not available and motivated the gradient descent algorithm implemented for task 1.f. From the figures referenced above it is also noted that there is a substantial time difference in the numeric and analytic algorithms. 
 
 \subsection*{\textbf{1e:} The repulsive interaction}
 
@@ -46,7 +50,7 @@ Comment to be added to discussion: we see that the expectation value of the loca
 
 
 \subsection*{\textbf{1f:} Finding the best parameter}
-Applying the gradient descent method to tune the variational parameter resulted in satisfying convergence to the optimal value for the variational parameter $\alpha$. The simulation results are included in figure \ref{fig:gd_nm_nia}\footnote{The simulations were produced with the file \lstinline{mainf_f.cpp} at commit \lstinline{2d03030ec5a711383d582dde23869483d122c6b6}}. After the convergence was shown to be satisfactory for the non-interactive case simulations were run for the hamiltonian with interaction \footnote{commit \lstinline{f285327a7d95349a874aafe16d8ecd5f48c5cef5}}. The result shows for the variational parameter as  $\alpha_{min} \approx 0.4988\ldots$. These findings are illustrated in figure \ref{fig:gd_nm_ia}. 
+Applying the gradient descent algorithm to tune the variational parameter resulted in satisfying convergence to the optimal value for the variational parameter $\alpha$. The simulation results are included in figure \ref{fig:gd_nm_nia}\footnote{The simulations were produced with the file \lstinline{mainf_f.cpp} at commit \lstinline{2d03030ec5a711383d582dde23869483d122c6b6}}. After the convergence was shown to be satisfactory for the non-interactive case simulations were run for the hamiltonian with interaction \footnote{commit \lstinline{f285327a7d95349a874aafe16d8ecd5f48c5cef5}}. The resulting minimum for the variational parameter is slightly lower than for the non-interactive case with a value of $\alpha_{min} \approx 0.49888\ldots$. These findings are illustrated in figure \ref{fig:gd_nm_ia}. 
 
 
 \begin{figure}
@@ -61,7 +65,7 @@ Applying the gradient descent method to tune the variational parameter resulted 
 
 \subsection*{\textbf{1g:} Onebody densities}
 
-The onebody density was computed the counting of particles in areas around the origo. The origo was chosen as it is the natural focal point of particles in the harmonic oscillator as formulated in the project. The bins were equipartitioned by a set step length trivially determined as $\Delta L = L/n_{bins}$ where $L$ denotes the endpoint of the interval and $n_{bins}$ the total number of bins. The implementation of the algorithm can be found in \lstinline{vmc.cpp}. A simulation was run to compute the onebody densities for both the interactive and non-interacitve case for the respective minimas of the variational parameter $\alpha$. 
+The onebody density was computed by counting particles in equipartitioned bins around the origo. The origo was chosen as a referemce because it is the natural focal point of particles in the harmonic oscillator trap we implemented. The bins were equipartitioned by a set step length trivially determined as $\Delta L = L/n_{bins}$ where $L$ denotes the endpoint of the interval and $n_{bins}$ the total number of bins. Each of those bins were normalized by the total count number and a factor corresponding to the difference in physical space occupied by each bin i.e. $1$ for the $1D$ case, $r$ for the $2D$ case and finally $r^2$ for the $3D$ case. The implementation of the algorithm can be found in \lstinline{vmc.cpp}. A simulation was run to compute the onebody densities for both the interactive and non-interacitve case for the respective minimas of the variational parameter $\alpha$. 
 
 \begin{figure}
 \includegraphics{figures/obd_i_ni.pdf}
