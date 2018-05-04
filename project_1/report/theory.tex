@@ -1,5 +1,33 @@
 \section{Theory}
 
+\subsection{Ansatz for the wavefunction and the hamiltonian}
+
+In this project we study the physics of a dilute many boson system in a Bose Einstein condensate with variational monte carlo methods. The particles are placed in a harmonic oscillator trap described by equation 1 in the project description. We'll start by discussing a hamiltonian in which there is no interaction between particles and being bosons there are no restrictions on the occupancy of a single energy state. But in general the trial wavefunction (or ansatz for the wavefunction) is defined as in equation \ref{eq:psi_t}
+
+\begin{equation}\label{eq:psi_t}
+\Psi_T(\{\mathbf{r}\}) = \prod _i g(\alpha, \beta, \mathbf{r}_i) \prod _{i <j} f(a, |\mathbf{r}_i -\mathbf{r}_j|)
+\end{equation} 
+\noindent Where $g(\alpha, \beta, \mathbf{r}_i)$ is a function proportional to the single particle solution of the harmonic oscillator trap. Which is to say it can be written on the form 
+
+\begin{equation}
+g(\alpha, \beta, \mathbf{r}_i) = e^{-\alpha ( x_i^2+ y_i^2 + \beta z_i ^2)}
+\end{equation}
+
+
+\noindent Where $\alpha$ is the variational parameter of interest. Which is to say that minimizing the system energy $\langle \Psi_T(\{\mathbf{r}\}) | \hat{H} |\Psi_T(\{\mathbf{r}\}) \rangle$ by $\alpha$ is the objective of this project. 
+
+In equation \ref{eq:psi_t} we also define the correlation wavefunction $f(a, |\mathbf{r}_i -\mathbf{r}_j|)$ is  defined as 
+
+\begin{equation}
+f(a, |\mathbf{r}_i -\mathbf{r}_j|) = 
+\begin{cases}
+\infty, & |\mathbf{r}_i -\mathbf{r}_j| \leq a \\
+0, & |\mathbf{r}_i -\mathbf{r}_j| > a
+\end{cases}
+\end{equation}
+
+\noindent Initially (for tasks a, b, and c) we set the parameter a to equal zero and solve the non-interactive system. As it turns out directly evaluating the inner product to find the expectation for the energy is problematic because for a system with interaction it involves solving a pretty unasvory integral. We then turn to numerical methods as a tool, but we still want avoid directly evaluating the expectation for the hamiltonian for the ensamble. The solution to this problem becomes appernt when you consider the machinery of the VMC.
+
 \subsection{Variational Monte Carlo}
 
 Monte Carlo simulations are widely used methods in numerical science that employs random walkers. 
