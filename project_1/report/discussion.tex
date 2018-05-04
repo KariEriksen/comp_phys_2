@@ -1,2 +1,9 @@
 \section{Discussion}
-Tekst
+\section{Non interacting bosons}
+
+We've observed that for non-interactive bosons we are able to find an analytical minimum for the local energy, that we've used as a reference to assert that the VMC machinery indeed produces the correct result. As noted in task 1b this information is not in general something that is available to us. Methods like gradient descent ad variations thereof must then be considered. We implemented a GD algorithm that converged fast, and with relatively few MC-cycles, to a stable minimum for $\alpha$. More complex methods were not considered since we knew the problem to be quadratic, and thus well behaved in that the search space only has one minimum. 
+As and additional metric on the system we computed the one-body desities which shows a delta like behaviour in the non-interactive regime. The physical interpretation of this is that the particles are all very close to eachother and the origio. The authors did not find any demonstrations of the onebody density for bosons in the BEC in a HO trap in the litterature so comparison weren't readily available. 
+
+We have also shown that there is, unsurprisingly, a large chunk of time lost by doing numerical estimations of the local energy. While trivial to implement and compute it is only useful as a sanity-check for the analytical solution for many body systems where an analytic derivative is available. Both the numeric and analytic simulations were run with the \lstinline{-O3} optimization flag. 
+
+There is also shown to be experimental indications of the hypothesis \footnote{theory, assumption?} that the ground state of the ensamble of bosons also is  the one that has the lowest variance in the VMC scheme by presenting the relative error in the measurment of $\expect{E_L}$  
