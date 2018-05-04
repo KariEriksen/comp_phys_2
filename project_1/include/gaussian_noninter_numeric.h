@@ -15,7 +15,7 @@ class GaussianNonInterNumeric: public WaveFunc{
         double evaluate(mat R);
         double E_l(mat R);
         double laplace(mat R);
-        mat drift_force(mat R);
+        mat drift_force(mat R, int j);
         double h;
         //mat NumericalDoubleDerivative(mat R);
         GaussianNonInterNumeric();
