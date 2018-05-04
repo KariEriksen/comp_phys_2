@@ -299,3 +299,15 @@ $$\nabla_k \Psi_T(\mathbf{r}) = (-2\alpha x_k \vec{i} - 2\alpha y_k \vec{j} - 2\
 
 $$F = (-4\alpha x_k \vec{i} - 4\alpha y_k \vec{j} - 4\alpha \beta z_k \vec{k}) + \sum_{j \ne k} \left( - \frac{a(\vec{r_k} - \vec{r_j})}{ar_{kj}^2 - r_{kj})^3} \right)$$
 
+For the elliptical trap we are given an external potential that turns the Hamiltonian to the following
+
+$$\hat{H} = \sum_{i}^{N} \left( \frac{-\hbar^2}{2m} \nabla_i^2 + \frac{1}{2} m [\omega_{ho}^2(x^2+ y^2) + \omega_z^2 z^2] \right) + \sum_{i<j}^{N} V_{int}(\mathbf{r_i}, \mathbf{r_j}).$$
+
+Using that $\omega_{ho} = \omega_{\perp}$ and $\omega_z = \lambda \omega_{ho}$ we see easily that we can rewrite this to 
+
+\begin{equation} \label{eq:elliptical}
+\hat{H} = \sum_{i}^{N} \left( \frac{-\hbar^2}{2m} \nabla_i^2 + \frac{1}{2} m \omega_{ho}^2(x^2 + y^2 + \lambda^2 z^2) \right) + \sum_{i<j}^{N} V_{int}(\mathbf{r_i}, \mathbf{r_j}),
+\end{equation}
+
+which is simply the Hamiltonian for the spherical trap with interaction and $\beta = \gamma = \lambda^2$.
+

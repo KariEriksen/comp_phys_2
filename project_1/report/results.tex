@@ -29,6 +29,12 @@ Where $N$ is the number of particles and $D$ is their dimension. From the figure
 
 \subsection*{\textbf{1e:} The repulsive interaction}
 
+
+In Table \ref{tab:Re.int.} we see the results for the case of the elliptical trap with a repulsive interaction. We have used the Hamiltonian in Equation \ref{eq:elliptical} to solve this case. The analytic solution of the local energy can be found in Appendix 1. The code that was used to find these results can be found \lstinline{gaussian_inter_analytic.cpp}\footnote{at commit \lstinline{d1c9ec9cc5640e7030b18adbabc802d2414dba75}}.
+We have used $a = 0.0043$ and $\beta = 2.82843$. We see that the expectation value of the local energy increases slowly as we increase the number of particles. It can seem that this is the case of the variational parameter $\alpha$ as well. 
+As for the CPU-time it increases rapidly. Already for 100 particles we are closing in one 3 hours.
+
+
 \begin{table}[]
     \centering
     \begin{tabular}{|c|c|c|c|c|c|}
@@ -46,29 +52,6 @@ Where $N$ is the number of particles and $D$ is their dimension. From the figure
     \label{tab:Re.int.}
 \end{table}
 
-Comment to be added to discussion: we see that the expectation value of the local energy increases by a small amount. This is consistent with what we see in Fig. 2 in (ref. to paper in Physics by J.L. DuBois). 
-
-
-\subsection*{\textbf{1e:} The repulsive interaction}
-
-\begin{table}[]
-	\centering
-	\begin{tabular}{|c|c|c|c|c|c|}
-		\hline
-		$N$ & $\alpha$ & $\sigma^2$ & $\langle E_L \rangle$ & $\frac{\langle E_L \rangle}{N}$ & CPU-time [sek] \\
-		\hline
-		10 & 0.480013 & 1.73405e-06 & 21.643 & 2.1643 & 12.31 \\
-		\hline
-		50 & 0.480127 & 1.75833e-06 & 111.066 & 2.2213 & 1253.91\\
-		\hline
-		100 & 0.480279 & 1.75902e-06 & 228.682 & 2.2868 & 9854.01 \\
-		\hline
-	\end{tabular}
-	\caption{VMC with Metropolis sampling. Calculations done in 3 dimensions with number of cycles $N_{MC} = 10^{6}$ for an elliptical trap, $\beta = 2.82843$ with interaction, $a = 0.0043$. Step length $t = 0.5$.}
-	\label{tab:Re.int.}
-\end{table}
-
-Comment to be added to discussion: we see that the expectation value of the local energy increases by a small amount. This is consistent with what we see in Fig. 2 in (ref. to paper in Physics by J.L. DuBois). 
 
 \subsection*{\textbf{1f:} Finding the best parameter}
 Applying the gradient descent algorithm to tune the variational parameter resulted in satisfying convergence to the optimal value for the variational parameter $\alpha$. The simulation results are included in figure \ref{fig:gd_nm_nia}\footnote{The simulations were produced with the file \lstinline{mainf_f.cpp} at commit \lstinline{2d03030ec5a711383d582dde23869483d122c6b6}}. After the convergence was shown to be satisfactory for the non-interactive case simulations were run for the hamiltonian with interaction \footnote{commit \lstinline{f285327a7d95349a874aafe16d8ecd5f48c5cef5}}. The resulting minimum for the variational parameter is slightly lower than for the non-interactive case with a value of $\alpha_{min} \approx 0.49888\ldots$. These findings are illustrated in figure \ref{fig:gd_nm_ia}. 
