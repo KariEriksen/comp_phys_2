@@ -9,6 +9,8 @@ gnia = gaussian_noninter_analytic.o
 mh = naive_mh.o
 imp = importance.o
 
+# ==========================================================
+# Class Object files
 wavefunc.o: ../include/wavefunc.h wavefunc.cpp
 	clang wavefunc.cpp -c $(FLAGS) 
 
@@ -33,17 +35,10 @@ importance.o: importance.cpp ../include/vmc.h vmc.cpp
 naive_mh.o: naive_mh.cpp ../include/vmc.h vmc.cpp 
 	clang naive_mh.cpp -c $(FLAGS)
 
+# ==========================================================
+# Main Object files
 main_b.o: main_b.cpp 
 	clang main_b.cpp $(FLAGS) -c
-
-app_b.x: main_b.o $(gnin) $(gnia) $(mh) $(depend_all)
-	g++ -o app_b.x main_b.o $(FLAGS) $(gnin) $(gnia) $(mh) $(depend_all)
-
-app_c.x: main_c.o 
-	g++ -o app_c.x main_c.o vmc.o wavefunc.o gaussian_noninter_numeric.o gaussian_noninter_analytic.o importance.o -O3 -larmadillo
-
-app_c_inter.x: main_c_inter.o 
-	g++ -o app_c_inter.x main_c_inter.o vmc.o wavefunc.o gaussian_inter_analytic.o importance.o -O3 -larmadillo
 
 main_c.o: main_c.cpp vmc.o gaussian_noninter_numeric.o gaussian_noninter_analytic.o wavefunc.o importance.o
 	clang main_c.cpp $(FLAGS)  -c
@@ -54,17 +49,29 @@ main_c_inter.o: main_c_inter.cpp vmc.o gaussian_inter_analytic.o wavefunc.o impo
 main_f.o: main_f.cpp $(gia) $(mh) $(depend_all)
 	clang main_f.cpp $(FLAGS) -c
 
-app_f.x: main_f.o $(gnia) $(mh) $(depend_all)
-	g++ -o app_f.x main_f.o $(FLAGS) $(gnia) $(mh) $(depend_all)
-
 main_test_2.o: main_test_2.cpp 
 	clang main_test_2.cpp $(FLAGS) -c
 
-app_test2.o: main_test_2.o $(gia) $(mh) $(depend_all)
-	g++ -o test2.x main_test_2.o $(gia) $(mh) $(depend_all) $(FLAGS)
-
 main_g.o: main_g.cpp 
 	clang main_g.cpp $(FLAGS) -c
+
+# ==========================================================
+# app.x files
+
+app_b.x: main_b.o $(gnin) $(gnia) $(mh) $(depend_all)
+	g++ -o app_b.x main_b.o $(FLAGS) $(gnin) $(gnia) $(mh) $(depend_all)
+
+app_c.x: main_c.o 
+	g++ -o app_c.x main_c.o vmc.o wavefunc.o gaussian_noninter_numeric.o gaussian_noninter_analytic.o importance.o -O3 -larmadillo
+
+app_c_inter.x: main_c_inter.o 
+	g++ -o app_c_inter.x main_c_inter.o vmc.o wavefunc.o gaussian_inter_analytic.o importance.o -O3 -larmadillo
+
+app_f.x: main_f.o $(gnia) $(mh) $(depend_all)
+	g++ -o app_f.x main_f.o $(FLAGS) $(gnia) $(mh) $(depend_all)
+
+app_test2.o: main_test_2.o $(gia) $(mh) $(depend_all)
+	g++ -o test2.x main_test_2.o $(gia) $(mh) $(depend_all) $(FLAGS)
 
 app_g.x: main_g.o $(gnia) $(mh) $(depend_all)
 	g++ -o app_g.x main_g.o $(gnia) $(mh) $(depend_all) $(FLAGS)
