@@ -1,5 +1,5 @@
 \documentclass[12pt]{article}
-\usepackage[backend=biber]{biblatex}
+%\usepackage[backend=biber]{biblatex}
 \usepackage{amsmath}
 \usepackage{listings}
 \usepackage{graphicx}
@@ -43,23 +43,24 @@
 \newcommand{\expect}[1]{\langle #1 \rangle}
 
 % Add bibliography
-\bibliography{bibliography.bib}
 \begin{document}
 
 
 \title{FYS4411 - Project 1}
-\author{Scrap I/O and friends}
+\author{Kari Eriksen, Geir Tore Ulvik, Robert Solli}
 \maketitle
 
 \include{abstract}
 \include{introduction}
 \include{theory}
-\include{method}
+%\include{method}
 \include{results}
 \include{discussion}
 \include{conclusion}
 \appendix
 \include{figures_1b}
 \include{derivation_fullproblem}
+\bibliographystyle{unsrt}
+\bibliography{bibliography}
 
 \end{document}
