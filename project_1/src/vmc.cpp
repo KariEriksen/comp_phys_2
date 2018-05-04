@@ -84,23 +84,16 @@ void vmc::generate_positions(double step_int){
 }
 
 void vmc::count_obd(mat radii, metadata* all_exp){
-    int sumval = 0;
     for(int i = 0; i < N_p ; i++){
         double tmp_rad = radii[i];
         for(int j = 0; j < obd_n_bins ; j++){
             double tmp_bin = obd_bins[j];
             if((tmp_rad > (tmp_bin - bin_length)) && (tmp_rad < (tmp_bin + bin_length))){
-                sumval +=1;
                 all_exp -> obd[j] += 1;
-
                 break;
             }
+            if(j == (obd_n_bins-1)) all_exp -> obd[j] ++;
         }
-    }
-
-    if(sumval != N_p){
-        cout << sumval << " | " << N_p << " | " <<  endl;
-        exit(EXIT_FAILURE);
     }
 
 }
@@ -109,7 +102,8 @@ void vmc::count_obd(mat radii, metadata* all_exp){
 vector<double> vmc::solve(WaveFunc *psi_t, string filename){
     // -> is dereferencing and  member access to methods of class.
     
-    obd_n_bins = 100;
+    double outer_limit = 5;
+    obd_n_bins = 30*outer_limit;
 
     generate_positions(step);
     psi_t -> initialize(R);
@@ -146,7 +140,6 @@ vector<double> vmc::solve(WaveFunc *psi_t, string filename){
             obd_bins[i] = 0;
         }
 
-        double outer_limit = 6;
         bin_length = outer_limit / (double)obd_n_bins;
         
         for(int i = 0; i<obd_n_bins; i++){
@@ -190,34 +183,30 @@ vector<double> vmc::solve(WaveFunc *psi_t, string filename){
         string obd_filename = "../data/obd_"+filename;
         ofstream obd_output(obd_filename);
         double* divisor = new double[obd_n_bins];
-
-        if(N_d == 1){
-            divisor[0] = bin_length * N_mc;
+        int total = 0;
+        
+        
+        for(int i = 0; i < obd_n_bins; i++){
+            total += all_exp.obd[i];
         }
-        else if(N_d == 2){
-            divisor[0] = M_PI * N_mc* (obd_bins[0] * obd_bins[0] ); 
-        }
-        else{
-            divisor[0] = (4.0/3)*M_PI * N_mc* (pow(obd_bins[0], 3) );
-        }
-
-        for(int i = 1; i < obd_n_bins ; i++){
+        
+        for(int i = 0; i < obd_n_bins ; i++){
             if(N_d == 1){
-                divisor[i] = bin_length * N_mc;
+                divisor[i] = 1;
             }
             else if(N_d == 2){
-                divisor[i] = M_PI * N_mc* (obd_bins[i] * obd_bins[i] 
-                        - obd_bins[i-1] * obd_bins[i-1] ); 
+                divisor[i] = obd_bins[i] ; 
             }
             else{
-                divisor[i] = (4.0/3)*M_PI * N_mc* (pow(obd_bins[i], 3) 
-                        - pow(obd_bins[i-1],3) );
+                divisor[i] = obd_bins[i]*obd_bins[i];
             }
         }
+
+
         mat arma_obd = mat(obd_n_bins, 2);
         
         for(int i = 0; i< obd_n_bins; i++){
-            arma_obd(i, 1) = all_exp.obd[i]/divisor[i]; 
+            arma_obd(i, 1) = all_exp.obd[i]/(double)total; 
             arma_obd(i, 0) = obd_bins[i];
         }
         

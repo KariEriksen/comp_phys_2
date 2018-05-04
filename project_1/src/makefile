@@ -1,4 +1,4 @@
-FLAGS =  -g -fPIC --std=c++11 -larmadillo
+FLAGS =  -g -fPIC --std=c++11 -larmadillo -O3
 depend_all = wavefunc.o vmc.o
 
 gin = gaussian_inter_numeric.o
@@ -46,7 +46,7 @@ main_c.o: main_c.cpp vmc.o gaussian_noninter_numeric.o gaussian_noninter_analyti
 main_c_inter.o: main_c_inter.cpp vmc.o gaussian_inter_analytic.o wavefunc.o importance.o
 	clang main_c_inter.cpp $(FLAGS)  -c
 
-main_f.o: main_f.cpp $(gia) $(mh) $(depend_all)
+main_f.o: main_f.cpp $(gnia) $(gia) $(mh) $(depend_all)
 	clang main_f.cpp $(FLAGS) -c
 
 main_test_2.o: main_test_2.cpp 
@@ -77,5 +77,5 @@ app_g.x: main_g.o $(gnia) $(mh) $(depend_all)
 	g++ -o app_g.x main_g.o $(gnia) $(mh) $(depend_all) $(FLAGS)
 	
 clean:
-	rm -f *.x
+	rm -f *.o
 
