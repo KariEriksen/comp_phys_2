@@ -1,5 +1,33 @@
 \section{Theory}
 
+\subsection{Ansatz for the wavefunction and the hamiltonian}
+
+In this project we study the physics of a dilute many boson system in a Bose Einstein condensate with variational monte carlo methods. The particles are placed in a harmonic oscillator trap described by equation 1 in the project description. We'll start by discussing a hamiltonian in which there is no interaction between particles and being bosons there are no restrictions on the occupancy of a single energy state. But in general the trial wavefunction (or ansatz for the wavefunction) is defined as in equation \ref{eq:psi_t}
+
+\begin{equation}\label{eq:psi_t}
+\Psi_T(\{\mathbf{r}\}) = \prod _i g(\alpha, \beta, \mathbf{r}_i) \prod _{i <j} f(a, |\mathbf{r}_i -\mathbf{r}_j|)
+\end{equation} 
+\noindent Where $g(\alpha, \beta, \mathbf{r}_i)$ is a function proportional to the single particle solution of the harmonic oscillator trap. Which is to say it can be written on the form 
+
+\begin{equation}
+g(\alpha, \beta, \mathbf{r}_i) = e^{-\alpha ( x_i^2+ y_i^2 + \beta z_i ^2)}
+\end{equation}
+
+
+\noindent Where $\alpha$ is the variational parameter of interest. Which is to say that minimizing the system energy $\langle \Psi_T(\{\mathbf{r}\}) | \hat{H} |\Psi_T(\{\mathbf{r}\}) \rangle$ by $\alpha$ is the objective of this project. 
+
+In equation \ref{eq:psi_t} we also define the correlation wavefunction $f(a, |\mathbf{r}_i -\mathbf{r}_j|)$ is  defined as 
+
+\begin{equation}
+f(a, |\mathbf{r}_i -\mathbf{r}_j|) = 
+\begin{cases}
+\infty, & |\mathbf{r}_i -\mathbf{r}_j| \leq a \\
+0, & |\mathbf{r}_i -\mathbf{r}_j| > a
+\end{cases}
+\end{equation}
+
+\noindent Initially (for tasks a, b, and c) we set the parameter a to equal zero and solve the non-interactive system. As it turns out directly evaluating the inner product to find the expectation for the energy is problematic because for a system with interaction it involves solving a pretty unasvory integral. We then turn to numerical methods as a tool, but we still want avoid directly evaluating the expectation for the hamiltonian for the ensamble. The solution to this problem becomes appernt when you consider the machinery of the VMC.
+
 \subsection{Variational Monte Carlo}
 
 Monte Carlo simulations are widely used methods in numerical science that employs random walkers. 
@@ -118,13 +146,13 @@ and we must calculate the drift force in order to find new moves and the Green's
 Like most problems in physics the variational quantum problem is one of optimization. In this project we are optimizing the expectation value of the energy over the parameter $\alpha$. In the naive implementation we simply span a reasonable range of $\alpha$ \footnote{an implementation of which can be seen in the file \lstinline{main_b.cpp}}. For a multi-parameter variational problem this approach is too computationally expensive to implement in most cases. To remedy this problem iterative gradient methods have been developed to make more intelligent choices for the variational parameters. In this project we have opted to implement a simple gradient descent method. The gradient descent is ordinarily presented as 
 
 \begin{equation}
-\alpha_{i+1} = \alpha_i -\gamma \frac{\partial \langle E_L^i \rangle}{\partial \alpha}
+\alpha_{i+1} = \alpha_i -\gamma \frac{\partial \langle E_L (\alpha_i) \rangle}{\partial \alpha_i}
 \end{equation}
 
 \noindent Where we have opted to update the parameter $\gamma$ iteratively by the Barzilai-Borwein formula which is a method that uses an iterative approach to the step size $\gamma$ derived in much the same manner as for quasi-Newton methods\cite{OptTeory}. The only constraint we have to enforce is that $0 < \alpha$. In the algorithm we have a simple rule  that checks the sign of $\alpha$ and makes a correction if it is out-of-bounds. For $i > 0$ the step size $\gamma_i$ is then given as: 
 
 \begin{equation}
-\gamma_i = (\alpha_{i+1} - \alpha) \cdot \frac{1}{\expect{E_L}^{i+1} - \expect{E_L}^i}
+\gamma_i = (\alpha_{i+1} - \alpha_i) \cdot \frac{1}{\expect{E_L}^\alpha_{i+1} - \expect{E_L}^\alpha_i}
 \end{equation}
 
 \noindent We also introduce the notation $\frac{\partial \langle E_L^i \rangle}{\partial \alpha} = \expect{E_L}^\alpha_{i}$ for brevity, and the same notation will be used for the tiral wavefunction $\psi_T$. The partial derivative itself can be found by the equation\footnote{The equation was retrieved from the lecture notes} 
@@ -188,3 +216,17 @@ $\mathbf{R_m} = \mathbf{R}$\\
 Since the derivative involves three function calls for each particle the numerical derivative will obviously be quite computationally expensive. It is noted  that the differentiation could be substantially optimized from the version included in the code, but is outside the scope of this project. 
 
 
+\subsection{One-body densities}
+The one body density can be defined in terms of an arbitrary position vector $\mathbf{r}_1$ as 
+
+\begin{equation}\label{eq:obd}
+\rho(\mathbf{r}_1) = \int d\mathbf{r}_2 \ldots d\mathbf{r}_N |\Psi(\mathbf{r}_1, \mathbf{r}_2, \ldots, \mathbf{r}_N)|^2
+\end{equation}
+
+It's a useful size to compute since it relates the number of particles in the simulation to the density by way of equation \ref{eq:obd_N}
+
+\begin{equation}\label{eq:obd_N}
+N = \int d\mathbf{r}\rho(\mathbf{r})
+\end{equation}
+
+It also provides a complete picture of the relative distribution of particles. Which can be used to visually identify the ground state\footnote{In the odd case where the computation of $\frac{\partial \langle E_L (\alpha_i) \rangle}{\partial \alpha_i}$ for variational optimization is unavailable or too cumbersome one could ostensibly use very simple ML algorithms to optimize the variational parameter.}. 

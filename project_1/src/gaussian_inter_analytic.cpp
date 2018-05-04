@@ -10,16 +10,12 @@ GaussianInterAnalytic::GaussianInterAnalytic() : WaveFunc(){}
 
 void GaussianInterAnalytic::initialize(mat R){
     double a = params[3];
-    double beta = params[2];
 
     for(int i = 0; i < N_p; i ++ ){
         mat temp_outer = R.row(i);
         for(int j = (i+1) ; j < N_p; j++){
             mat temp_inner = R.row(j);
             mat temp = temp_inner - temp_outer;
-            if(N_d > 2){
-                temp(2) *= beta;
-            }
             double dist = (double) sqrt(accu(square(temp)));
             D(i, j) = 1 - a/dist;
         }
@@ -77,13 +73,14 @@ double GaussianInterAnalytic::eval_corr(mat R, int k = -1){
 }
 double GaussianInterAnalytic::eval_g(mat R){
     double alpha = params[0];
-    double beta = params[2];
+    //double beta = params[2];
 
     mat R_c(size(R));
     R_c = R;
-    if(N_d > 2){
+    /*
+	if(N_d > 2){
         R_c.col(2) *= beta;
-    }
+    }*/
     double ret_val = 0;
     double internal = accu(sum(square(R_c)));
 
@@ -139,9 +136,6 @@ double GaussianInterAnalytic::laplace(mat R){
         for(int dk = 0; dk < N_d; dk++){
             rk(dk) = R(k, dk);
         }
-        if(N_d > 2){
-            rk(2) *= beta;
-        }
 
         psi_l = -4*alpha - 2*alpha*beta + 4*alpha_sq*(sum(rk%rk));
         psi_d = -2*alpha*rk;
@@ -151,9 +145,6 @@ double GaussianInterAnalytic::laplace(mat R){
             //Number of dimensions
             for(int dj = 0; dj < N_d; dj++){
                 rj(dj) = R(j, dj);
-            }
-            if(N_d > 2){
-                rj(2) *= beta;
             }
 
             if(j != k){
@@ -178,9 +169,6 @@ double GaussianInterAnalytic::laplace(mat R){
                     for(int di = 0; di < N_d; di++){
                         ri(di) = R(i, di);
                     }
-                    if(N_d > 2){
-                        ri(2) *= beta;
-                    }
 
                     if(i != k){
 
@@ -203,17 +191,19 @@ double GaussianInterAnalytic::laplace(mat R){
     return laplace_return;
 }
 
-mat GaussianInterAnalytic::drift_force(mat R){
+mat GaussianInterAnalytic::drift_force(mat R, int particle_index){
+	// Returns the drift force for <particle>
     double alpha = params[0];
     double a = params[3];
 
-    vec rk = zeros<vec>(N_d);
-    vec rj = zeros<vec>(N_d);
-    vec rkj = zeros<vec>(N_d);
-    vec deri_phi_k = zeros<vec>(N_d);
-    vec deri_u_k = zeros<vec>(N_d);
+    rowvec rk = zeros<rowvec>(N_d);
+    rowvec rj = zeros<rowvec>(N_d);
+    rowvec rkj = zeros<rowvec>(N_d);
+    rowvec deri_phi_k = zeros<rowvec>(N_d);
+    rowvec deri_u_k = zeros<rowvec>(N_d);
 
     double r_kj;
+    deri_phi_k = -4*alpha*(R.row(particle_index));
 
     for(int k = 0; k < N_p; k++){
         //Number of dimensions
@@ -230,11 +220,8 @@ mat GaussianInterAnalytic::drift_force(mat R){
             rkj = rk - rj;
             r_kj = sqrt(sum(rkj%rkj));
 
-            deri_phi_k = (-4*alpha*(rk));
-
             if (j != k){
-                deri_u_k += -a/(a*r_kj*r_kj - r_kj*r_kj*r_kj)*rkj;
-
+                deri_u_k += -a*rkj/(a*r_kj*r_kj - r_kj*r_kj*r_kj);
             }
         }
     }
@@ -264,9 +251,5 @@ void GaussianInterAnalytic::set_params(vector<double> params_i, int N_d_i, int N
     D = mat(N_p, N_p, fill::zeros);
     D_p = mat(N_p, N_p, fill::zeros);
 }
-
-
-
-
 
 

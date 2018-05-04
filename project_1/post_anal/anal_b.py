@@ -47,7 +47,7 @@ def block(x):
     #print ("%8g %20g %15g" % (mu, k, ans**.5))
     return ans
 
-filenames = np.array(os.listdir("../data/"))
+filenames = np.array(os.listdir("../data/temp_data"))
 
 #With error plot
 alpha_regex = r".+_a_(0.\d{6}).+"
@@ -60,16 +60,16 @@ mask = [not f.endswith("data.csv") for f in filenames]
 filenames = sorted(filenames[mask], key = lambda x: float(alpha_regex_obj.search(x).group(1)))
 stds = [0, 0]
 
-N_ps = (1, 10, 500)
+N_ps = (1, 10, 100, 500)
 N_mc = 0
 N_ds = (1, 2, 3)
 sim_types = [v for v in sys.argv[1:]]
 
-fast = False 
+fast = False
 
 for N_d_i in N_ds:
     for N_p_i in N_ps:
-        mean_n_times = pd.read_csv("../data/"+
+        mean_n_times = pd.read_csv("../data/temp_data/"+
                 sim_types[0]+
                 "_"+sim_types[1][3:]+
                 "_meta"+
@@ -82,7 +82,7 @@ for N_d_i in N_ds:
             tmp = []
             for filename in filenames: 
                 if filename.startswith(sim_type):
-                    t_filename = "../data/"+filename
+                    t_filename = "../data/temp_data/"+filename
                     
                     f_o = open(t_filename)
                     header = f_o.readline()
