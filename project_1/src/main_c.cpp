@@ -12,7 +12,7 @@ int main(int argc, char *argv[]){
     double beta, step, h, dt; 
     int N_p, N_d, N_mc, mc_exp;
     beta = 1; step = 1; h = 1e-4;
-    if( argc < 3){
+    if( argc < 4){
         cout << "Wrong usage" << endl;    
         exit(1);
     }
@@ -38,10 +38,13 @@ int main(int argc, char *argv[]){
         alpha_array[i] = alpha_start + i*alpha_step ;
     }
 
+	double dummy = 0.0; // Just to keep params same length between non-interactive
+						// and interactive case.
+
     for(int i = 0; i < num_sims; i++){
         double alpha = alpha_array[i];
         string sim_type_a = "IM_NIA";
-        vector<double> params = {alpha, alpha*alpha, beta, dt};
+        vector<double> params = {alpha, alpha*alpha, beta, dummy, dt};
         g.set_params(params, N_d, N_p);
         //must be called or else you literally have no random numbers
         //args are alpha, beta, N_particles, N_dims, N_mccycles
