@@ -67,7 +67,7 @@ int main(int argc, char *argv[]){
      for(int i = 0; i < num_sims; i++){
         double alpha = alpha_array[i];
         string sim_type_n = "IM_NIN";
-        vector<double> params = {alpha, beta, h, dt};
+        vector<double> params = {alpha, dummy, beta, h, dt};
         u.set_params(params, N_d, N_p);
         //must be called or else you literally have no random numbers
         //args are alpha, beta, N_particles, N_dims, N_mccycles

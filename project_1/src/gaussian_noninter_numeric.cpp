@@ -26,7 +26,7 @@ double GaussianNonInterNumeric::evaluate(mat R){
 
 double GaussianNonInterNumeric::laplace(mat R){
 
-    double h = params[2];
+    double h = params[3];
     double lap = 0;
 
     mat Rp = R;
@@ -51,7 +51,7 @@ double GaussianNonInterNumeric::laplace(mat R){
 }
 
 mat GaussianNonInterNumeric::drift_force(mat R, int j){
-    double h = params[2];
+    double h = params[3];
 	mat current = R.row(j);
 	mat der(size(current));
 	for(int i = 0; i < N_d; i++){
