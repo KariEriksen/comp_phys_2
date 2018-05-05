@@ -23,7 +23,6 @@ double Importance::metropolis_hastings(WaveFunc *psi_t, double prev_E_l){
 	}
 
 	// Calculate drift force for that particle.
-	// TODO: Make sure it actually works.
     mat F_drift(1, N_d);
 	F_drift = psi_t -> drift_force(R, j);
 

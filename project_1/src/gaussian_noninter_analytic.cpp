@@ -54,7 +54,7 @@ double GaussianNonInterAnalytic::ratio(mat R, mat R_p, int k){
 void GaussianNonInterAnalytic::set_params(vector<double> params_i, int N_d_i, int N_p_i){
     N_d = N_d_i;
     N_p = N_p_i;
-    // params : alpha, alpha_squared, beta
+    // params : alpha, alpha_squared, beta, dt
     params = params_i;
 
 }
