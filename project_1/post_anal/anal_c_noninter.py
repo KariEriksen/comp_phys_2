@@ -58,23 +58,23 @@ header_regex_obj = re.compile(header_regex)
 
 mask = [not f.endswith("data.csv") for f in filenames]
 filenames = sorted(filenames[mask], key = lambda x: float(alpha_regex_obj.search(x).group(1)))
-stds = [0, 0]
+stds = [0]
 
-dts = (0.0001,0.001, 0.01, 0.1, 1.0)
-N_ps = (10,)
+dts = (0.1,)
+N_ps = (1, 10, 100, 500)
 N_mc = 0
-N_ds = (3,)
+N_ds = (1, 2, 3)
 sim_types = [v for v in sys.argv[1:]]
 
-fast = True
+fast = False
 for N_d_i in N_ds:
     for N_p_i in N_ps:
 
         fig, ax = plt.subplots(figsize=(9, 7))
         for dt_i in dts:
             mean_n_times = pd.read_csv("../data/"+
+                    #"_"+sim_types[1][3:]+
                     sim_types[0]+
-                    "_"+sim_types[1][3:]+
                     "_meta"+
                     "_np_"+str(N_p_i)+
                     "_nd_"+str(N_d_i)+
@@ -108,16 +108,18 @@ for N_d_i in N_ds:
 
 
             time_anal = np.average(mean_n_times["analytic_time"])
+            """
             try:
                 time_num = np.average(mean_n_times["numeric_time"])
                 num_min_index = np.where(
                         mean_n_times.numeric_energy == np.min(mean_n_times.numeric_energy))
                 num_min_cord = (mean_n_times.alpha[num_min_index[0][0]],
-                    mean_n_times.numeric_energy[num_min_index[0][0]])
+                        mean_n_times.numeric_energy[num_min_index[0][0]])
 
                 t_r = time_num / time_anal
             except IndexError:
                 pass 
+            """
             anal_min_index = np.where(
                     mean_n_times.analytic_energy == np.min(mean_n_times.analytic_energy))
             anal_min_cord = (mean_n_times.alpha[anal_min_index[0][0]],
@@ -130,60 +132,60 @@ for N_d_i in N_ds:
 
             if fast:
                 x = mean_n_times.alpha.values
-                num = mean_n_times.numeric_energy.values
+                #num = mean_n_times.numeric_energy.values
                 anal = mean_n_times.analytic_energy.values
-                plt.subplot(211)
                 plt.plot(x, anal, label=r"$dt = ${}".format(dt_i))
-                plt.title("Analytic")
-                plt.xlabel(r"$\alpha$")
-                plt.ylabel(r"$\langle E \rangle $")
-                plt.legend()
-
-                plt.subplot(212)
-                plt.plot(x, num, label=r"$dt = ${}".format(dt_i))
-                plt.title("Numeric")
                 
+                #plt.title("Analytic")
+                #plt.xlabel(r"$\alpha$")
+                #plt.ylabel(r"$\langle E \rangle $")
+                #plt.legend()
+
+                #plt.subplot(212)
+                #plt.plot(x, num, label=r"$dt = ${}".format(dt_i))
+                #plt.title("Numeric")
+
                 #mean_n_times.plot("alpha", ["analytic_energy", "numeric_energy"],
                 #        legend = True,
                 #        title = title,
                 #        ax = ax)
             else:
                 x = mean_n_times.alpha.values
-                num = mean_n_times.numeric_energy.values
+                #num = mean_n_times.numeric_energy.values
                 anal = mean_n_times.analytic_energy.values
 
-                plt.errorbar(x, num, fmt = "x-",
-                        barsabove = True,
-                        yerr = np.array(stds[1], dtype = float),
-                        label = "numeric_energy")
-
-                plt.errorbar(x, anal, fmt = "^-",
-                        barsabove = True,
-                        yerr = np.array(stds[0], dtype=float),
-                        label = "analytic_energy: dt = " + str(dt_i)) 
-                plt.title(title)
-                plt.xticks(x, rotation = 45, size = "medium")
-                plt.legend()
-            """ 
+                #plt.errorbar(x, num, fmt = "x-",
+                #        barsabove = True,
+                #        yerr = np.array(stds[1], dtype = float),
+                #        label = "numeric_energy")
+                
+                if dt_i == 0.1:
+                    plt.errorbar(x, anal, fmt = "^-",
+                            barsabove = True,
+                            yerr = np.array(stds[0], dtype=float))
+                    plt.title(title)
+                    plt.xticks(x, rotation = 45, size = "medium")
+                    plt.legend()
             a_min_txt = r"Analytic GS @ $\alpha = ${} with $\langle E \rangle / N_P =$ {:.2f}".format(anal_min_cord[0], anal_min_cord[1]/float(N_p_i))
 
-            n_min_txt = r"Numeric GS @ $\alpha = ${} with $\langle E \rangle / N_P =$ {:.2f}".format(num_min_cord[0], num_min_cord[1]/float(N_p_i))
+            #n_min_txt = r"Numeric GS @ $\alpha = ${} with $\langle E \rangle / N_P =$ {:.2f}".format(num_min_cord[0], num_min_cord[1]/float(N_p_i))
 
             ax.annotate(a_min_txt, xy=anal_min_cord,  xycoords='data',
                     xytext=(50, 120), textcoords='offset points',
                     arrowprops=dict(arrowstyle="->",
                         connectionstyle="arc3,rad=0.2"))
 
-            ax.annotate(n_min_txt, xy=num_min_cord,  xycoords='data',
-                    xytext=(-60, 150), textcoords='offset points',
-                    arrowprops=dict(arrowstyle="->",
-                                    connectionstyle="arc3,rad=0.2"))        
-            """
+            #ax.annotate(n_min_txt, xy=num_min_cord,  xycoords='data',
+            #        xytext=(-60, 150), textcoords='offset points',
+            #        arrowprops=dict(arrowstyle="->",
+            #                        connectionstyle="arc3,rad=0.2"))        
+
+        #plt.title(title)
         plt.xlabel(r"$\alpha$")
         plt.ylabel(r"$\langle E \rangle $")
-        plt.legend()
+        #plt.legend()
 
         figname = sim_types[0]
-        figname += "_np_" + str(N_p_i) + "_nd_" + str(N_d_i) + "_dt" + ".pdf" 
+        figname += "_np_" + str(N_p_i) + "_nd_" + str(N_d_i) + ".pdf" 
         plt.savefig("../report/figures/non-interactive/" + figname)
         plt.clf()

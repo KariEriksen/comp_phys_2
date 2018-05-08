@@ -54,10 +54,14 @@ mat GaussianNonInterNumeric::drift_force(mat R, int j){
     double h = params[3];
 	mat current = R.row(j);
 	mat der(size(current));
+	mat val(size(current));
 	for(int i = 0; i < N_d; i++){
 		der(i) = (evaluate(current.col(i) + h) - evaluate(current.col(i)))/h;
 	}
-    return der;
+	for(int i = 0; i < N_d; i++){
+		val(i) = evaluate(current.col(i));
+	}
+    return 2*der/val;
 }
 
 

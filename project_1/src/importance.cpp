@@ -30,7 +30,6 @@ double Importance::metropolis_hastings(WaveFunc *psi_t, double prev_E_l){
 	double zeta = dis_zeta(*gen);
 	R_p.row(j) += 0.5*F_drift*dt + zeta*sqrt(dt);
 	
-	
     double P = psi_t -> ratio(R, R_p, j);
 
 	// Calculate drift force for particle j in proposed position

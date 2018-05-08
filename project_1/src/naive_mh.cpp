@@ -8,7 +8,7 @@ using namespace std;
 double NaiveMh::metropolis_hastings(WaveFunc *psi_t, double prev_E_l){
     mat R_p(size(R));
     R_p = R;
-	double beta = psi_t -> params[2]
+	double beta = psi_t -> params[2];
 
     uniform_int_distribution<int> dis_r(0, N_p - 1);
     uniform_real_distribution<double> dis_step(-1, 1);

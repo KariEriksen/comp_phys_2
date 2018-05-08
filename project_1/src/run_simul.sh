@@ -1,7 +1,7 @@
 N_mc="17";
-for N_d in "3"
+for N_d in "1" "2" "3"
 	do
-		for N_p in "10"
+		for N_p in "1" "10" "100" "500"
 			do
 				for dt in "0.0001" "0.001" "0.01" "0.1" "1.0"
 					do
