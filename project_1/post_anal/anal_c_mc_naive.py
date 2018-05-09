@@ -48,12 +48,12 @@ sim_types = [v for v in sys.argv[1:]]
 
 for N_d_i in N_ds:
     for N_p_i in N_ps:
-        mean_n_times = pd.read_csv("../data/NM_NIA_NIN_meta_np_3_nd_500_data.csv")
+        mean_n_times = pd.read_csv("../data/NM_NIA_NIN_meta_np_500_nd_3_data.csv")
         
         for i in range(len(sim_types)):
             sim_type = sim_types[i]
             tmp = []
-            t_filename = "../data/NM_NIA_a_0.400000_b_1.000000_step_1.000000_np_3_nd_500.csv"
+            t_filename = "../data/NM_NIA_a_0.400000_b_1.000000_step_1.000000_np_500_nd_3.csv"
             
             f_o = open(t_filename)
             header = f_o.readline()
