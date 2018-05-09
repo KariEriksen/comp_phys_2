@@ -1,5 +1,6 @@
 #include "../include/gaussian_noninter_analytic.h"
 #include "../include/wavefunc.h"
+
 #include <armadillo>
 
 using namespace std;
@@ -16,11 +17,14 @@ double GaussianNonInterAnalytic::E_l(mat R){
 double GaussianNonInterAnalytic::evaluate(mat R){
     double alpha = params[0];
 	double alpha_sq = params[1];
+    double beta = params[2];
 
     mat R_c(size(R));
     R_c = R;
-    
-	double ret_val = 0;
+    if(N_d > 2){
+        R_c.col(2) *= beta;
+    }
+    double ret_val = 0;
     double internal = accu(square(R_c));
     ret_val = (double) as_scalar(exp(-alpha *(internal)));
     return ret_val;
@@ -29,14 +33,20 @@ double GaussianNonInterAnalytic::laplace(mat R){
 
     double alpha = params[0];
     double alpha_sq = params[1];
+	double beta = params[2];
     double factor = N_d*N_p;
 	
+	if(N_d == 3){
+		R.col(2) = R.col(2)*beta;
+	}
+
     //This is the analytical expression for the second derivative of the
     //wave function. Not calculating the laplacien
     double scnd_der = factor*alpha - 2*alpha_sq*as_scalar(accu(square(R)));
     return scnd_der;
 }
 
+// Moved in from dev version
 mat GaussianNonInterAnalytic::drift_force(mat R, int j){
 	double alpha = params[0];
     return -4*alpha*R.row(j);
@@ -54,7 +64,7 @@ double GaussianNonInterAnalytic::ratio(mat R, mat R_p, int k){
 void GaussianNonInterAnalytic::set_params(vector<double> params_i, int N_d_i, int N_p_i){
     N_d = N_d_i;
     N_p = N_p_i;
-    // params : alpha, alpha_squared, beta, dt
+    // params : alpha, alpha_squared, beta
     params = params_i;
 
 }
