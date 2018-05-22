@@ -1,173 +1,65 @@
-\documentclass[12pt]{article}
-\usepackage[backend=biber]{biblatex}
-\usepackage{amsmath}
-\usepackage{listings}
-\usepackage{graphicx}
-\usepackage{caption}
-\usepackage{subcaption}
-\usepackage{commath}
-\usepackage{hyperref}
-\usepackage{url}
-\usepackage{xcolor}
-\usepackage{textcomp}
-\usepackage{dirtytalk}
-\usepackage{listings}
-\usepackage{wasysym}
-\usepackage{float}
+\section{Appendix 1}
 
+Given the Hamiltonian in eq. (REF EQ FROM ABOVE) the expression for the local energy is given by the following.
 
-% Parameters for displaying code.
-\lstset{language=C++}
-\lstset{basicstyle=\ttfamily\small}
-\lstset{frame=single}
-\lstset{keywordstyle=\color{red}\bfseries}
-\lstset{commentstyle=\itshape\color{blue}}
-\lstset{showspaces=false}
-\lstset{showstringspaces=false}
-\lstset{showtabs=false}
-\lstset{breaklines}
-
-% Define new commands
-\newcommand{\expect}[1]{\langle #1 \rangle}
-\newcommand{\dd}[1]{\ \text{d}#1}
-\newcommand{\f}[2]{\frac{#1}{#2}} 
-\newcommand{\tf}[2]{\tfrac{#1}{#2}}
-\newcommand{\beq}{\begin{equation*}}
-\newcommand{\eeq}{\end{equation*}}
-\newcommand{\bra}[1]{\langle #1|}
-\newcommand{\ket}[1]{|#1 \rangle}
-\newcommand{\braket}[2]{\langle #1 | #2 \rangle}
-\newcommand{\av}[1]{\left| #1 \right|}
-\newcommand{\op}[1]{\widehat{#1}}
-\newcommand{\braopket}[3]{\langle #1 | \op{#2} | #3 \rangle}
-\newcommand{\ketbra}[2]{\ket{#1}\bra{#2}}
-\newcommand{\pp}[1]{\frac{\partial}{\partial #1}}
-\newcommand{\ppn}[1]{\frac{\partial^2}{\partial #1^2}}
-\newcommand{\up}{\left|\uparrow\rangle\right.}
-\newcommand{\down}{\left|\downarrow\rangle\right.}
-\newcommand{\updown}{\left|\uparrow\downarrow\rangle\right.}
-\newcommand{\downup}{\left|\downarrow\uparrow\rangle\right.}
-\newcommand{\ua}{\uparrow}
-\newcommand{\da}{\downarrow}
-
-% Add bibliography
-%\addbibresource{bibliography.bib}
-
-\begin{document}
-
-\title{Derivations}
-\author{Garbage}
-\maketitle
-
-\section*{Drift Force without interaction}
-
-Drift force is given by:
-\beq
-F = \f{2\nabla\Psi_T}{\Psi_T}
-\eeq
-With non-interacting particles, we have
-\beq
-\Psi_T = \prod_{i} g(\alpha, \beta, \vec{r}_i)
-\eeq
-so
 \begin{align*}
-	\nabla g(\alpha, \beta, \vec{r}_i) &= 
-	\left( \pp{x}+\pp{y}+\pp{z}\right)
-	\exp\big(-\alpha(x^{2}_i + y^{2}_i + \beta z^{2}_i)\big)
-\end{align*}
-The partial derivatives are:
-\begin{align*}
-	\pp{x}g &= -2\alpha x_i \exp\big(-\alpha(x^{2}_i + y^{2}_i + \beta z^{2}_i)\big) \\
-	\pp{y}g &= -2\alpha y_i \exp\big(-\alpha(x^{2}_i + y^{2}_i + \beta z^{2}_i)\big) \\
-	\pp{z}g &= -2\alpha\beta z_i \exp\big(-\alpha(x^{2}_i + y^{2}_i) + \beta z^{2}_i)\big)
-\end{align*}
-Using this we find:
-\begin{align*}
-	\nabla g(\alpha, \beta, \vec{r}_i) &= 
-	-2\alpha(x_i + y_i + \beta z_i)\exp\big(-\alpha(x^{2}_i + y^{2}_i) + \beta z^{2}_i)\big)
-\end{align*}
-Which finally gives:
-\beq
-	F = \f{2\nabla g}{g} = -4\alpha \sum_{i}(x_i + y_i + \beta z_i)
-\eeq
-
-\section{Local energy without interaction}
-\subsection{Single particle}
-\subsection{N particles}
-\subsubsection{1D}
-Edit 09.03.18: This is probably wrong. Check.
-For N particles in one dimension, we have:
-\begin{align*}
-	\Psi_T &= \prod_{i} g(\alpha, \vec{r}_i) = \exp\big(-\alpha(x^{2}_i)\big) \\
-	E_L &= \f{\op{H}\Psi_T}{\Psi_T} \\
-	\op{H}\Psi_T &= \big(\sum_{i} \f{\hbar^2}{2m}\nabla^{2}_j + 
-	\f{1}{2}m\omega^{2}_{ho}x^{2}_i \big) \prod_{i} g_i \\
-	&= \f{\hbar^2}{2m}\sum_{i} \nabla^{2}_j \prod_{i} g_i + 
-	\f{1}{2}m\omega^{2}_{ho}x^{2}_i \prod_{i} g_i \\
-	\nabla^{2}_i &= \ppn{x_i}
-\end{align*}
-Computing the second-derivative of the wave-function:
-\begin{align*}
-	\nabla_j \prod_{i}g_i &=\pp{x_j}\prod_{i\neq j}g_i = -2\alpha x_i\prod_{i} g_i \\
-	\nabla^{2}_j\prod_{i}g_i &= \nabla_j(\nabla_j \prod_{i}g_i) \\
-	&= -2\alpha \nabla_j(x_i\prod_{i} g_i) \\
-	&= -2\alpha \big(\prod_{i}g_i + x_i\nabla_j\prod_{i}g_i \big) \\
-	&= -2\alpha \big(\prod_{i}g_i + x_i(-2\alpha x_i \prod_{i}g_)\big) \\
-	&= 2\alpha\prod_{i}g_i(2\alpha x^{2}_i - 1)
-\end{align*}
-With this we find the local energy $E_L$:
-\begin{align*}
-	E_L &= 
-	\f{1}{\prod_{i}g_i}\big(-\f{\hbar^2}{2m}\sum_{j}2\alpha\prod_{i}g_i
-	(2\alpha x^{2}_i - 1) + \f{1}{2}m\omega^{2}_{ho}\prod_{i}g_i \big) \\
-	&= -\f{\hbar^2}{m}\alpha N(2\alpha x^{2}_i - 2) + \f{1}{2}m\omega^{2}_{ho}
-\end{align*}
-where $\alpha = \f{1}{2a^{2}_{H_0}}$ and $a_{H_0} = \f{\hbar}{m\omega}$
-
-\subsubsection{2D}
-\subsubsection{3D}
-Edited 08.03.18.
-\begin{align*}
-	\nabla_k\Psi_T(\vec{r}) &= \nabla_k\phi(\vec{r}_k)\cdot\prod_{i \neq k}\phi(\vec{r}_i) \\
-	\nabla^{2}_{k}\Psi_T(\vec{r}) &=\nabla_k[\nabla_k\Psi_T(\vec{r})] \\
-	&= \nabla_k[\nabla_k\phi(\vec{r}_k)\cdot\prod_{i \neq k}\phi(\vec{r}_i)] \\
-	&= \nabla^{2}_{k}\phi(\vec{r}_k)\cdot\prod_{i \neq k}\phi(\vec{r}_i)\\
-\end{align*}
-where
-\begin{align*}
-	\nabla_k\phi(\vec{r}_k) &= \nabla_k\exp(-\alpha(x{^2}_k+y{^2}_k+\beta z{^2}_k)) \\
-	&= -2\alpha(x_k + y_k + \beta z_k)\exp(-\alpha(x{^2}_k+y{^2}_k+\beta z{^2}_k))
-\end{align*}
-and
-\begin{align*}
-	\nabla^{2}_{k}\phi(\vec{r}_k) &= \nabla_k\big(\nabla_k
-		\exp(-\alpha(x{^2}_k+y{^2}_k+\beta z{^2}_k))\big) \\
-	&= \nabla_k\big(-2\alpha(x_k + y_k + \beta z_k)
-		\exp(-\alpha(x{^2}_k+y{^2}_k+\beta z{^2}_k))\big) \\
-	&= -2\alpha\big(\nabla_k(x_k + y_k + \beta z_k)
-		\cdot\exp(-\alpha(x{^2}_k+y{^2}_k+\beta z{^2}_k)) \\
-		&+ \nabla_k\exp(-\alpha(x{^2}_k+y{^2}_k+\beta z{^2}_k))
-		\cdot(x_k + y_k + \beta z_k)\big) \\
-	&= -2\alpha\big(\nabla_k(x_k + y_k + \beta z_k)\cdot\phi(\vec{r}_k)
-		-2\alpha(x_k + y_k + \beta z_k)^2\phi(\vec{r}_k)\big) \\
-	&= -2\alpha\big((2+\beta)\phi(\vec{r}_k)
-		-2\alpha(x_k + y_k + \beta z_k)^2\phi(\vec{r}_k)\big) \\
+E_L &= \frac{1}{\Psi}\hat{H}\psi \\
+&= \sum_{k}^{P} \frac{1}{2} \left( -\frac{1}{\Psi} \nabla_k^2 \Psi +  \omega^2 r_k^2 \right) + \sum_{k < l} \frac{1}{r_{kl}}
 \end{align*}
 
-\section{Local energy with interaction}
-\subsection{Note on indices in project file.}
-The project file has screwed up indices for sums etc in the problem text,
-and lacks some clarity regarding $f(i,j)$. This is a brief summary of notes made
-in group session:
+We wish to find the Laplacian of the NQS wave function. Since our visible nodes represents the particle positions in Cartesian coordinates the Laplace operator takes the second partial derivative with respect to each independent variable in the vector space. It can therefore be written as  
+
+\begin{equation*}
+\nabla_k^2 \Psi = \sum_{l}^{D} \frac{\partial^2}{\partial x_{kl}^2} \Psi.
+\end{equation*}
+
+\begin{equation*}
+E_L = \sum_{k}^{P} \sum_{l}^{D} \frac{1}{2} \left( -\frac{1}{\Psi} \frac{\partial^2}{\partial x_{kl}^2} \Psi +  \omega^2 r_k^2 \right) + \sum_{k < l} \frac{1}{r_{kl}}
+\end{equation*}
+
+\begin{equation*}
+E_L = \sum_{i}^{M} \frac{1}{2} \left( -\frac{1}{\Psi} \frac{\partial^2}{\partial X_{i}^2} \Psi +  \frac{1}{\Psi} \omega^2 X_i^2 \right) + \frac{1}{\Psi} \sum_{k < l} \frac{1}{r_{kl}}
+\end{equation*}
+
+In the above equation we have used the fact that the number of visible nodes are $M = P \cdot D$. This reduces the number of sums in the first term to one. Also we see that it would be an advantage to solve the derivatives of $\ln \Psi$ since our wave function consist of sums in the exponential and also removes the $\Psi$ in the denominator. Thus the identity below is helpful. 
+
+\begin{equation*}
+\frac{1}{\Psi} \frac{\partial^2}{\partial X_{i}^2} \Psi = \left( \frac{\partial}{\partial X_{i}} \ln \Psi \right)^2 + \frac{\partial^2}{\partial X_{i}^2} \ln \Psi
+\end{equation*}
+
+
+\begin{equation*}
+E_L = \sum_{i}^{M} \frac{1}{2} \left( - \left( \frac{\partial}{\partial X_{i}} \ln \Psi \right)^2 + \frac{\partial^2}{\partial X_{i}^2} \ln \Psi  +  \frac{1}{\Psi} \omega^2 X_i^2 \right) + \frac{1}{\Psi} \sum_{k < l} \frac{1}{r_{kl}}
+\end{equation*}
+
+Our local energy can be rewritten and we must now solve both the first and second derivative of the wave function. Our wave function is represented by the marginal probability $F_{rbm}$.
+
 \begin{align*}
-	\phi{\vec{r}_i} &= \exp(-\alpha(x^{2}_i + y^{2}_i + \beta z^{2}_i))\\
-	f(r_{ij}) &= \exp(\sum_{i<j}u(r_{ij})) \\
-	u(r_{ij}) &= ln(f(r_{ij})) = ln(\exp\big(\sum_{i<j}u(r_{ij})\big)) \\
-	f(r_{ij}) &= \exp\big(u(r_{ij})\big) \\
-	\nabla_k \exp\big(\sum_{i<j} u(r_{ij}) &= \exp\big(\sum_{i<j} u(r_{ij})\big) \cdot 
-	\nabla_k \sum_{l\neq k} u(r_{lk}) \\
-	\sum_{j\neq k} \nabla_k u(r_{kj})
+\Psi(X) &= F_{rbm}(X) \\
+&= \frac{1}{Z} \exp \left( -\sum_{i}^{M} \frac{(X_i - a_i)^2}{2 \sigma^2} \right) \prod_{j}^{N} \left( 1 + \exp \left( b_j + \sum_{i}^{M} \frac{X_i \omega_{ij}}{\sigma^2} \right) \right)
 \end{align*}
 
 
-\end{document}
+\begin{equation*}
+\ln \Psi = -\ln Z - \sum_{i}^{M} \frac{(X_i - a_i)^2}{2 \sigma^2} +  \sum_{j}^{N} \ln \left(1 + \exp \left( b_j + \sum_{i}^{M} \frac{X_i \omega_{ij}}{\sigma^2} \right) \right)
+\end{equation*}
+
+Since $Z$ is the normalization constant its derivative is zero and can be removed.
+We end up with the following
+
+\begin{align*}
+\nabla_i \ln \Psi &= \nabla_i \left( - \sum_{i}^{M} \frac{(X_i - a_i)^2}{2 \sigma^2} +  \sum_{j}^{N} \ln \left( 1 + \exp \left( b_j + \sum_{i}^{M} \frac{X_i \omega_{ij}}{\sigma^2} \right) \right) \right) \\
+&= \frac{\partial}{\partial X_i} \left( - \sum_{i}^{M} \frac{(X_i - a_i)^2}{2 \sigma^2} +  \sum_{j}^{N} \ln \left(1 + \exp \left( b_j + \sum_{i}^{M} \frac{X_i \omega_{ij}}{\sigma^2} \right) \right) \right)\\
+&= \frac{-2 (X_i - a_i) 2 \sigma^2}{(2 \sigma^2)^2} + \sum_{j}^{N} \frac{1}{1 + \exp \left( b_j + \sum_{i}^{M} \frac{X_i \omega_{ij}}{\sigma^2} \right)} \left( \frac{\omega_{ij}}{\sigma^2} \right) \exp \left(  b_j + \sum_{i}^{M} \frac{X_i \omega_{ij}}{\sigma^2} \right) \\
+&= \frac{-(X_i - a_i)}{\sigma^2} + \frac{1}{\sigma^2}\sum_{j}^{N} \frac{\omega_{ij}}{1 + \exp \left( -b_j - \sum_{i}^{M} \frac{X_i \omega_{ij}}{\sigma^2} \right)}
+\end{align*}
+
+Given the first derivative we now find the second derivative. And we have solved the analytic case of the local energy.
+
+\begin{align*}
+\nabla_i^2 \ln \Psi &= \nabla_i^2 \left( - \sum_{i}^{M} \frac{(X_i - a_i)^2}{2 \sigma^2} +  \sum_{j}^{N} \ln \left( 1 + \exp \left( b_j + \sum_{i}^{M} \frac{X_i \omega_{ij}}{\sigma^2} \right) \right) \right) \\
+&= \frac{\partial}{\partial X_i} \left( \frac{-(X_i - a_i)}{\sigma^2} + \frac{1}{\sigma^2} \sum_{j}^{N} \frac{\omega_{ij}}{1 + \exp \left( -b_j - \sum_{i}^{M} \frac{X_i \omega_{ij}}{\sigma^2} \right)} \right) \\
+&= -\frac{1}{\sigma^2} + \frac{1}{\sigma^2} \sum_{j}^{N} \frac{-\omega_{ij}}{\left(1 + \exp \left( -b_j - \sum_{i}^{M} \frac{X_i \omega_{ij}}{\sigma^2} \right)\right)^2} \left( \frac{-\omega_{ij}}{\sigma^2} \right) \exp \left( -b_j - \sum_{i}^{M} \frac{X_i \omega_{ij}}{\sigma^2} \right) \\
+&= -\frac{1}{\sigma^2} + \frac{1}{\sigma^4} \sum_{j}^{N} \frac{\left(\omega_{ij}\right)^2  }{\left(1 + \exp \left( -b_j - \sum_{i}^{M} \frac{X_i \omega_{ij}}{\sigma^2} \right)\right)^2}\exp \left( -b_j - \sum_{i}^{M} \frac{X_i \omega_{ij}}{\sigma^2} \right) 
+\end{align*}
+
