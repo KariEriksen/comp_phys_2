@@ -18,7 +18,7 @@ E_L = \sum_{k}^{P} \sum_{l}^{D} \frac{1}{2} \left( -\frac{1}{\Psi} \frac{\partia
 \end{equation*}
 
 \begin{equation*}
-E_L = \sum_{i}^{M} \frac{1}{2} \left( -\frac{1}{\Psi} \frac{\partial^2}{\partial X_{i}^2} \Psi +  \frac{1}{\Psi} \omega^2 X_i^2 \right) + \frac{1}{\Psi} \sum_{k < l} \frac{1}{r_{kl}}
+E_L = \sum_{i}^{M} \frac{1}{2} \left( -\frac{1}{\Psi} \frac{\partial^2}{\partial X_{i}^2} \Psi +  \omega^2 X_i^2 \right) +  \sum_{k < l} \frac{1}{r_{kl}}
 \end{equation*}
 
 In the above equation we have used the fact that the number of visible nodes are $M = P \cdot D$. This reduces the number of sums in the first term to one. Also we see that it would be an advantage to solve the derivatives of $\ln \Psi$ since our wave function consist of sums in the exponential and also removes the $\Psi$ in the denominator. Thus the identity below is helpful. 
@@ -29,7 +29,7 @@ In the above equation we have used the fact that the number of visible nodes are
 
 
 \begin{equation*}
-E_L = \sum_{i}^{M} \frac{1}{2} \left( - \left( \frac{\partial}{\partial X_{i}} \ln \Psi \right)^2 + \frac{\partial^2}{\partial X_{i}^2} \ln \Psi  +  \frac{1}{\Psi} \omega^2 X_i^2 \right) + \frac{1}{\Psi} \sum_{k < l} \frac{1}{r_{kl}}
+E_L = \sum_{i}^{M} \frac{1}{2} \left( - \left( \frac{\partial}{\partial X_{i}} \ln \Psi \right)^2 + \frac{\partial^2}{\partial X_{i}^2} \ln \Psi  + \omega^2 X_i^2 \right) +  \sum_{k < l} \frac{1}{r_{kl}}
 \end{equation*}
 
 Our local energy can be rewritten and we must now solve both the first and second derivative of the wave function. Our wave function is represented by the marginal probability $F_{rbm}$.
@@ -62,4 +62,9 @@ Given the first derivative we now find the second derivative. And we have solved
 &= -\frac{1}{\sigma^2} + \frac{1}{\sigma^2} \sum_{j}^{N} \frac{-\omega_{ij}}{\left(1 + \exp \left( -b_j - \sum_{i}^{M} \frac{X_i \omega_{ij}}{\sigma^2} \right)\right)^2} \left( \frac{-\omega_{ij}}{\sigma^2} \right) \exp \left( -b_j - \sum_{i}^{M} \frac{X_i \omega_{ij}}{\sigma^2} \right) \\
 &= -\frac{1}{\sigma^2} + \frac{1}{\sigma^4} \sum_{j}^{N} \frac{\left(\omega_{ij}\right)^2  }{\left(1 + \exp \left( -b_j - \sum_{i}^{M} \frac{X_i \omega_{ij}}{\sigma^2} \right)\right)^2}\exp \left( -b_j - \sum_{i}^{M} \frac{X_i \omega_{ij}}{\sigma^2} \right) 
 \end{align*}
+
+\subsection{Ref}
+Machine Learning An Algorithmic Perspective, Stephen Marsland
+
+A high-bias, low-variance introduction to Machine Learning for physicists, Mehta
 
