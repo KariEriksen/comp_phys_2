@@ -19,16 +19,10 @@ double NaiveMh::metropolis_hastings(WaveFunc *psi_t, double prev_E_l){
     }
     double eps = dis_p(*gen);
     double P = psi_t -> ratio(R, R_p, j);
-    /*
-    cout << "eps: " << eps << " | P: " << P << endl;
-    cout << "R ------------------" << endl;
-    R.print();
-    cout << "R_p ----------------" << endl;
-    R_p.print();
-    */
+
     if(eps < P){
         R = R_p;
-        psi_t -> update();
+        //psi_t -> update();
         return psi_t -> E_l(R);
     }
     else{

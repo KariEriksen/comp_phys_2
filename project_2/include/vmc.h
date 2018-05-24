@@ -22,7 +22,6 @@ class vmc{
         double step;
         bool compute_extra; 
         bool compute_obd;
-        double a, b;
         int N_p, N_mc, N_d;
    protected:
         int obd_n_bins;
@@ -37,7 +36,8 @@ class vmc{
         void monte_carlo(WaveFunc *psi_t, metadata *exp_vals);
         vector<double> solve(WaveFunc *psi, string filename);
         void generate_positions(double step_int);
-        void set_params(double a, double b, int N, int dim,
+        double gradient_descent(mat R, mat a, mat b, mat W, double sigma);
+        void set_params(int N, int dim,
                 int mc_cycles, bool obd_bool, bool meta_bool);
     protected:
         virtual double metropolis_hastings(WaveFunc *psi_t, double prev_E_l) = 0;
