@@ -1,7 +1,12 @@
 \section{Discussion}
 \section{Non interacting bosons}
 
-We've observed that for non-interactive bosons we are able to find an analytical minimum for the local energy, that we've used as a reference to assert that the VMC machinery indeed produces the correct result. As noted in task 1b this information is not in general something that is available to us. Methods like gradient descent ad variations thereof must then be considered. We implemented a GD algorithm that converged fast, and with relatively few MC-cycles, to a stable minimum for $\alpha$. More complex methods were not considered since we knew the problem to be quadratic, and thus well behaved in that the search space only has one minimum. 
+We've observed that for non-interactive bosons we are able to find an analytical minimum for the local energy, that we've used as a reference to assert that the VMC machinery indeed produces the correct result. To decrease the number of MC-cycles needed to reach a minimum, importance sampling was implemented, but the results produced indicated little to no effect of the implemented sampling.
+It is known that importance sampling \textbf{does} improve the sampling, thus indicating the implementation itself is at fault. This is further backed up by the deviation from the analytical minimum
+for results generated with importance sampling. This may be due to the chosen dt, as looking closer at figure \ref{fig:1c_dt} it seems it may have a minimum at $\alpha = 0.6$.
+
+As noted in task 1b the analytical minimum is not in general something that is available to us.
+Methods like gradient descent and variations thereof must then be considered. We implemented a GD algorithm that converged fast, and with relatively few MC-cycles, to a stable minimum for $\alpha$. More complex methods were not considered since we knew the problem to be quadratic, and thus well behaved in that the search space only has one minimum. 
 As and additional metric on the system we computed the one-body desities which shows a delta like behaviour in the non-interactive regime. The physical interpretation of this is that the particles are all very close to eachother and the origio. The authors did not find any demonstrations of the onebody density for bosons in the BEC in a HO trap in the litterature so comparison weren't readily available. 
 
 We have also shown that there is, unsurprisingly, a large chunk of time lost by doing numerical estimations of the local energy. While trivial to implement and compute it is only useful as a sanity-check for the analytical solution for many body systems where an analytic derivative is available. Both the numeric and analytic simulations were run with the \lstinline{-O3} optimization flag. 

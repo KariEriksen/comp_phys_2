@@ -29,19 +29,19 @@ Where $N$ is the number of particles and $D$ is their dimension. From the figure
 
 \subsection*{\textbf{1c):} Adding importance sampling}
 
-The results of the simulations are included in the appendix \ref{app:fig-c} as figures \ref{fig:1c_1} \ref{fig:1c_10}, \ref{fig:1c_100} and \ref{fig:1c_500}. The results were produced with the file \lstinline{main_c.cpp}\footnote{at commit \lstinline{16a3f6c514831e65f18dc96a476d1ba1c20d0729}}. Calculations are equivalent to those described in 1b) above.
+The results of the simulations are included in the appendix \ref{app:fig-c} as figures \ref{fig:1c_1} \ref{fig:1c_10}, \ref{fig:1c_100} and \ref{fig:1c_500}. 
+The results were produced with the file \lstinline{main_c.cpp}\footnote{at commit \lstinline{16a3f6c514831e65f18dc96a476d1ba1c20d0729}}. 
+Calculations are equivalent to those described in 1b) above.
 
-
-
-Where $N$ is the number of particles and $D$ is their dimension. From the figures referenced in the beginning of this section it is clear that both the numerical and analytic solutions have a minimum at that  agrees with the analytical solution. The intervals  were chosen such that the known optimum for $\alpha$ was included, this information in in general not available and motivated the gradient descent algorithm implemented for task 1.f. From the figures referenced above it is also noted that there is a substantial time difference in the numeric and analytic algorithms. 
+Figure \ref{fig:1c_dt} shows a nice, smooth curve for $dt = 0.1$, which is the $dt$-value used in subsequent simulations.
+The referenced figures show a slight deviation from the analytical results presented in 1b), presenting a minimum at $\alpha = 0.55 \neq 0.5$. 
+Figure \ref{fig:1c_mc} shows the local energy as a function of the number of monte-carlo cycles.
 
 \subsection*{\textbf{1e:} The repulsive interaction}
-
 
 In Table \ref{tab:Re.int.} we see the results for the case of the elliptical trap with a repulsive interaction. We have used the Hamiltonian in Equation \ref{eq:elliptical} to solve this case. The analytic solution of the local energy can be found in Appendix 1. The code that was used to find these results can be found \lstinline{gaussian_inter_analytic.cpp}\footnote{at commit \lstinline{d1c9ec9cc5640e7030b18adbabc802d2414dba75}}.
 We have used $a = 0.0043$ and $\beta = 2.82843$. We see that the expectation value of the local energy increases slowly as we increase the number of particles. It can seem that this is the case of the variational parameter $\alpha$ as well. 
 As for the CPU-time it increases rapidly. Already for 100 particles we are closing in one 3 hours.
-
 
 \begin{table}[]
     \centering
