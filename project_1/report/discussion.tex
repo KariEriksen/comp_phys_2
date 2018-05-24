@@ -4,10 +4,8 @@
 We've observed that for non-interactive bosons we are able to find an analytical minimum for the local energy, that we've used as a reference to assert that the VMC machinery indeed produces the correct result. 
 To decrease the number of MC-cycles needed to reach a minimum, importance sampling was implemented. 
 From figure \ref{fig:1c_mc} we observe that importance sampling seems to not visibly improve convergence. 
-The observation of values deviating from the analytical local energy (figure \ref{fig:1c_10}),
-which is also different from the minima found in figure \ref{fig:1c_dt01}, tells of larger variations in the implementation than is apparent from the variance in the results
-(figures \ref{fig:1c_1},\ref{fig:1c_10},\ref{fig:1c_100},\ref{fig:1c_500}).
-It is then reasonable to conclude that our implementation might also affect the rate of convergecen by the same error that leads to the loss of precision in $\expect{E_L}$.
+Aditionally we find deviations from the analytical local energy in some importance sampling simulations as seen in figures \ref{fig:1c_1},\ref{fig:1c_10},\ref{fig:1c_100},\ref{fig:1c_500} and \ref{fig:1c_dt01}. This tells of larger variations in the implementation than is apparent from the variance in the local energy as shown by the errorbars.
+It is then reasonable to conclude that our implementation might also affect the rate of convergece by the same error that leads to precision loss in $\expect{E_L}$. We were unable to pinpoint this error. 
 
 As noted in task 1b the analytical minimum is not in general something that is available to us.
 Methods like gradient descent and variations thereof must then be considered. We implemented a GD algorithm that converged fast, and with relatively few MC-cycles, to a stable minimum for $\alpha$. More complex methods were not considered since we knew the problem to be quadratic, and thus well behaved in that the search space only has one minimum. 
