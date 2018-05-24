@@ -54,13 +54,10 @@ void vmc::monte_carlo(WaveFunc *psi_t, metadata *exp_vals){
     }
 }
 
-void vmc::set_params(double a_in, double b_in, 
-        int N, int dim,int mc_cycles,
+void vmc::set_params(int N, int dim,int mc_cycles,
         bool meta_bool,
         bool obd_bool
     ){
-    a = a_in;
-    b = b_in;
     N_p = N;
     N_mc = mc_cycles;
     N_d = dim;
@@ -231,3 +228,6 @@ vector<double> vmc::solve(WaveFunc *psi_t, string filename){
     return retval ;
 }
 
+double vmc::gradient_descent(mat R, mat a, mat b, mat W, double sigma){
+    return 0;
+}

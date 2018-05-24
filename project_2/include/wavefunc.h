@@ -6,13 +6,12 @@ using namespace arma;
 
 class WaveFunc{
     public:
-        int N_d, N_p; 
-        vector<double> params;
+        int M, N;
 
         WaveFunc(){}
-        virtual void set_params(vector<double> params, int N_d, int N_p) =0;
-        virtual void initialize(mat R) = 0;
-        virtual void update() = 0;
+        virtual void set_params(int M, int N, double gamma) =0;
+        virtual void initialize(mat R, mat a_i, mat b_i, mat W_ij) = 0;
+        virtual void update(mat a_i, mat b_i, mat W_ij) = 0;
         virtual ~WaveFunc() {}
     
         virtual double evaluate(mat R) = 0; 
