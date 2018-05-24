@@ -3,7 +3,8 @@
 
 We've observed that for non-interactive bosons we are able to find an analytical minimum for the local energy, that we've used as a reference to assert that the VMC machinery indeed produces the correct result. To decrease the number of MC-cycles needed to reach a minimum, importance sampling was implemented, but the results produced indicated little to no effect of the implemented sampling.
 It is known that importance sampling \textbf{does} improve the sampling, thus indicating the implementation itself is at fault. This is further backed up by the deviation from the analytical minimum
-for results generated with importance sampling. This may be due to the chosen dt, as looking closer at figure \ref{fig:1c_dt} it seems it may have a minimum at $\alpha = 0.6$.
+for results generated with importance sampling. This may be due to the chosen dt, as looking closer at figure \ref{fig:1c_dt} it seems it may have a minimum at $\alpha = 0.6$. $dt = 0.01$ may have been
+a better choice.
 
 As noted in task 1b the analytical minimum is not in general something that is available to us.
 Methods like gradient descent and variations thereof must then be considered. We implemented a GD algorithm that converged fast, and with relatively few MC-cycles, to a stable minimum for $\alpha$. More complex methods were not considered since we knew the problem to be quadratic, and thus well behaved in that the search space only has one minimum. 
