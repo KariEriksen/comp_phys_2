@@ -22,11 +22,12 @@ class vmc{
         double step;
         bool compute_extra; 
         bool compute_obd;
-        int N_p, N_mc, N_d;
+        int N, M, N_p, N_mc, N_d;
+        double sigma, omega, gamma;
    protected:
         int obd_n_bins;
         double bin_length;
-        mat R;
+        mat R, a, b, W;
         random_device rd;  //Will be used to obtain a seed for the random number engine
         mt19937 *gen; //Standard mersenne_twister_engine seeded with rd()
         double* obd_bins;

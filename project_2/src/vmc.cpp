@@ -103,7 +103,7 @@ vector<double> vmc::solve(WaveFunc *psi_t, string filename){
     obd_n_bins = 30*outer_limit;
 
     generate_positions(step);
-    psi_t -> initialize(R);
+    //psi_t -> initialize(R);
     double evaluated = psi_t -> evaluate(R);
     double step_init = step;
     /*
@@ -116,7 +116,7 @@ vector<double> vmc::solve(WaveFunc *psi_t, string filename){
     while(evaluated == 0){
         step_init += step*1e-5;
         generate_positions(step_init);
-        psi_t -> initialize(R);
+        //psi_t -> initialize(R);
         evaluated = psi_t -> evaluate(R);
     }
     
