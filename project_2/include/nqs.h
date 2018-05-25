@@ -18,7 +18,8 @@ public:
     double laplace(mat R, mat a, mat b, mat W);
     mat drift_force(mat R);
     void initialize(mat R, mat a, mat b, mat W);
-    void update(mat R, mat a, mat b, mat W);
+    void update_positions(mat R);
+    void update_weights(mat a, mat b, mat W);
     //mat NumericalDoubleDerivative(mat R);
     //??
     nqs();

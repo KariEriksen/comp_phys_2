@@ -9,7 +9,23 @@ using namespace arma;
 nqs::nqs() : WaveFunc(){}
 
 void nqs::initialize(mat R, mat a, mat b, mat W){
-    return 0;
+    uniform_real_distribution<double> dis (0, 0.001);
+    gen = new mt19937(rd());
+
+    for(int i = 0; i < N; i++){
+        a(i) = dis(*gen);
+    }
+
+    for(int j = 0; j < N; j++){
+        b(j) = dis(*gen);
+    }
+
+    for(int i = 0; i < M; i++){
+        for(int j = 0; j < N; j++){
+            W(i,j) = dis(*gen);
+        }
+
+    }
 }
 
 double nqs::evaluate(mat R){
@@ -19,6 +35,7 @@ double nqs::evaluate(mat R){
     double sigma_sq = sigma*sigma;
     exp_term = exp(-(R - a)/2*sigma_sq);
     prod *= 1 + exp(b + sum(R*W)/sigma_sq);
+    return exp_term*prod;
 }
 
 double nqs::E_l(mat R, mat a, mat b, mat W){
@@ -106,8 +123,16 @@ double nqs::ratio(mat R, mat R_p, int k){
     return prob;
 }
 
-void nqs::update(mat R){
-    return 0;
+void nqs::update_positions(mat R){
+
+    D = D_p;
+}
+
+void nqs::update_weights(mat a, mat b, mat W){
+
+    a = a_p;
+    b = b_p;
+    W = W_p;
 }
 
 void nqs::set_params(int M, int N, int N_p, int N_d, double sigma, double omega, double gamma){
@@ -121,7 +146,6 @@ void nqs::set_params(int M, int N, int N_p, int N_d, double sigma, double omega,
     omega = omega;
     gamma = gamma;
     */
-    return 0;
 }
 
 
