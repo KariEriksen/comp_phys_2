@@ -7,7 +7,6 @@ double Importance::metropolis_hastings(WaveFunc *psi_t, double prev_E_l){
     mat R_p(size(R));
     R_p = R;
 	double dt = psi_t -> params[4];
-	double beta = psi_t -> params[2];
 
     uniform_int_distribution<int> dis_r(0, N_p - 1);
     uniform_real_distribution<double> dis_step(-1.0, 1.0);
@@ -17,20 +16,13 @@ double Importance::metropolis_hastings(WaveFunc *psi_t, double prev_E_l){
 	// Pick particle j to move.
     int j = dis_r(*gen);
 
-	// Scale z-position of moved particle with beta
-	if(N_d == 3){
-		R_p.col(2) *= beta;
-	}
-
 	// Calculate drift force for that particle.
-	// TODO: Make sure it actually works.
     mat F_drift(1, N_d);
 	F_drift = psi_t -> drift_force(R, j);
 
 	// Move the particle
 	double zeta = dis_zeta(*gen);
 	R_p.row(j) += 0.5*F_drift*dt + zeta*sqrt(dt);
-	
 	
     double P = psi_t -> ratio(R, R_p, j);
 

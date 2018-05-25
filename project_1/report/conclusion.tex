@@ -4,7 +4,8 @@ condensation, has been explored using variational monte-carlo techniques to find
 value for the energy as a function of a single variational parameter $\alpha$. The system is
 explored both with and without a repulsive potatential between particles, and in both cases the
 method of gradient descent is used to find ground-state energies. To improve the convergence of
-the algorithm, importance sampling was implemented, but left much to be desired as an improvement
-was not observed. Lastly, the onebody densities for the system with and without interaction was
+the algorithm, importance sampling was implemented, but results indicate that the implementation
+converges no better than the naive metropolis algorithm, and is less stable. 
+Lastly, the onebody densities for the system with and without interaction was
 concidered, showing most particles were localized for the non-interactive case, and distributed
 fitting a bell curve in the interactive case.

@@ -32,10 +32,9 @@ Where $N$ is the number of particles and $D$ is their dimension. From the figure
 The results of the simulations are included in the appendix \ref{app:fig-c} as figures \ref{fig:1c_1} \ref{fig:1c_10}, \ref{fig:1c_100} and \ref{fig:1c_500}. 
 The results were produced with the file \lstinline{main_c.cpp}\footnote{at commit \lstinline{16a3f6c514831e65f18dc96a476d1ba1c20d0729}}. 
 Calculations are equivalent to those described in 1b) above.
-
-Figure \ref{fig:1c_dt} shows a nice, smooth curve for $dt = 0.1$, which is the $dt$-value used in subsequent simulations.
-The referenced figures show a slight deviation from the analytical results presented in 1b), presenting a minimum at $\alpha = 0.55 \neq 0.5$. 
-Figure \ref{fig:1c_mc} shows the local energy as a function of the number of monte-carlo cycles.
+Figure 8 shows the impact of dt on the simulations. For subsequent simulations $dt = 0.1$ was chosen based on a qualitative measure of coherence with the analytical energy\footnote{Eyeballing, how much more sciency can ya get}.  
+In figure \ref{fig:1c_dt01} we demonstrate the minimum for the local energy with $dt = 0.1$. 
+We also make comparisons of the convergence rate for both naive metropolis and with importance sampling in figure \ref{fig:1c_mc}.
 
 \subsection*{\textbf{1e:} The repulsive interaction}
 
