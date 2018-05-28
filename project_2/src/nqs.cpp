@@ -61,9 +61,8 @@ double nqs::laplace(mat R, mat a, mat b, mat W){
 
     for(int i = 0; i < M; i++){
         for(int j = 0; j < N; j++){
-            for(int k = 0; k < M; k++){
-                Hj = - b(j) - R(i)*W(i,j);
-            }
+
+            Hj = - b(j) - sum(R%W.col(j));
             exp_term = exp(Hj);
             term = 1 + exp_term;
 
@@ -96,9 +95,9 @@ mat nqs::drift_force(mat R){
 
     for(int i = 0; i < M; i++){
         for(int j = 0; j < N; j++){
-            for(int k = 0; k < M; k++){
-                Hj = - b(j) - R(k)*W(k,j);
-            }
+
+            Hj = - b(j) - sum(R%W.col(j));
+
             exp_j = exp(Hj);
             term = 1 + exp_j;
 

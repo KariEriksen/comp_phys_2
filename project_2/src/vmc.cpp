@@ -274,5 +274,25 @@ double vmc::gradient_descent(mat R, mat a, mat b, mat W, double sigma){
 
 	double return_val; // Gonna be what?
 
+	// Other commit below, got merge conflict
+
+    /*double deri_psi_a = 0;
+    double deri_psi_b = 0;
+    double deri_psi_W = 0;
+
+    double sigma_sq = sigma*sigma;
+
+    for(int i = 0; i < )
+
+    deri_psi_a = (R - a)/sigma_sq;
+
+    for(j = 0; j < N; j++){
+        Hj = - b(j) - sum(R%W.col(j));
+        deri_psi_b = 1 + exp(Hj);
+    }
+    */
     return 0;
+
+
+
 }
