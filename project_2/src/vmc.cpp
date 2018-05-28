@@ -242,7 +242,7 @@ double vmc::gradient_descent(mat R, mat a, mat b, mat W, double sigma){
 
 	mat<double> gradient_a(M, 1);
 	mat<double> gradient_b(N, 1);
-	mat<double> gradient_w(M, N);
+	mat<double> gradient_w(M*N, 1);
 	double sigma_squared = sigma*sigma;
 	
 	
@@ -265,7 +265,7 @@ double vmc::gradient_descent(mat R, mat a, mat b, mat W, double sigma){
 		for (int k = 0; k < M; k++) {
 			double temp = 0.0;
 			temp += accu(R*W.col(n))/sigma_squared;
-			gradient_w(k,n) += 1/(1 + exp(-b(n) - temp));
+			gradient_w(k*n) += 1/(1 + exp(-b(n) - temp));
 		}
 	}
 	gradient_w /= sigma_squared;
