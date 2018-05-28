@@ -229,5 +229,50 @@ vector<double> vmc::solve(WaveFunc *psi_t, string filename){
 }
 
 double vmc::gradient_descent(mat R, mat a, mat b, mat W, double sigma){
+
+	mat<double> gradient_a(N_p,1);
+	mat<double> gradient_b(N_p,1);
+	mat<double> gradient_w(N_p,M);
+	double sigma_squared = sigma*sigma;
+	
+	// Gradient a
+	for (int k = 0; k < N_p; k++) {
+		for (int dim = 0; dim < N_d; dim++){
+			gradient_a(k) += R(k, dim) - a(k);
+		}
+	}
+	gradient_a /= sigma_squared;
+
+	// Gradient b
+	for (int k = 0; k < N_p; k++) {
+		double temp_sum = 0.0;
+		for (int i = 0; i < M; i++){
+			for (int dim = 0; dim < N_d; dim++){
+				temp_sum += R(i,dim)*W(i,k);
+			}
+		}
+		temp_sum /= sigma_squared;
+		gradient_b(k) += 1/(1 + exp(-b(k) - temp_sum));
+	}
+
+	// Gradient w_kn 
+	// Is n needed here? Uncertain when n designates.
+	// currently w_kn is same for all n, which seems weird.
+	for (int k = 0; k < N_p; k++) {
+			double temp_sum = 0.0;
+			for (int i = 0; i < M; i++){
+				for (int dim = 0; dim < N_d; dim++){
+					temp_sum += R(i,dim)*W(i,k);
+				}
+			}
+			temp_sum /= sigma_squared
+		for (int n = 0; n < M; n++){
+			gradient_w(k,n) += 1/(1 + exp(-b(k) - temp_sum));
+		}
+	}
+	gradient_w /= sigma_squared;
+
+	double return_val; // Gonna be what?
+
     return 0;
 }
