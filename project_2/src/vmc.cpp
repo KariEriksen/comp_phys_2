@@ -230,69 +230,48 @@ vector<double> vmc::solve(WaveFunc *psi_t, string filename){
 
 double vmc::gradient_descent(mat R, mat a, mat b, mat W, double sigma){
 
-	mat<double> gradient_a(N_p,1);
-	mat<double> gradient_b(N_p,1);
-	mat<double> gradient_w(N_p,M);
+	// Visible biases are vectors of length M.
+	// Hidden nodes and corresponding hidden biases are vectors of length N
+	// Weight matrix MxN
+	// Number of visible nodes should correspond to the number of particles, N_p,
+	// and the number of dimensions in the system, N_d, such that
+	// M = N_p*N_d
+	
+	int M = R.size(0);
+	int N = W.size(1);
+
+	mat<double> gradient_a(M, 1);
+	mat<double> gradient_b(N, 1);
+	mat<double> gradient_w(M, N);
 	double sigma_squared = sigma*sigma;
 	
+	
 	// Gradient a
-	for (int k = 0; k < N_p; k++) {
-		for (int dim = 0; dim < N_d; dim++){
-			gradient_a(k) += R(k, dim) - a(k);
-		}
-	}
+	gradient_a += R - a;
 	gradient_a /= sigma_squared;
 
+
 	// Gradient b
-	for (int k = 0; k < N_p; k++) {
-		double temp_sum = 0.0;
-		for (int i = 0; i < M; i++){
-			for (int dim = 0; dim < N_d; dim++){
-				temp_sum += R(i,dim)*W(i,k);
-			}
-		}
-		temp_sum /= sigma_squared;
-		gradient_b(k) += 1/(1 + exp(-b(k) - temp_sum));
+	for (int k = 0; k < N; k++) {
+		double temp = 0.0;
+		temp += accu(R*W.col(k))/sigma_squared;
+		gradient_b(k) += 1/(1 + exp(-b(k) - temp));
 	}
 
-	// Gradient w_kn 
-	// Is n needed here? Uncertain when n designates.
-	// currently w_kn is same for all n, which seems weird.
-	for (int k = 0; k < N_p; k++) {
-			double temp_sum = 0.0;
-			for (int i = 0; i < M; i++){
-				for (int dim = 0; dim < N_d; dim++){
-					temp_sum += R(i,dim)*W(i,k);
-				}
-			}
-			temp_sum /= sigma_squared
-		for (int n = 0; n < M; n++){
-			gradient_w(k,n) += 1/(1 + exp(-b(k) - temp_sum));
+
+	// Gradient w_kn
+	// Concider changing summing indices in .tex for clarity
+	for (int n = 0; n < N; n++) {	
+		for (int k = 0; k < M; k++) {
+			double temp = 0.0;
+			temp += accu(R*W.col(n))/sigma_squared;
+			gradient_w(k,n) += 1/(1 + exp(-b(n) - temp));
 		}
 	}
 	gradient_w /= sigma_squared;
 
+
 	double return_val; // Gonna be what?
 
-	// Other commit below, got merge conflict
-
-    /*double deri_psi_a = 0;
-    double deri_psi_b = 0;
-    double deri_psi_W = 0;
-
-    double sigma_sq = sigma*sigma;
-
-    for(int i = 0; i < )
-
-    deri_psi_a = (R - a)/sigma_sq;
-
-    for(j = 0; j < N; j++){
-        Hj = - b(j) - sum(R%W.col(j));
-        deri_psi_b = 1 + exp(Hj);
-    }
-    */
     return 0;
-
-
-
 }
