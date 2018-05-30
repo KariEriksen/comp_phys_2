@@ -1,0 +1,26 @@
+As for the case of Gibbs sampling
+
+\begin{align*}
+\Psi(X) &= \sqrt{F_{rbm}(X)} \\
+&= \sqrt{\frac{1}{Z} \exp \left( -\sum_{i}^{M} \frac{(X_i - a_i)^2}{2 \sigma^2} \right) \prod_{j}^{N} \left( 1 + \exp \left( b_j + \sum_{i}^{M} \frac{X_i \omega_{ij}}{\sigma^2} \right) \right)}
+\end{align*}
+
+
+\begin{equation*}
+\ln \Psi = -\frac{1}{2} \left( \ln Z - \sum_{i}^{M} \frac{(X_i - a_i)^2}{2 \sigma^2} +  \sum_{j}^{N} \ln \left(1 + \exp \left( b_j + \sum_{i}^{M} \frac{X_i \omega_{ij}}{\sigma^2} \right) \right) \right)
+\end{equation*}
+
+This is only an extra constant in front of the term
+
+\begin{align*}
+\nabla_i \ln \Psi &= \nabla_i \left( - \sum_{i}^{M} \frac{(X_i - a_i)^2}{4 \sigma^2} +  \frac{1}{2} \sum_{j}^{N} \ln \left( 1 + \exp \left( b_j + \sum_{i}^{M} \frac{X_i \omega_{ij}}{\sigma^2} \right) \right) \right) \\
+&= \frac{-(X_i - a_i)}{2\sigma^2} + \frac{1}{2\sigma^2}\sum_{j}^{N} \frac{\omega_{ij}}{1 + \exp \left( -b_j - \sum_{i}^{M} \frac{X_i \omega_{ij}}{\sigma^2} \right)}
+\end{align*}
+
+Given the first derivative we now find the second derivative. And we have solved the analytic case of the local energy.
+
+\begin{align*}
+\nabla_i^2 \ln \Psi &= \nabla_i^2 \left( - \sum_{i}^{M} \frac{(X_i - a_i)^2}{4 \sigma^2} +  \frac{1}{2} \sum_{j}^{N} \ln \left( 1 + \exp \left( b_j + \sum_{i}^{M} \frac{X_i \omega_{ij}}{\sigma^2} \right) \right) \right) \\
+&= -\frac{1}{2\sigma^2} + \frac{1}{2\sigma^4} \sum_{j}^{N} \frac{\left(\omega_{ij}\right)^2  }{\left(1 + \exp \left( -b_j - \sum_{i}^{M} \frac{X_i \omega_{ij}}{\sigma^2} \right)\right)^2}\exp \left( -b_j - \sum_{i}^{M} \frac{X_i \omega_{ij}}{\sigma^2} \right) 
+\end{align*}
+
