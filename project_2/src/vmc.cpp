@@ -228,7 +228,7 @@ vector<double> vmc::solve(WaveFunc *psi_t, string filename){
     return retval ;
 }
 
-double vmc::gradient_descent(mat R, mat a, mat b, mat W, double sigma){
+mat vmc::gradient_descent(mat R, mat a, mat b, mat W, double sigma){
 
 	// Visible biases are vectors of length M.
 	// Hidden nodes and corresponding hidden biases are vectors of length N
@@ -269,9 +269,21 @@ double vmc::gradient_descent(mat R, mat a, mat b, mat W, double sigma){
 		}
 	}
 	gradient_w /= sigma_squared;
+	
+	// Expectation values
+	double energy_local = psi_t -> E_l(R, a, b, W);
+	double expected_a = mean(gradient_a);
+	double expected_b = mean(gradient_b);
+	double expected_w = mean(gradient_w);
+
+	// Return
+	mat<double> G(3, 1);
+	G(0) = (mean(energy_local*gradient_a) - energy_local*expected_a);
+	G(1) = (mean(energy_local*gradient_b) - energy_local*expected_b);
+	G(2) = (mean(energy_local*gradient_w) - energy_local*expected_w);
+	G = 2*G;
 
 
-	double return_val; // Gonna be what?
-
-    return 0;
+	
+    return G;
 }
