@@ -157,19 +157,38 @@ Like most problems in physics the variational quantum problem is one of optimiza
 
 \noindent We also introduce the notation $\frac{\partial \langle E_L^i \rangle}{\partial \alpha} = \expect{E_L}^\alpha_{i}$ for brevity, and the same notation will be used for the tiral wavefunction $\psi_T$. The partial derivative itself can be found by the equation\footnote{The equation was retrieved from the lecture notes} 
 
-\begin{equation}
-\expect{E_l}^\alpha_{i} = 2 \left(\expect{\frac{\psi^\alpha}{\psi} E_L}^i - \expect{\frac{\psi^\alpha}{\psi}}\expect{E_L}^i \right)
-\end{equation} 
+To find the local energy minimum of the NQS wavefunction the  gradient of the local energy with respect to the variational parameter $\alpha  = \{\mathbf{a}, \mathbf{b}, \mathbf{W} \}$ needs to be computed. For each variational parameter $\alpha_i \in \alpha$ the gradient is defined as in equation \ref{eq:var_grad} 
 
-\noindent Wherein the fraction of the partial derivative of the wavefunction by the wavefunction must be derived, which is trivial with the ansatz of the wavefunction. 
+\begin{equation}\label{eq:var_grad}
+G_i = \frac{\partial \expect{E_L}}{\partial \alpha_i} = 2\left( \expect{E_L \frac{1}{\Psi} \frac{\partial \Psi}{\partial \alpha_i}}  - \expect{E_L} \expect{ \frac{1}{\Psi} \frac{\partial \Psi}{\partial \alpha_i}}\right)    
+\end{equation}
 
+\noindent While the NQS is defined for the Gaussian Binary RBM as 
 
 \begin{align}
-\frac{\psi^\alpha}{\psi} &= \frac{\psi \prod_i^N (x_i^2 + y_i^2 + \beta z^2_i)}{\psi} \\
-&= \prod_i^N (x_i^2 + y_i^2 + \beta z^2_i)
+    \Psi (\mathbf{X}) = \frac{1}{Z} \exp\left(-\sum_i^M \frac{(X_i - a_i)^2}{2\sigma^2}\right) 
+    \prod_j ^N \left( 1 + \exp\left(b_j  + \sum_i^M \frac{X_i w_{ij}}{\sigma^2}\right) \right)
 \end{align}
-\noindent This holds for both the interactive and non-interactive case since the correlation wavefunction, $f(r_i, r_j)$, does not have any dependence on $\alpha$\\
-In the program the only addition to make is the computation of two additional expecation values\footnote{implemented in \lstinline{vmc.cpp}}. Empirically we've also seen that we can reduce the number of MC-cycles quite drastically and still get a good convergence to the optimal $\alpha$. In summary gradient descent and other associated methods allows for a radical speedup in estimation of the optimal values of the variational parameters. The implementation of this method can be found in the file \lstinline{main_f.cpp}.
+\noindent We now find it useful to use the identity 
+\begin{align}
+    \frac{d}{dx}\ln f(x) = \frac{1}{f(x)} \frac{d}{dx}f(x)
+\end{align}
+
+\noindent Taking the logarithm of the NQS wavefunction then gives
+
+\begin{align}
+    \ln( \Psi(\mathbf{X}) )  = \ln{\frac{1}{Z}} -\sum_i^M \frac{(X_i - a_i)^2}{2\sigma^2} 
+    + \sum_j^N \ln\left[  1 + \exp\left(b_j  + \sum_i^M \frac{X_i w_{ij}}{\sigma^2}\right) \right]
+\end{align}
+
+\noindent  The final result for the gradient of the components of $\alpha_i$ is then  
+
+\begin{align}
+    \frac{\partial \ln( \Psi(\mathbf{X}) )}{\partial a_k} &= \frac{1}{\sigma ^2} (X_k - a_k)\\
+    \frac{\partial \ln( \Psi(\mathbf{X}) )}{\partial b_k} &= \left(1 +  \exp\left(- b_k  - \sum_i^M \frac{X_i w_{ik}}{\sigma^2}\right)  \right)^{-1}  \\
+    \frac{\partial \ln( \Psi(\mathbf{X}) )}{\partial w_{kn}}& = \frac{X_k}{\sigma^2} \left(1 +  \exp\left(- b_k  - \sum_i^M \frac{X_i w_{ik}}{\sigma^2}\right)  \right)^{-1}   
+\end{align}
+
 
 
 \subsection{Blocking Method}
