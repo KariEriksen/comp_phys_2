@@ -1,3 +1,5 @@
+\section{Local energy with $\psi(x) = F_{rbm}$}
+
 Given the Hamiltonian in eq. (REF EQ FROM ABOVE) the expression for the local energy is given by the following.
 
 \begin{align*}
@@ -61,4 +63,36 @@ Given the first derivative we now find the second derivative. And we have solved
 &= -\frac{1}{\sigma^2} + \frac{1}{\sigma^4} \sum_{j}^{N} \frac{\left(\omega_{ij}\right)^2  }{\left(1 + \exp \left( -b_j - \sum_{i}^{M} \frac{X_i \omega_{ij}}{\sigma^2} \right)\right)^2}\exp \left( -b_j - \sum_{i}^{M} \frac{X_i \omega_{ij}}{\sigma^2} \right) 
 \end{align*}
 
+\section{Gradients with respect to RMB parameters, $\psi(x) = F_{rbm}$}
 
+To find the local energy minimum of the NQS wavefunction the  gradient of the local energy with respect to the variational parameter $\alpha  = \{\mathbf{a}, \mathbf{b}, \mathbf{W} \}$ needs to be computed. For each variational parameter $\alpha_i \in \alpha$ the gradient is defined as in equation \ref{eq:var_grad} 
+
+\begin{equation}\label{eq:var_grad}
+G_i = \frac{\partial \expect{E_L}}{\partial \alpha_i} = 2\left( \expect{E_L \frac{1}{\Psi} \frac{\partial \Psi}{\partial \alpha_i}}  - \expect{E_L} \expect{ \frac{1}{\Psi} \frac{\partial \Psi}{\partial \alpha_i}}\right)    
+\end{equation}
+
+\noindent While the NQS is defined for the Gaussian Binary RBM as 
+
+\begin{align}
+    \Psi (\mathbf{X}) = \frac{1}{Z} \exp\left(-\sum_i^M \frac{(X_i - a_i)^2}{2\sigma^2}\right) 
+    \prod_j ^N \left( 1 + \exp\left(b_j  + \sum_i^M \frac{X_i w_{ij}}{\sigma^2}\right) \right)
+\end{align}
+\noindent We now find it useful to use the identity 
+\begin{align}
+    \frac{d}{dx}\ln f(x) = \frac{1}{f(x)} \frac{d}{dx}f(x)
+\end{align}
+
+\noindent Taking the logarithm of the NQS wavefunction then gives
+
+\begin{align}
+    \ln( \Psi(\mathbf{X}) )  = \ln{\frac{1}{Z}} -\sum_i^M \frac{(X_i - a_i)^2}{2\sigma^2} 
+    + \sum_j^N \ln\left[  1 + \exp\left(b_j  + \sum_i^M \frac{X_i w_{ij}}{\sigma^2}\right) \right]
+\end{align}
+
+\noindent  The final result for the gradient of the components of $\alpha_i$ is then  
+
+\begin{align}
+    \frac{\partial \ln( \Psi(\mathbf{X}) )}{\partial a_k} &= \frac{1}{\sigma ^2} (X_k - a_k)\\
+    \frac{\partial \ln( \Psi(\mathbf{X}) )}{\partial b_n} &= \left(1 +  \exp\left(- b_n  - \sum_i^M \frac{X_i w_{in}}{\sigma^2}\right)  \right)^{-1}  \\
+    \frac{\partial \ln( \Psi(\mathbf{X}) )}{\partial w_{kn}}& = \frac{X_k}{\sigma^2} \left(1 +  \exp\left(- b_n  - \sum_i^M \frac{X_i w_{in}}{\sigma^2}\right)  \right)^{-1}   
+\end{align}

@@ -40,17 +40,25 @@ double nqs::evaluate(mat R){
 
 double nqs::E_l(mat R, mat a, mat b, mat W){
 
+    // Calulates the local energy of the given
+    // configuration of the system
+
     double omega_sq = omega*omega;
     return 0.5*(laplace(R, a, b, W) + sum(omega_sq*R));
 }
 
 double nqs::laplace(mat R, mat a, mat b, mat W){
 
+    // Calulates the derivatives of the wave function
+    // Both first and second derivatives
+    // Called upon in local energy function
+
     double Hj = 0;
     double exp_term = 0;
     double term = 0;
     double sum_1 = 0;
     double sum_2 = 0;
+    double grad_psi = 0;
     double grad_psi_sq = 0;
     double laplace_psi = 0;
     double sigmoid = 0;
@@ -73,8 +81,12 @@ double nqs::laplace(mat R, mat a, mat b, mat W){
             sum_2 += W(i,j)*W(i,j)*sigmoid_deri;
         }
 
-        grad_psi_sq = -(R(i) - a(i))/sigma_sq + sum_1/sigma_sq;
+        // First and second derivatives of the logarithm
+        // of the nqs wave function
+        grad_psi = -(R(i) - a(i))/sigma_sq + sum_1/sigma_sq;
+        grad_psi_sq = grad_psi*grad_psi;
         laplace_psi = -1/sigma_sq + sum_2/sigma_qd;
+
 
         laplace_return += (-(grad_psi_sq + laplace_psi) + omega_sq*R(i));
     }
@@ -83,6 +95,8 @@ double nqs::laplace(mat R, mat a, mat b, mat W){
 }
 
 mat nqs::drift_force(mat R){
+
+    // Drift force, F, to be used in importance sampling
 
     double Hj = 0;
     double exp_j = 0;
@@ -106,9 +120,11 @@ mat nqs::drift_force(mat R){
             sum_1 += W(i,j)*sigmoid;
         }
 
+        // The first derivative of logarithm of the wave function
         grad_psi_sq = -(R(i) - a(i))/sigma_sq + sum_1/sigma_sq;
     }
 
+    // F = 2* '(ln(psi))
     mat drift_force_i = 2*deri_psi;
 
     return drift_force_i;

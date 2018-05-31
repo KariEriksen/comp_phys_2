@@ -1,3 +1,5 @@
+\section{Local energy with $\psi(x) = \sqrt{F_{rbm}}$}
+
 In the case of the Gibbs sampling we represent the wave function as 
 
 \begin{align*}
@@ -25,3 +27,15 @@ Now we can easily see that the derivatives of the logarithm of the nqs wave func
 \end{align*}
 
 and are the derivative to be replaced in the expression of the local energy when we employ the Gibbs sampling.
+
+\section{Gradients with respect to RMB parameters, $\psi(x) = \sqrt{F_{rbm}}$}
+
+We also need to update the gradients to be used in the gradient descent method. These are also easily found, a simple constant i front of each term.
+
+
+\begin{align}
+\frac{\partial \ln( \Psi(\mathbf{X}) )}{\partial a_k} &= \frac{1}{2 \sigma ^2} (X_k - a_k)\\
+\frac{\partial \ln( \Psi(\mathbf{X}) )}{\partial b_n} &= \frac{1}{2}\left(1 +  \exp\left(- b_n  - \sum_i^M \frac{X_i w_{in}}{\sigma^2}\right)  \right)^{-1}  \\
+\frac{\partial \ln( \Psi(\mathbf{X}) )}{\partial w_{kn}}& = \frac{X_k}{2 \sigma^2} \left(1 +  \exp\left(- b_n  - \sum_i^M \frac{X_i w_{in}}{\sigma^2}\right)  \right)^{-1}   
+\end{align}
+
