@@ -1,0 +1,64 @@
+Given the Hamiltonian in eq. (REF EQ FROM ABOVE) the expression for the local energy is given by the following.
+
+\begin{align*}
+E_L &= \frac{1}{\Psi}\hat{H}\psi \\
+&= \sum_{k}^{P} \frac{1}{2} \left( -\frac{1}{\Psi} \nabla_k^2 \Psi +  \omega^2 r_k^2 \right) + \sum_{k < l} \frac{1}{r_{kl}}
+\end{align*}
+
+We wish to find the Laplacian of the NQS wave function. Since our visible nodes represents the particle positions in Cartesian coordinates the Laplace operator takes the second partial derivative with respect to each independent variable in the vector space. It can therefore be written as  
+
+\begin{equation*}
+\nabla_k^2 \Psi = \sum_{l}^{D} \frac{\partial^2}{\partial x_{kl}^2} \Psi.
+\end{equation*}
+
+\begin{equation*}
+E_L = \sum_{k}^{P} \sum_{l}^{D} \frac{1}{2} \left( -\frac{1}{\Psi} \frac{\partial^2}{\partial x_{kl}^2} \Psi +  \omega^2 r_k^2 \right) + \sum_{k < l} \frac{1}{r_{kl}}
+\end{equation*}
+
+\begin{equation*}
+E_L = \sum_{i}^{M} \frac{1}{2} \left( -\frac{1}{\Psi} \frac{\partial^2}{\partial X_{i}^2} \Psi +  \omega^2 X_i^2 \right) +  \sum_{k < l} \frac{1}{r_{kl}}
+\end{equation*}
+
+In the above equation we have used the fact that the number of visible nodes are $M = P \cdot D$. This reduces the number of sums in the first term to one. Also we see that it would be an advantage to solve the derivatives of $\ln \Psi$ since our wave function consist of sums in the exponential and also removes the $\Psi$ in the denominator. Thus the identity below is helpful. 
+
+\begin{equation*}
+\frac{1}{\Psi} \frac{\partial^2}{\partial X_{i}^2} \Psi = \left( \frac{\partial}{\partial X_{i}} \ln \Psi \right)^2 + \frac{\partial^2}{\partial X_{i}^2} \ln \Psi
+\end{equation*}
+
+
+\begin{equation*}
+E_L = \sum_{i}^{M} \frac{1}{2} \left( - \left( \frac{\partial}{\partial X_{i}} \ln \Psi \right)^2 + \frac{\partial^2}{\partial X_{i}^2} \ln \Psi  + \omega^2 X_i^2 \right) +  \sum_{k < l} \frac{1}{r_{kl}}
+\end{equation*}
+
+Our local energy can be rewritten and we must now solve both the first and second derivative of the wave function. Our wave function is represented by the marginal probability $F_{rbm}$.
+
+\begin{align*}
+\Psi(X) &= F_{rbm}(X) \\
+&= \frac{1}{Z} \exp \left( -\sum_{i}^{M} \frac{(X_i - a_i)^2}{2 \sigma^2} \right) \prod_{j}^{N} \left( 1 + \exp \left( b_j + \sum_{i}^{M} \frac{X_i \omega_{ij}}{\sigma^2} \right) \right)
+\end{align*}
+
+
+\begin{equation*}
+\ln \Psi = -\ln Z - \sum_{i}^{M} \frac{(X_i - a_i)^2}{2 \sigma^2} +  \sum_{j}^{N} \ln \left(1 + \exp \left( b_j + \sum_{i}^{M} \frac{X_i \omega_{ij}}{\sigma^2} \right) \right)
+\end{equation*}
+
+Since $Z$ is the normalization constant its derivative is zero and can be removed.
+We end up with the following
+
+\begin{align*}
+\nabla_i \ln \Psi &= \nabla_i \left( - \sum_{i}^{M} \frac{(X_i - a_i)^2}{2 \sigma^2} +  \sum_{j}^{N} \ln \left( 1 + \exp \left( b_j + \sum_{i}^{M} \frac{X_i \omega_{ij}}{\sigma^2} \right) \right) \right) \\
+&= \frac{\partial}{\partial X_i} \left( - \sum_{i}^{M} \frac{(X_i - a_i)^2}{2 \sigma^2} +  \sum_{j}^{N} \ln \left(1 + \exp \left( b_j + \sum_{i}^{M} \frac{X_i \omega_{ij}}{\sigma^2} \right) \right) \right)\\
+&= \frac{-2 (X_i - a_i) 2 \sigma^2}{(2 \sigma^2)^2} + \sum_{j}^{N} \frac{1}{1 + \exp \left( b_j + \sum_{i}^{M} \frac{X_i \omega_{ij}}{\sigma^2} \right)} \left( \frac{\omega_{ij}}{\sigma^2} \right) \exp \left(  b_j + \sum_{i}^{M} \frac{X_i \omega_{ij}}{\sigma^2} \right) \\
+&= \frac{-(X_i - a_i)}{\sigma^2} + \frac{1}{\sigma^2}\sum_{j}^{N} \frac{\omega_{ij}}{1 + \exp \left( -b_j - \sum_{i}^{M} \frac{X_i \omega_{ij}}{\sigma^2} \right)}
+\end{align*}
+
+Given the first derivative we now find the second derivative. And we have solved the analytic case of the local energy.
+
+\begin{align*}
+\nabla_i^2 \ln \Psi &= \nabla_i^2 \left( - \sum_{i}^{M} \frac{(X_i - a_i)^2}{2 \sigma^2} +  \sum_{j}^{N} \ln \left( 1 + \exp \left( b_j + \sum_{i}^{M} \frac{X_i \omega_{ij}}{\sigma^2} \right) \right) \right) \\
+&= \frac{\partial}{\partial X_i} \left( \frac{-(X_i - a_i)}{\sigma^2} + \frac{1}{\sigma^2} \sum_{j}^{N} \frac{\omega_{ij}}{1 + \exp \left( -b_j - \sum_{i}^{M} \frac{X_i \omega_{ij}}{\sigma^2} \right)} \right) \\
+&= -\frac{1}{\sigma^2} + \frac{1}{\sigma^2} \sum_{j}^{N} \frac{-\omega_{ij}}{\left(1 + \exp \left( -b_j - \sum_{i}^{M} \frac{X_i \omega_{ij}}{\sigma^2} \right)\right)^2} \left( \frac{-\omega_{ij}}{\sigma^2} \right) \exp \left( -b_j - \sum_{i}^{M} \frac{X_i \omega_{ij}}{\sigma^2} \right) \\
+&= -\frac{1}{\sigma^2} + \frac{1}{\sigma^4} \sum_{j}^{N} \frac{\left(\omega_{ij}\right)^2  }{\left(1 + \exp \left( -b_j - \sum_{i}^{M} \frac{X_i \omega_{ij}}{\sigma^2} \right)\right)^2}\exp \left( -b_j - \sum_{i}^{M} \frac{X_i \omega_{ij}}{\sigma^2} \right) 
+\end{align*}
+
+

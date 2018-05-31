@@ -103,7 +103,7 @@ vector<double> vmc::solve(WaveFunc *psi_t, string filename){
     obd_n_bins = 30*outer_limit;
 
     generate_positions(step);
-    psi_t -> initialize(R);
+    //psi_t -> initialize(R);
     double evaluated = psi_t -> evaluate(R);
     double step_init = step;
     /*
@@ -116,7 +116,7 @@ vector<double> vmc::solve(WaveFunc *psi_t, string filename){
     while(evaluated == 0){
         step_init += step*1e-5;
         generate_positions(step_init);
-        psi_t -> initialize(R);
+        //psi_t -> initialize(R);
         evaluated = psi_t -> evaluate(R);
     }
     
@@ -229,5 +229,49 @@ vector<double> vmc::solve(WaveFunc *psi_t, string filename){
 }
 
 double vmc::gradient_descent(mat R, mat a, mat b, mat W, double sigma){
+
+	// Visible biases are vectors of length M.
+	// Hidden nodes and corresponding hidden biases are vectors of length N
+	// Weight matrix MxN
+	// Number of visible nodes should correspond to the number of particles, N_p,
+	// and the number of dimensions in the system, N_d, such that
+	// M = N_p*N_d
+	
+	int M = R.size(0);
+	int N = W.size(1);
+
+	mat<double> gradient_a(M, 1);
+	mat<double> gradient_b(N, 1);
+	mat<double> gradient_w(M*N, 1);
+	double sigma_squared = sigma*sigma;
+	
+	
+	// Gradient a
+	gradient_a += R - a;
+	gradient_a /= sigma_squared;
+
+
+	// Gradient b
+	for (int k = 0; k < N; k++) {
+		double temp = 0.0;
+		temp += accu(R*W.col(k))/sigma_squared;
+		gradient_b(k) += 1/(1 + exp(-b(k) - temp));
+	}
+
+
+	// Gradient w_kn
+	// Concider changing summing indices in .tex for clarity
+	for (int n = 0; n < N; n++) {	
+		for (int k = 0; k < M; k++) {
+			double temp = 0.0;
+			temp += accu(R*W.col(n))/sigma_squared;
+			gradient_w(k*n) += 1/(1 + exp(-b(n) - temp));
+		}
+	}
+	gradient_w /= sigma_squared;
+
+
+	double return_val; // Gonna be what?
+
     return 0;
 }

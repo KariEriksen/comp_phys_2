@@ -13,16 +13,16 @@ double NaiveMh::metropolis_hastings(WaveFunc *psi_t, double prev_E_l){
     uniform_real_distribution<double> dis_step(-1, 1);
     uniform_real_distribution<double> dis_p(0, 1);
 
-    int j = dis_r(*gen);
+    //int j = dis_r(*gen);
     for(int i = 0; i < N_d; i++){
-        R_p(j, i) += dis_step(*gen) * step ;
+        R_p(i) += dis_step(*gen) * step ;
     }
     double eps = dis_p(*gen);
     double P = psi_t -> ratio(R, R_p, j);
 
     if(eps < P){
         R = R_p;
-        //psi_t -> update();
+        psi_t -> update_positions(R);
         return psi_t -> E_l(R);
     }
     else{
