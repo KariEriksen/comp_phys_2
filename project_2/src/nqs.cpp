@@ -16,8 +16,8 @@ void nqs::initialize(mat R, mat a, mat b, mat W){
         a(i) = dis(*gen);
     }
 
-    for(int j = 0; j < N; j++){
-        b(j) = dis(*gen);
+    for(int i = 0; i < N; j++){
+        b(i) = dis(*gen);
     }
 
     for(int i = 0; i < M; i++){
