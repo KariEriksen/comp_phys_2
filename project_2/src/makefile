@@ -29,7 +29,7 @@ main_b.o: main_b.cpp
 # ==========================================================
 # app.x files
 
-app_b.x: main.o $(depend_all)
+app_b.x: main_b.o $(depend_all)
 	g++ -o app_b.x main_b.o $(FLAGS) $(depend_all)
 
 clean:

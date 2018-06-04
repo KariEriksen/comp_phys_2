@@ -8,7 +8,7 @@ using namespace arma;
 int main(int argc, char *argv[]){
 
     int N, M;
-    int N_p, N_d, N_mc;
+    int N_p, N_d, N_mc, mc_exp;
     double gamma, omega, sigma, step;
 
     //N = 3; N_p = 1; N_d = 2;
