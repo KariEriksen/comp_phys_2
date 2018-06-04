@@ -248,6 +248,13 @@ mat vmc::gradient_descent(mat R, mat a, mat b, mat W, double sigma){
     mat<double> gradient_w(M*N, 1);
     double sigma_squared = sigma*sigma;
 
+	// Add iteration loop that optimizes, based on steepest descent in lecture codes.
+	// We're optimizing the parameters for the NQS, specifically, from which the expressions
+	// for gradients were obtained.
+	
+	int max_iter = 1000;
+	double c, alpha, d;
+	// 
 
     // Gradient a
     gradient_a += R - a;
