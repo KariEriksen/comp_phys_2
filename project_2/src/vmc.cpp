@@ -242,7 +242,12 @@ mat vmc::gradient_descent(WaveFunc *psi_t){
 	// and the number of dimensions in the system, N_d, such that
 	// M = N_p*N_d
 	
-	mat a = psi_t
+	// Don't know if this bit is necessary
+	mat a(M,1) = psi_t -> a;
+	mat b(N,1) = psi_t -> b;
+	mat W(N,M) = psi_t -> W;
+	mat R(M*N,1) = psi_t -> R;
+
 
 	int M = psi_t -> M;
 	int N = psi_t -> N;
@@ -304,20 +309,17 @@ mat vmc::gradient_descent(WaveFunc *psi_t){
 		G(2) = accu((mean(energy_local*gradient_w) - energy_local*expected_w));
 		G = 2*G;
 
+		previous_energy = psi_t -> E_l(R, a, b, W);
 
-		 // But how do we check for the minima? Needs work.
-		mat old_vals = mat(3, 1);
-		old_vals(0) = a;
-		old_vals(1) = b;
-		old_vals(2) = W;
-		
-
+		// Update variational params and calculate energy again
 		a += -gamma*G(0);
 		b += -gamma*G(1);
 		W += -gamma*G(2);
+		
+		new_energy = psi_t -> E_l(R, a, b, W);
 
 
-		if (test_val < tolerance) break;
+		if (abs(previous_energy - new_energy) < tolerance) break;
 		iter++;
 
 	mat return_val(3,1);
