@@ -2,31 +2,52 @@
 
 \subsection{Ansatz for the wavefunction and the hamiltonian}
 
-In this project we study the physics of a dilute many boson system in a Bose Einstein condensate with variational monte carlo methods. The particles are placed in a harmonic oscillator trap described by equation 1 in the project description. We'll start by discussing a hamiltonian in which there is no interaction between particles and being bosons there are no restrictions on the occupancy of a single energy state. But in general the trial wavefunction (or ansatz for the wavefunction) is defined as in equation \ref{eq:psi_t}
-
-\begin{equation}\label{eq:psi_t}
-\Psi_T(\{\mathbf{r}\}) = \prod _i g(\alpha, \beta, \mathbf{r}_i) \prod _{i <j} f(a, |\mathbf{r}_i -\mathbf{r}_j|)
-\end{equation} 
-\noindent Where $g(\alpha, \beta, \mathbf{r}_i)$ is a function proportional to the single particle solution of the harmonic oscillator trap. Which is to say it can be written on the form 
+We are studying a system of two electrons confined in a harmonic oscillator trap described by the Hamiltonian 
 
 \begin{equation}
-g(\alpha, \beta, \mathbf{r}_i) = e^{-\alpha ( x_i^2+ y_i^2 + \beta z_i ^2)}
+\hat{H} = \sum_{i=1}^N \left( - \frac{1}{2} \nabla_i^2 + \frac{1}{2} \omega^2 r_i^2 \right) + \sum_{i<j} \frac{1}{r_{ij}}
 \end{equation}
 
+where the first sum is the standard harmonic oscillator part and the last is the interacting part between the electrons and $N$ represent the number of particles. $\omega$ is the oscillator frequency of the trap and $r_i$ is the position of particle $i$, whereas $r_{ij}$ is the distance between the particles and given as $r_{ij} = |\mathbf{r_i} - \mathbf{r_j}|$. \\
+Our wave function is given from the energy of the restricted Boltzmann machine, see \eqref{eq:E_rbm}, which is the joint energy functional between the visible and hidden nodes. From the marginal probability of the joint probability distribution, see \eqref{eq:F_rbm_marg}, we get our wave equation.                     
 
-\noindent Where $\alpha$ is the variational parameter of interest. Which is to say that minimizing the system energy $\langle \Psi_T(\{\mathbf{r}\}) | \hat{H} |\Psi_T(\{\mathbf{r}\}) \rangle$ by $\alpha$ is the objective of this project. 
+\begin{align}
+\Psi(X) &= F_{rbm}(X) \\
+&= \frac{1}{Z} \exp \left( -\sum_{i}^{M} \frac{(X_i - a_i)^2}{2 \sigma^2} \right) \prod_{j}^{N} \left( 1 + \exp \left( b_j + \sum_{i}^{M} \frac{X_i \omega_{ij}}{\sigma^2} \right) \right)
+\end{align}
 
-In equation \ref{eq:psi_t} we also define the correlation wavefunction $f(a, |\mathbf{r}_i -\mathbf{r}_j|)$ is  defined as 
+Here $Z$ is the partition function, $X_i$ represents the visible nodes running up to $M$, and $a_i$ and $b_j$ are the biases described in the section below, \eqref{sec:rbm}, where number of hidden nodes $j$ runs up to $N$. $\omega_{ij}$ is an $M \times N$ matrix holding the weights connecting the visible nodes with the hidden and $\sigma$ is the standard deviation of the noise in our model. \\
 
-\begin{equation}
-f(a, |\mathbf{r}_i -\mathbf{r}_j|) = 
-\begin{cases}
-\infty, & |\mathbf{r}_i -\mathbf{r}_j| \leq a \\
-0, & |\mathbf{r}_i -\mathbf{r}_j| > a
-\end{cases}
+\subsection{Restricted Boltzmann Machine}\label{sec:rbm}
+
+Restricted Boltzmann machine is a energy-based generative model which include hidden and visible variables (ref to Metha). It consists of a two-layer network with a two dimensional matrix $W_{ij}$ telling how strong the connections between the hidden and visible nodes are. The energy related to a configuration of the nodes is what forms the basis of our model. It is given in \eqref{eq:E_rbm}.
+
+\begin{equation}\label{eq:E_rbm}
+E(\mathbf{v}, \mathbf{h}) = - \sum_{i} a_i(v_i) - \sum_{\mu} b_j(h_j) - \sum_{ij} W_{ij}v_i h_j 
 \end{equation}
 
-\noindent Initially (for tasks a, b, and c) we set the parameter a to equal zero and solve the non-interactive system. As it turns out directly evaluating the inner product to find the expectation for the energy is problematic because for a system with interaction it involves solving a pretty unasvory integral. We then turn to numerical methods as a tool, but we still want avoid directly evaluating the expectation for the hamiltonian for the ensamble. The solution to this problem becomes apparent when you consider the machinery of the VMC scheme.
+Here $a_i(v_i)$ and $b_j(h_j)$ are bias functions of the visible and hidden layers which we are allowed to choose our self. In our case we want the visible layer to take a continuous form and the hidden layer to be binary, (Gaussian-binary), meaning $a_i$ and $b_j$ takes the following from
+
+$$a_i(v_i) = \frac{v_i^2}{2 \sigma_i^2}, \ \ \ b_j(h_j)= b_jh_j.$$
+
+We are working with restricted Boltzmann machine meaning there is no connection between nodes within layers, only between layers. Also this network is a generative one so we want our network to learn a probability distribution. We begin with the joint probability distribution of the visible and hidden nodes is given in \eqref{eq:F_rbm_joint} where $Z$ is the partition function, see \eqref{eq:Z}. 
+
+\begin{equation}\label{eq:F_rbm_joint}
+F_{rbm} (\mathbf{X}, \mathbf{h}) = \frac{1}{Z} e^{-E(\mathbf{X}, \mathbf{h})}
+\end{equation}
+
+\begin{equation}\label{eq:Z}
+Z = \int \int \frac{1}{Z} e^{-E(\mathbf{X}, \mathbf{h})} d\mathbf{x}d\mathbf{h}
+\end{equation}
+
+From \eqref{eq:F_rbm_joint} we can marginalize over all the hidden units and get the distribution over the visible units. And as mentioned above this is what we use to represent our wave function. 
+
+\begin{align}\label{eq:F_rbm_marg}
+F_{rbm} (\mathbf{X}) &= \sum_{\mathbf{h}} F_{rbm} (\mathbf{X}, \mathbf{h}) \\
+&= \frac{1}{Z} \sum_{\mathbf{h}} e^{-E(\mathbf{X}, \mathbf{h})}
+\end{align}
+
+Since we have no data to train we use the technique of reinforcement learning. We feed the network with input using Monte Carlo method and based on the variational principle we find the ground state of the system by seeking the configuration that gives the lowest quantum mechanical energy. According to this principle we change the weights and biases by gradient descent method and hopefully the network will converge towards the correct state.  
 
 \subsection{Variational Monte Carlo}
 
