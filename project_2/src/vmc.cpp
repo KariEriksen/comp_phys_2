@@ -14,7 +14,7 @@ using namespace arma;
 using namespace std;
 
 void vmc::monte_carlo(WaveFunc *psi_t, metadata *exp_vals){
-    exp_vals -> exp_E[0] = psi_t -> E_l(R);
+    exp_vals -> exp_E[0] = psi_t -> E_l(R, a, b, W);
     mat square_R;
 
     if(compute_extra || compute_obd)
@@ -53,9 +53,9 @@ void vmc::monte_carlo(WaveFunc *psi_t, metadata *exp_vals){
         }
 
         //call sgd and update weights
-        mat<double> G(3, 1);
-        G = gradient_descent(R, a, b, W, sigma);
-        psi_t -> update_weights(G);
+        mat G = mat(3, 1);
+        G = gradient_descent(psi_t);
+        psi_t -> update_weights(G, a, b, W);
 
     }
 }
@@ -107,7 +107,7 @@ vector<double> vmc::solve(WaveFunc *psi_t, string filename){
 
     generate_positions(step);
     psi_t -> initialize(a, b, W);
-    double evaluated = psi_t -> evaluate(R);
+    double evaluated = psi_t -> evaluate(R, a, b, W);
     double step_init = step;
     /*
      *Accepting a state in which a particle pair is closer than the permitted
@@ -120,7 +120,7 @@ vector<double> vmc::solve(WaveFunc *psi_t, string filename){
         step_init += step*1e-5;
         generate_positions(step_init);
         //psi_t -> initialize(R);
-        evaluated = psi_t -> evaluate(R);
+        evaluated = psi_t -> evaluate(R, a, b, W);
     }
     
     metadata all_exp;
@@ -165,7 +165,7 @@ vector<double> vmc::solve(WaveFunc *psi_t, string filename){
     }
 
     
-    string header = "#{N_p: " + to_string(N_p)
+    /*string header = "#{N_p: " + to_string(N_p)
             + ", N_d: " + to_string(N_d)
             + ", N_mc: " + to_string(N_mc)
             + ", alpha: " +to_string(a)
@@ -178,6 +178,7 @@ vector<double> vmc::solve(WaveFunc *psi_t, string filename){
     
     cout << "Writing local energies to file: " << "../data/"+  filename << endl;
     output_file.close();
+    */
 
     if(compute_obd){
         string obd_filename = "../data/obd_"+filename;
@@ -210,10 +211,11 @@ vector<double> vmc::solve(WaveFunc *psi_t, string filename){
             arma_obd(i, 0) = obd_bins[i];
         }
         
-        cout << "Writing obd to file: "<< obd_filename << endl;
+        /*cout << "Writing obd to file: "<< obd_filename << endl;
         obd_output << header << "\n";
         arma_obd.save(obd_output, csv_ascii);
         obd_output.close();
+        */
     }
 
     
@@ -231,7 +233,7 @@ vector<double> vmc::solve(WaveFunc *psi_t, string filename){
     return retval ;
 }
 
-mat vmc::gradient_descent(mat R, mat a, mat b, mat W, double sigma){
+mat vmc::gradient_descent(WaveFunc *psi_t){
 
     // Visible biases are vectors of length M.
     // Hidden nodes and corresponding hidden biases are vectors of length N
@@ -240,12 +242,12 @@ mat vmc::gradient_descent(mat R, mat a, mat b, mat W, double sigma){
     // and the number of dimensions in the system, N_d, such that
     // M = N_p*N_d
 
-    int M = R.size(0);
-    int N = W.size(1);
+    //int M = R.size(0);
+    //int N = W.size(1);
 
-    mat<double> gradient_a(M, 1);
-    mat<double> gradient_b(N, 1);
-    mat<double> gradient_w(M*N, 1);
+    mat gradient_a = mat(M, 1);
+    mat gradient_b = mat(N, 1);
+    mat gradient_w = mat(M*N, 1);
     double sigma_squared = sigma*sigma;
 
 
@@ -275,15 +277,15 @@ mat vmc::gradient_descent(mat R, mat a, mat b, mat W, double sigma){
 
     // Expectation values
     double energy_local = psi_t -> E_l(R, a, b, W);
-    double expected_a = mean(gradient_a);
-    double expected_b = mean(gradient_b);
-    double expected_w = mean(gradient_w);
+    double expected_a = accu(mean(gradient_a, 1));
+    double expected_b = accu(mean(gradient_b, 1));
+    double expected_w = accu(mean(gradient_w, 1));
 
     // Return
-    mat<double> G(3, 1);
-    G(0) = (mean(energy_local*gradient_a) - energy_local*expected_a);
-    G(1) = (mean(energy_local*gradient_b) - energy_local*expected_b);
-    G(2) = (mean(energy_local*gradient_w) - energy_local*expected_w);
+    mat G = mat(3, 1);
+    G(0) = accu((mean(energy_local*gradient_a) - energy_local*expected_a));
+    G(1) = accu((mean(energy_local*gradient_b) - energy_local*expected_b));
+    G(2) = accu((mean(energy_local*gradient_w) - energy_local*expected_w));
     G = 2*G;
 
 
