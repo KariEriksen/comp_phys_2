@@ -16,10 +16,10 @@ public:
     double evaluate(mat R);
     double E_l(mat R, mat a, mat b, mat W);
     double laplace(mat R, mat a, mat b, mat W);
-    mat drift_force(mat R);
-    void initialize(mat R, mat a, mat b, mat W);
+    mat drift_force(mat R, mat a, mat b, mat W);
+    void initialize(mat a, mat b, mat W);
     void update_positions(mat R);
-    void update_weights(mat a, mat b, mat W);
+    void update_weights(mat G);
     //mat NumericalDoubleDerivative(mat R);
     //??
     nqs();

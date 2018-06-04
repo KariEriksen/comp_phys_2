@@ -8,7 +8,7 @@ using namespace arma;
 
 nqs::nqs() : WaveFunc(){}
 
-void nqs::initialize(mat R, mat a, mat b, mat W){
+void nqs::initialize(mat a, mat b, mat W){
     uniform_real_distribution<double> dis (0, 0.001);
     gen = new mt19937(rd());
 
@@ -94,7 +94,7 @@ double nqs::laplace(mat R, mat a, mat b, mat W){
     return laplace_return;
 }
 
-mat nqs::drift_force(mat R){
+mat nqs::drift_force(mat R, mat a, mat b, mat W){
 
     // Drift force, F, to be used in importance sampling
 
@@ -143,11 +143,13 @@ void nqs::update_positions(mat R){
     D = D_p;
 }
 
-void nqs::update_weights(mat a, mat b, mat W){
+void nqs::update_weights(mat G){
 
-    a = a_p;
-    b = b_p;
-    W = W_p;
+    //Is this sufficient, do we use the same G for all
+    //indices?
+    a += -gamma*G(0);
+    b += -gamma*G(1);
+    W += -gamma*G(2);
 }
 
 void nqs::set_params(int M, int N, int N_p, int N_d, double sigma, double omega, double gamma){
