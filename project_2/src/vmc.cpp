@@ -297,21 +297,27 @@ mat vmc::gradient_descent(WaveFunc *psi_t){
 		double expected_b = accu(mean(gradient_b, 1));
 		double expected_w = accu(mean(gradient_w, 1));
 
-		// Return
+		// Calc and check if we've found a minima
 		mat G = mat(3, 1);
 		G(0) = accu((mean(energy_local*gradient_a) - energy_local*expected_a));
 		G(1) = accu((mean(energy_local*gradient_b) - energy_local*expected_b));
 		G(2) = accu((mean(energy_local*gradient_w) - energy_local*expected_w));
 		G = 2*G;
 
+
+		 // But how do we check for the minima? Needs work.
+		mat old_vals = mat(3, 1);
+		old_vals(0) = a;
+		old_vals(1) = b;
+		old_vals(2) = W;
+		
+
 		a += -gamma*G(0);
 		b += -gamma*G(1);
 		W += -gamma*G(2);
 
-		vec f = W*a - b;
-		
 
-		if (sqrt(dot(f,f)) < tolerance) break;
+		if (test_val < tolerance) break;
 		iter++;
 
 	mat return_val(3,1);
@@ -320,5 +326,5 @@ mat vmc::gradient_descent(WaveFunc *psi_t){
 	return_val(2) = W;
 
 
-	return 0;
+	return return_val;
 }
