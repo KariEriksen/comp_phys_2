@@ -9,8 +9,9 @@ using namespace arma;
 nqs::nqs() : WaveFunc(){}
 
 void nqs::initialize(mat a, mat b, mat W){
+    random_device rd;
+    mt19937 gen(rd());
     uniform_real_distribution<double> dis (0, 0.001);
-    gen = new mt19937(rd());
 
     for(int i = 0; i < N; i++){
         a(i) = dis(*gen);
@@ -28,13 +29,15 @@ void nqs::initialize(mat a, mat b, mat W){
     }
 }
 
-double nqs::evaluate(mat R){
+double nqs::evaluate(mat R, mat a, mat b, mat W){
 
     double exp_term = 0;
     double prod = 0;
     double sigma_sq = sigma*sigma;
-    exp_term = exp(-(R - a)/2*sigma_sq);
-    prod *= 1 + exp(b + sum(R*W)/sigma_sq);
+    exp_term = exp(accu(-(R - a)/2*sigma_sq));
+    for(int j = 0; j < N; j++){
+        prod *= 1 + exp(- b(j) - sum(R%W.col(j))/sigma_sq);
+    }
     return exp_term*prod;
 }
 
@@ -44,7 +47,7 @@ double nqs::E_l(mat R, mat a, mat b, mat W){
     // configuration of the system
 
     double omega_sq = omega*omega;
-    return 0.5*(laplace(R, a, b, W) + sum(omega_sq*R));
+    return 0.5*(laplace(R, a, b, W) + accu(omega_sq*R));
 }
 
 double nqs::laplace(mat R, mat a, mat b, mat W){
@@ -63,9 +66,11 @@ double nqs::laplace(mat R, mat a, mat b, mat W){
     double laplace_psi = 0;
     double sigmoid = 0;
     double sigmoid_deri = 0;
+    double laplace_return = 0;
 
     double sigma_sq = sigma*sigma;
     double sigma_qd = sigma_sq*sigma_sq;
+    double omega_sq = omega*omega;
 
     for(int i = 0; i < M; i++){
         for(int j = 0; j < N; j++){
@@ -104,6 +109,7 @@ mat nqs::drift_force(mat R, mat a, mat b, mat W){
     double sum_1 = 0;
     double grad_psi_sq = 0;
     double sigmoid = 0;
+    mat grad_psi_sq = mat(M, 1);
 
     double sigma_sq = sigma*sigma;
 
@@ -121,7 +127,7 @@ mat nqs::drift_force(mat R, mat a, mat b, mat W){
         }
 
         // The first derivative of logarithm of the wave function
-        grad_psi_sq = -(R(i) - a(i))/sigma_sq + sum_1/sigma_sq;
+        grad_psi_sq(i) = -(R(i) - a(i))/sigma_sq + sum_1/sigma_sq;
     }
 
     // F = 2* '(ln(psi))
@@ -130,10 +136,10 @@ mat nqs::drift_force(mat R, mat a, mat b, mat W){
     return drift_force_i;
 }
 
-double nqs::ratio(mat R, mat R_p, int k){
+double nqs::ratio(mat R, mat R_p, int k, mat a, mat b, mat W){
 
-    double eval_R = evaluate(R);
-    double eval_R_p = evaluate(R_p);
+    double eval_R = evaluate(R, a, b, W);
+    double eval_R_p = evaluate(R_p, a, b, W);
     double prob = (eval_R_p*eval_R_p)/(eval_R*eval_R);
     return prob;
 }
@@ -143,7 +149,7 @@ void nqs::update_positions(mat R){
     D = D_p;
 }
 
-void nqs::update_weights(mat G){
+void nqs::update_weights(mat G, mat a, mat b, mat W){
 
     //Is this sufficient, do we use the same G for all
     //indices?
