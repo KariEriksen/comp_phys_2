@@ -33,10 +33,9 @@ double nqs::evaluate(mat R){
 
     double exp_term = 0;
     double prod = 0;
-    double sigma_sq = sigma*sigma;
-    exp_term = exp(accu(-(R - a)/2*sigma_sq));
+    exp_term = exp(accu(-(R - a)/2*sigma_2));
     for(int j = 0; j < N; j++){
-        prod *= 1 + exp(- b(j) - sum(R%W.col(j))/sigma_sq);
+        prod *= 1 + exp(- b(j) - sum(R%W.col(j))/sigma_2);
     }
     return exp_term*prod;
 }
@@ -45,9 +44,7 @@ double nqs::E_l(mat R){
 
     // Calulates the local energy of the given
     // configuration of the system
-
-    double omega_sq = omega*omega;
-    return 0.5*(laplace(R) + accu(omega_sq*R));
+    return 0.5*(laplace(R) + accu(omega_2*R));
 }
 
 double nqs::laplace(mat R){
@@ -68,10 +65,6 @@ double nqs::laplace(mat R){
     double sigmoid_deri = 0;
     double laplace_return = 0;
 
-    double sigma_sq = sigma*sigma;
-    double sigma_qd = sigma_sq*sigma_sq;
-    double omega_sq = omega*omega;
-
     for(int i = 0; i < M; i++){
         for(int j = 0; j < N; j++){
 
@@ -88,12 +81,12 @@ double nqs::laplace(mat R){
 
         // First and second derivatives of the logarithm
         // of the nqs wave function
-        grad_psi = -(R(i) - a(i))/sigma_sq + sum_1/sigma_sq;
+        grad_psi = -(R(i) - a(i))/sigma_2 + sum_1/sigma_2;
         grad_psi_sq = grad_psi*grad_psi;
-        laplace_psi = -1/sigma_sq + sum_2/sigma_qd;
+        laplace_psi = -1/sigma_2 + sum_2/sigma_4;
 
 
-        laplace_return += (-(grad_psi_sq + laplace_psi) + omega_sq*R(i));
+        laplace_return += (-(grad_psi_sq + laplace_psi) + omega_2*R(i));
     }
 
     return laplace_return;
@@ -110,8 +103,6 @@ mat nqs::drift_force(mat R){
     double sigmoid = 0;
     mat grad_psi_sq = mat(M, 1);
 
-    double sigma_sq = sigma*sigma;
-
     for(int i = 0; i < M; i++){
         for(int j = 0; j < N; j++){
 
@@ -126,7 +117,7 @@ mat nqs::drift_force(mat R){
         }
 
         // The first derivative of logarithm of the wave function
-        grad_psi_sq(i) = -(R(i) - a(i))/sigma_sq + sum_1/sigma_sq;
+        grad_psi_sq(i) = -(R(i) - a(i))/sigma_2 + sum_1/sigma_2;
     }
 
     // F = 2* '(ln(psi))
@@ -157,17 +148,25 @@ void nqs::update_weights(mat G){
     W += -gamma*G(2);
 }
 
-void nqs::set_params(int M, int N, int N_p, int N_d, double sigma, double omega, double gamma){
+void nqs::set_params(vec params){
 
-    /*
-    M_h = M;
-    N_x = N;
-    N_p = N_p;
-    N_d = N_d;
-    sigma = sigma;
-    omega = omega;
-    gamma = gamma;
+    /*int M_in, int N_in,
+    double sigma_in, double sigma_sq_in,
+    double sigma_4_in,
+    double omega_in, double omega_sq_in,
+    double gamma_in
     */
+
+    a = colvec((int) params[0]);
+    b = colvec((int) params[1]);
+    W = mat((int) params[0], (int) params[1]);
+    sigma = params[2];
+    sigma_2 = params[3];
+    sigma_4 = params[4];
+    omega = params[5];
+    omega_2 = params[6];
+    gamma = params[7];
+
 }
 
 
