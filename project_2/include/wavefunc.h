@@ -11,7 +11,7 @@ class WaveFunc{
         double sigma, omega, gamma;
 
         WaveFunc(){}
-        virtual void set_params(int M, int N, int N_p, int N_d, double sigma, double omega, double gamma) =0;
+        virtual void set_params(vec params) =0;
         virtual void initialize() = 0;
         virtual void update_positions(mat R) = 0;
         virtual void update_weights(mat G) = 0;
