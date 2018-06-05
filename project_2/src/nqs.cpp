@@ -14,16 +14,16 @@ void nqs::initialize(mat a, mat b, mat W){
     uniform_real_distribution<double> dis (0, 0.001);
 
     for(int i = 0; i < N; i++){
-        a(i) = dis(*gen);
+        a(i) = dis(gen);
     }
 
-    for(int i = 0; i < N; j++){
-        b(i) = dis(*gen);
+    for(int i = 0; i < N; i++){
+        b(i) = dis(gen);
     }
 
     for(int i = 0; i < M; i++){
         for(int j = 0; j < N; j++){
-            W(i,j) = dis(*gen);
+            W(i,j) = dis(gen);
         }
 
     }
@@ -80,7 +80,7 @@ double nqs::laplace(mat R, mat a, mat b, mat W){
             term = 1 + exp_term;
 
             sigmoid = 1/(term);
-            sigmoid_deri = exp_j/(term*term);
+            sigmoid_deri = exp_term/(term*term);
 
             sum_1 += W(i,j)*sigmoid;
             sum_2 += W(i,j)*W(i,j)*sigmoid_deri;
@@ -107,7 +107,6 @@ mat nqs::drift_force(mat R, mat a, mat b, mat W){
     double exp_j = 0;
     double term = 0;
     double sum_1 = 0;
-    double grad_psi_sq = 0;
     double sigmoid = 0;
     mat grad_psi_sq = mat(M, 1);
 
@@ -131,7 +130,7 @@ mat nqs::drift_force(mat R, mat a, mat b, mat W){
     }
 
     // F = 2* '(ln(psi))
-    mat drift_force_i = 2*deri_psi;
+    mat drift_force_i = 2*grad_psi_sq;
 
     return drift_force_i;
 }
