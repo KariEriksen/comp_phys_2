@@ -8,18 +8,24 @@ using namespace arma;
 int main(int argc, char *argv[]){
 
     int N, M;
-    int N_p, N_d, N_mc, mc_exp;
+    int N_d, N_mc, mc_exp;
     double gamma, omega, sigma, step;
 
-    //N = 3; N_p = 1; N_d = 2;
-    N = atoi(argv[1]) ; N_p = atoi(argv[1]);
-    N_d = atoi(argv[2]); mc_exp = atoi(argv[3]);
+    int N_p = 2;
 
-    M = N_p*N_d;
+    if( argc < 3){
+        cout << "Wrong usage" << endl;
+        exit(1);
+    }
+    else{
+        N_d = atoi(argv[1]); mc_exp = atoi(argv[2]);
+        N = atoi(argv[3]);
+    }
 
     N_mc = pow(2, mc_exp);
+    M = N_p*N_d;
 
-    gamma = 1; omega = 1; sigma = 1; step = 0.1;
+    gamma = 0.01; omega = 1; sigma = 1; step = 0.1;
 
     nqs n;
     NaiveMh D;
