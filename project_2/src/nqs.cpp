@@ -8,21 +8,22 @@ using namespace arma;
 
 nqs::nqs() : WaveFunc(){}
 
-void nqs::initialize(mat R, mat a, mat b, mat W){
+void nqs::initialize(){
+    random_device rd;
+    mt19937 gen(rd());
     uniform_real_distribution<double> dis (0, 0.001);
-    gen = new mt19937(rd());
 
     for(int i = 0; i < N; i++){
-        a(i) = dis(*gen);
+        a(i) = dis(gen);
     }
 
-    for(int j = 0; j < N; j++){
-        b(j) = dis(*gen);
+    for(int i = 0; i < N; i++){
+        b(i) = dis(gen);
     }
 
     for(int i = 0; i < M; i++){
         for(int j = 0; j < N; j++){
-            W(i,j) = dis(*gen);
+            W(i,j) = dis(gen);
         }
 
     }
@@ -32,22 +33,21 @@ double nqs::evaluate(mat R){
 
     double exp_term = 0;
     double prod = 0;
-    double sigma_sq = sigma*sigma;
-    exp_term = exp(-(R - a)/2*sigma_sq);
-    prod *= 1 + exp(b + sum(R*W)/sigma_sq);
+    exp_term = exp(accu(-(R - a)/2*sigma_2));
+    for(int j = 0; j < N; j++){
+        prod *= 1 + exp(- b(j) - sum(R%W.col(j))/sigma_2);
+    }
     return exp_term*prod;
 }
 
-double nqs::E_l(mat R, mat a, mat b, mat W){
+double nqs::E_l(mat R){
 
     // Calulates the local energy of the given
     // configuration of the system
-
-    double omega_sq = omega*omega;
-    return 0.5*(laplace(R, a, b, W) + sum(omega_sq*R));
+    return 0.5*(laplace(R) + accu(omega_2*R));
 }
 
-double nqs::laplace(mat R, mat a, mat b, mat W){
+double nqs::laplace(mat R){
 
     // Calulates the derivatives of the wave function
     // Both first and second derivatives
@@ -63,9 +63,7 @@ double nqs::laplace(mat R, mat a, mat b, mat W){
     double laplace_psi = 0;
     double sigmoid = 0;
     double sigmoid_deri = 0;
-
-    double sigma_sq = sigma*sigma;
-    double sigma_qd = sigma_sq*sigma_sq;
+    double laplace_return = 0;
 
     for(int i = 0; i < M; i++){
         for(int j = 0; j < N; j++){
@@ -75,7 +73,7 @@ double nqs::laplace(mat R, mat a, mat b, mat W){
             term = 1 + exp_term;
 
             sigmoid = 1/(term);
-            sigmoid_deri = exp_j/(term*term);
+            sigmoid_deri = exp_term/(term*term);
 
             sum_1 += W(i,j)*sigmoid;
             sum_2 += W(i,j)*W(i,j)*sigmoid_deri;
@@ -83,12 +81,12 @@ double nqs::laplace(mat R, mat a, mat b, mat W){
 
         // First and second derivatives of the logarithm
         // of the nqs wave function
-        grad_psi = -(R(i) - a(i))/sigma_sq + sum_1/sigma_sq;
+        grad_psi = -(R(i) - a(i))/sigma_2 + sum_1/sigma_2;
         grad_psi_sq = grad_psi*grad_psi;
-        laplace_psi = -1/sigma_sq + sum_2/sigma_qd;
+        laplace_psi = -1/sigma_2 + sum_2/sigma_4;
 
 
-        laplace_return += (-(grad_psi_sq + laplace_psi) + omega_sq*R(i));
+        laplace_return += (-(grad_psi_sq + laplace_psi) + omega_2*R(i));
     }
 
     return laplace_return;
@@ -102,10 +100,8 @@ mat nqs::drift_force(mat R){
     double exp_j = 0;
     double term = 0;
     double sum_1 = 0;
-    double grad_psi_sq = 0;
     double sigmoid = 0;
-
-    double sigma_sq = sigma*sigma;
+    mat grad_psi_sq = mat(M, 1);
 
     for(int i = 0; i < M; i++){
         for(int j = 0; j < N; j++){
@@ -121,11 +117,11 @@ mat nqs::drift_force(mat R){
         }
 
         // The first derivative of logarithm of the wave function
-        grad_psi_sq = -(R(i) - a(i))/sigma_sq + sum_1/sigma_sq;
+        grad_psi_sq(i) = -(R(i) - a(i))/sigma_2 + sum_1/sigma_2;
     }
 
     // F = 2* '(ln(psi))
-    mat drift_force_i = 2*deri_psi;
+    mat drift_force_i = 2*grad_psi_sq;
 
     return drift_force_i;
 }
@@ -143,24 +139,34 @@ void nqs::update_positions(mat R){
     D = D_p;
 }
 
-void nqs::update_weights(mat a, mat b, mat W){
+void nqs::update_weights(mat G){
 
-    a = a_p;
-    b = b_p;
-    W = W_p;
+    //Is this sufficient, do we use the same G for all
+    //indices?
+    a += -gamma*G(0);
+    b += -gamma*G(1);
+    W += -gamma*G(2);
 }
 
-void nqs::set_params(int M, int N, int N_p, int N_d, double sigma, double omega, double gamma){
+void nqs::set_params(vec params){
 
-    /*
-    M_h = M;
-    N_x = N;
-    N_p = N_p;
-    N_d = N_d;
-    sigma = sigma;
-    omega = omega;
-    gamma = gamma;
+    /*int M_in, int N_in,
+    double sigma_in, double sigma_sq_in,
+    double sigma_4_in,
+    double omega_in, double omega_sq_in,
+    double gamma_in
     */
+
+    a = colvec((int) params[0]);
+    b = colvec((int) params[1]);
+    W = mat((int) params[0], (int) params[1]);
+    sigma = params[2];
+    sigma_2 = params[3];
+    sigma_4 = params[4];
+    omega = params[5];
+    omega_2 = params[6];
+    gamma = params[7];
+
 }
 
 

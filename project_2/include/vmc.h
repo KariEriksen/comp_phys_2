@@ -27,7 +27,7 @@ class vmc{
    protected:
         int obd_n_bins;
         double bin_length;
-        mat R, a, b, W;
+        mat R;
         random_device rd;  //Will be used to obtain a seed for the random number engine
         mt19937 *gen; //Standard mersenne_twister_engine seeded with rd()
         double* obd_bins;
@@ -37,7 +37,7 @@ class vmc{
         void monte_carlo(WaveFunc *psi_t, metadata *exp_vals);
         vector<double> solve(WaveFunc *psi, string filename);
         void generate_positions(double step_int);
-        mat gradient_descent(mat R, mat a, mat b, mat W, double sigma);
+        mat gradient_descent(WaveFunc *psi_t);
         void set_params(int N, int dim,
                 int mc_cycles, bool obd_bool, bool meta_bool);
     protected:

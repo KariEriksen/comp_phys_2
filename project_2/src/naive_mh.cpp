@@ -18,7 +18,7 @@ double NaiveMh::metropolis_hastings(WaveFunc *psi_t, double prev_E_l){
         R_p(i) += dis_step(*gen) * step ;
     }
     double eps = dis_p(*gen);
-    double P = psi_t -> ratio(R, R_p, j);
+    double P = psi_t -> ratio(R, R_p, 1);
 
     if(eps < P){
         R = R_p;

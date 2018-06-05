@@ -1,4 +1,4 @@
-FLAGS =  -g -fPIC --std=c++11 -larmadillo -O3
+FLAGS =  -g -fPIC --std=c++11 -larmadillo -O3 -llapack -lblas
 depend_all = wavefunc.o vmc.o nqs.o
 
 mh = naive_mh.o
@@ -9,7 +9,7 @@ imp = importance.o
 wavefunc.o: ../include/wavefunc.h wavefunc.cpp
 	clang wavefunc.cpp -c $(FLAGS) 
 
-nqs.o: ../include/nqs.h nqs.cpp
+nqs.o: ../include/nqs.h nqs.cpp 
 	clang nqs.cpp -c $(FLAGS)
 
 vmc.o: ../include/vmc.h vmc.cpp ../include/wavefunc.h wavefunc.cpp
@@ -29,8 +29,8 @@ main_b.o: main_b.cpp
 # ==========================================================
 # app.x files
 
-app_b.x: main.o $(depend_all)
-	g++ -o app_b.x main_b.o $(FLAGS) $(depend_all)
+app_b.x: main_b.o $(depend_all) $(mh)
+	g++ -o app_b.x main_b.o $(depend_all) $(mh) $(FLAGS)  
 
 clean:
 	rm -f *.o
