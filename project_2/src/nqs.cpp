@@ -147,15 +147,9 @@ void nqs::update_weights(mat G){
 
     //Is this sufficient, do we use the same G for all
     //indices?
-
-
-	// The below code implemented in vmc::gradient_descent
-	// but the question above still stands.
-	/*
     a += -gamma*G(0);
     b += -gamma*G(1);
     W += -gamma*G(2);
-	*/
 }
 
 void nqs::set_params(int M, int N, int N_p, int N_d, double sigma, double omega, double gamma){
