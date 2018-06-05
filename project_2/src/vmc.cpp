@@ -252,15 +252,16 @@ mat vmc::gradient_descent(WaveFunc *psi_t){
 
 
     // Gradient a
-    gradient_a += R - a;
+    gradient_a += R - psi_t -> a;
     gradient_a /= sigma_squared;
 
 
     // Gradient b
     for (int k = 0; k < N; k++) {
         double temp = 0.0;
-        temp += accu(R*W.col(k))/sigma_squared;
-        gradient_b(k) += 1/(1 + exp(-b(k) - temp));
+        temp += accu(R*psi_t -> W.col(k))/sigma_squared;
+        gradient_b(k) += 1/(1 + exp(-psi_t -> b(k)
+                                    - temp));
     }
 
 
@@ -269,14 +270,14 @@ mat vmc::gradient_descent(WaveFunc *psi_t){
     for (int n = 0; n < N; n++) {
         for (int k = 0; k < M; k++) {
             double temp = 0.0;
-            temp += accu(R*W.col(n))/sigma_squared;
-            gradient_w(k*n) += 1/(1 + exp(-b(n) - temp));
+            temp += accu(R*psi_t->W.col(n))/sigma_squared;
+            gradient_w(k*n) += 1/(1 + exp(-psi_t->b(n) - temp));
         }
     }
     gradient_w /= sigma_squared;
 
     // Expectation values
-    double energy_local = psi_t -> E_l(R, a, b, W);
+    double energy_local = psi_t -> E_l(R);
     double expected_a = accu(mean(gradient_a, 1));
     double expected_b = accu(mean(gradient_b, 1));
     double expected_w = accu(mean(gradient_w, 1));

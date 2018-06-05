@@ -7,6 +7,7 @@ using namespace arma;
 class WaveFunc{
     public:
         int M, N, N_p, N_d;
+        mat a, b, W;
         double sigma, omega, gamma;
 
         WaveFunc(){}

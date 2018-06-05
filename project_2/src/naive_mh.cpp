@@ -18,12 +18,12 @@ double NaiveMh::metropolis_hastings(WaveFunc *psi_t, double prev_E_l){
         R_p(i) += dis_step(*gen) * step ;
     }
     double eps = dis_p(*gen);
-    double P = psi_t -> ratio(R, R_p, j, a, b, W);
+    double P = psi_t -> ratio(R, R_p, 1);
 
     if(eps < P){
         R = R_p;
         psi_t -> update_positions(R);
-        return psi_t -> E_l(R, a, b, W);
+        return psi_t -> E_l(R);
     }
     else{
         return prev_E_l;

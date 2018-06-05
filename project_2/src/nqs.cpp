@@ -47,7 +47,7 @@ double nqs::E_l(mat R){
     // configuration of the system
 
     double omega_sq = omega*omega;
-    return 0.5*(laplace(R, a, b, W) + accu(omega_sq*R));
+    return 0.5*(laplace(R) + accu(omega_sq*R));
 }
 
 double nqs::laplace(mat R){
@@ -137,8 +137,8 @@ mat nqs::drift_force(mat R){
 
 double nqs::ratio(mat R, mat R_p, int k){
 
-    double eval_R = evaluate(R, a, b, W);
-    double eval_R_p = evaluate(R_p, a, b, W);
+    double eval_R = evaluate(R);
+    double eval_R_p = evaluate(R_p);
     double prob = (eval_R_p*eval_R_p)/(eval_R*eval_R);
     return prob;
 }
