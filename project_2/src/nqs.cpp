@@ -8,7 +8,7 @@ using namespace arma;
 
 nqs::nqs() : WaveFunc(){}
 
-void nqs::initialize(mat a, mat b, mat W){
+void nqs::initialize(){
     random_device rd;
     mt19937 gen(rd());
     uniform_real_distribution<double> dis (0, 0.001);
@@ -29,7 +29,7 @@ void nqs::initialize(mat a, mat b, mat W){
     }
 }
 
-double nqs::evaluate(mat R, mat a, mat b, mat W){
+double nqs::evaluate(mat R){
 
     double exp_term = 0;
     double prod = 0;
@@ -41,7 +41,7 @@ double nqs::evaluate(mat R, mat a, mat b, mat W){
     return exp_term*prod;
 }
 
-double nqs::E_l(mat R, mat a, mat b, mat W){
+double nqs::E_l(mat R){
 
     // Calulates the local energy of the given
     // configuration of the system
@@ -50,7 +50,7 @@ double nqs::E_l(mat R, mat a, mat b, mat W){
     return 0.5*(laplace(R, a, b, W) + accu(omega_sq*R));
 }
 
-double nqs::laplace(mat R, mat a, mat b, mat W){
+double nqs::laplace(mat R){
 
     // Calulates the derivatives of the wave function
     // Both first and second derivatives
@@ -99,7 +99,7 @@ double nqs::laplace(mat R, mat a, mat b, mat W){
     return laplace_return;
 }
 
-mat nqs::drift_force(mat R, mat a, mat b, mat W){
+mat nqs::drift_force(mat R){
 
     // Drift force, F, to be used in importance sampling
 
@@ -135,7 +135,7 @@ mat nqs::drift_force(mat R, mat a, mat b, mat W){
     return drift_force_i;
 }
 
-double nqs::ratio(mat R, mat R_p, int k, mat a, mat b, mat W){
+double nqs::ratio(mat R, mat R_p, int k){
 
     double eval_R = evaluate(R, a, b, W);
     double eval_R_p = evaluate(R_p, a, b, W);
@@ -148,7 +148,7 @@ void nqs::update_positions(mat R){
     D = D_p;
 }
 
-void nqs::update_weights(mat G, mat a, mat b, mat W){
+void nqs::update_weights(mat G){
 
     //Is this sufficient, do we use the same G for all
     //indices?

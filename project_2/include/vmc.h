@@ -27,7 +27,7 @@ class vmc{
    protected:
         int obd_n_bins;
         double bin_length;
-        mat R, a, b, W;
+        mat R;
         random_device rd;  //Will be used to obtain a seed for the random number engine
         mt19937 *gen; //Standard mersenne_twister_engine seeded with rd()
         double* obd_bins;

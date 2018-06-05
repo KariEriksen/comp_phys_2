@@ -14,7 +14,7 @@ using namespace arma;
 using namespace std;
 
 void vmc::monte_carlo(WaveFunc *psi_t, metadata *exp_vals){
-    exp_vals -> exp_E[0] = psi_t -> E_l(R, a, b, W);
+    exp_vals -> exp_E[0] = psi_t -> E_l(R);
     mat square_R;
 
     if(compute_extra || compute_obd)
@@ -55,7 +55,7 @@ void vmc::monte_carlo(WaveFunc *psi_t, metadata *exp_vals){
         //call sgd and update weights
         mat G = mat(3, 1);
         G = gradient_descent(psi_t);
-        psi_t -> update_weights(G, a, b, W);
+        psi_t -> update_weights(G);
 
     }
 }
@@ -67,7 +67,7 @@ void vmc::set_params(int N, int dim,int mc_cycles,
     N_p = N;
     N_mc = mc_cycles;
     N_d = dim;
-    R = mat(N_p, N_d);
+    R = mat(M,1);
     gen = new mt19937(rd());
     compute_extra = meta_bool;
     compute_obd = obd_bool;
@@ -106,8 +106,8 @@ vector<double> vmc::solve(WaveFunc *psi_t, string filename){
     obd_n_bins = 30*outer_limit;
 
     generate_positions(step);
-    psi_t -> initialize(a, b, W);
-    double evaluated = psi_t -> evaluate(R, a, b, W);
+    psi_t -> initialize();
+    double evaluated = psi_t -> evaluate(R);
     double step_init = step;
     /*
      *Accepting a state in which a particle pair is closer than the permitted
@@ -120,7 +120,7 @@ vector<double> vmc::solve(WaveFunc *psi_t, string filename){
         step_init += step*1e-5;
         generate_positions(step_init);
         //psi_t -> initialize(R);
-        evaluated = psi_t -> evaluate(R, a, b, W);
+        evaluated = psi_t -> evaluate(R);
     }
     
     metadata all_exp;
