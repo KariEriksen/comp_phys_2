@@ -36,11 +36,11 @@ int main(int argc, char *argv[]){
                       omg, omg_2,
                       gamma
                      };
-
     nqs n;
     NaiveMh D;
 
     D.step = step;
+    D.set_params(2, N_d, N_mc, 1, 0);
     n.set_params(params_nqs);
 
     vector<double> result;
