@@ -13,16 +13,15 @@
 using namespace arma;
 using namespace std;
 
-void vmc::monte_carlo(WaveFunc *psi_t, metadata *exp_vals){
+void vmc::monte_carlo(nqs *psi_t, metadata *exp_vals){
     exp_vals -> exp_E[0] = psi_t -> E_l(R);
+    
     mat square_R;
 
-    if(compute_extra || compute_obd)
+    if(compute_obd)
         square_R = square(R);
     if(compute_extra){
-        double prod_r_cur = (double) as_scalar(accu(square_R));
-        exp_vals -> prod_R[0] = prod_r_cur;
-        exp_vals -> prod_R_exp_E[0] = prod_r_cur * exp_vals -> exp_E[0];
+        gradient_descent(psi_t, exp_vals, exp_vals -> exp_E[0]);
     }
     if(compute_obd){
         /*r = sqrt(x^2 + y^2)*/
@@ -32,16 +31,15 @@ void vmc::monte_carlo(WaveFunc *psi_t, metadata *exp_vals){
 
     for(int i = 1; i < N_mc; i++){
         double tmp = metropolis_hastings(psi_t, exp_vals -> exp_E[i-1]);
-
+        exp_vals -> exp_E[i] = tmp;
+        
         if(compute_extra || compute_obd){
-            if(exp_vals -> exp_E[i-1] != tmp){
+            if((exp_vals -> exp_E[i-2] != tmp) & compute_obd){
                 square_R = square(R);
             }
 
             if(compute_extra){
-                double prod_r_cur = (double) as_scalar(accu(square_R));
-                exp_vals -> prod_R[i] = prod_r_cur;
-                exp_vals -> prod_R_exp_E[i] = prod_r_cur * tmp;
+                gradient_descent(psi_t, exp_vals, tmp);
             }
             if(compute_obd){
                 /*r = sqrt(x^2 + y^2)*/
@@ -49,25 +47,24 @@ void vmc::monte_carlo(WaveFunc *psi_t, metadata *exp_vals){
                 count_obd(all_radii, exp_vals);
             }
 
-            exp_vals -> exp_E[i] = tmp;
         }
-
-        //call sgd and update weights
-        mat G = mat(3, 1);
-        G = gradient_descent(psi_t);
-        psi_t -> update_weights(G);
-
     }
 }
 
-void vmc::set_params(int N, int dim,int mc_cycles,
+void vmc::set_params(int N_in, int M_in, int mc_cycles,
                      bool meta_bool,
                      bool obd_bool
                      ){
-    N_p = N;
+
+    gradient_a = mat(M_in, 1);
+    gradient_b = mat(N_in, 1);
+    gradient_w = mat(M_in, N_in);
+    
     N_mc = mc_cycles;
-    N_d = dim;
-    R = mat(M,1);
+    R = colvec(M_in);
+
+    M = M_in;
+    N = N_in;
     gen = new mt19937(rd());
     compute_extra = meta_bool;
     compute_obd = obd_bool;
@@ -84,7 +81,7 @@ void vmc::generate_positions(double step_int){
 }
 
 void vmc::count_obd(mat radii, metadata* all_exp){
-    for(int i = 0; i < N_p ; i++){
+    for(int i = 0; i < M ; i++){
         double tmp_rad = radii[i];
         for(int j = 0; j < obd_n_bins ; j++){
             double tmp_bin = obd_bins[j];
@@ -99,16 +96,14 @@ void vmc::count_obd(mat radii, metadata* all_exp){
 }
 
 
-vector<double> vmc::solve(WaveFunc *psi_t, string filename){
+retval vmc::solve(nqs *psi_t, string filename){
     // -> is dereferencing and  member access to methods of class.
     
     double outer_limit = 5;
     obd_n_bins = 30*outer_limit;
 
     generate_positions(step);
-    psi_t -> initialize();
-    double evaluated = psi_t -> evaluate(R);
-    double step_init = step;
+
     /*
      *Accepting a state in which a particle pair is closer than the permitted
      * distance "a" is unphysical, and a waste of MC-cycles. We guarantee that the
@@ -116,19 +111,19 @@ vector<double> vmc::solve(WaveFunc *psi_t, string filename){
      * proposed thate that has a < |r_i - r_j | for any particle pair is rejected
      */
     
-    while(evaluated == 0){
-        step_init += step*1e-5;
-        generate_positions(step_init);
-        //psi_t -> initialize(R);
-        evaluated = psi_t -> evaluate(R);
-    }
-    
+   
     metadata all_exp;
-    all_exp.exp_E = new double [N_mc];
+    all_exp.exp_E = new double[N_mc];
     
     if(compute_extra){
-        all_exp.prod_R = new double [N_mc];
-        all_exp.prod_R_exp_E = new double [N_mc];
+        all_exp.grad_a = colvec(M);
+        all_exp.grad_b = colvec(N);
+        all_exp.grad_W = mat(M, N);
+
+        all_exp.prod_E_grad_a = colvec(M);
+        all_exp.prod_E_grad_b = colvec(N);
+        all_exp.prod_E_grad_W = mat(M, N);
+        
     }
 
     if(compute_obd){
@@ -146,24 +141,26 @@ vector<double> vmc::solve(WaveFunc *psi_t, string filename){
             obd_bins[i] = (i+1) * bin_length;
         }
     }
-
+    
     int start_s = clock();
     monte_carlo(psi_t, &all_exp);
     int end_s = clock();
-
     double time_spent = (end_s - start_s)/(double (CLOCKS_PER_SEC) * 1000);
+    
+    double omc = 1/(double) N_mc;
+
+    all_exp.grad_a *= omc;
+    all_exp.prod_E_grad_a *= omc;
+
+    all_exp.grad_b *= omc;
+    all_exp.prod_E_grad_b *= omc;
+
+    all_exp.grad_W *= omc;
+    all_exp.prod_E_grad_W *= omc;
 
     mat arma_e_l = mat(N_mc, 1);
-    mat arma_prod_r= mat(N_mc, 1);
-    mat arma_prod_r_el= mat(N_mc, 1);
 
     for(int i = 0; i < N_mc; i++) arma_e_l(i, 0) = all_exp.exp_E[i];
-    
-    if(compute_extra){
-        for(int i = 0; i < N_mc; i++) arma_prod_r(i, 0) = all_exp.prod_R[i];
-        for(int i = 0; i < N_mc; i++) arma_prod_r_el(i, 0) = all_exp.prod_R_exp_E[i];
-    }
-
     
     /*string header = "#{N_p: " + to_string(N_p)
             + ", N_d: " + to_string(N_d)
@@ -190,6 +187,8 @@ vector<double> vmc::solve(WaveFunc *psi_t, string filename){
         for(int i = 0; i < obd_n_bins; i++){
             total += all_exp.obd[i];
         }
+
+        int N_d = M/2 ;
         
         for(int i = 0; i < obd_n_bins ; i++){
             if(N_d == 1){
@@ -219,21 +218,14 @@ vector<double> vmc::solve(WaveFunc *psi_t, string filename){
     }
 
     
-    vector<double> retval;
-    if(compute_extra){
-        retval = {(double) as_scalar(mean(arma_e_l)),
-                  (double) as_scalar(mean(arma_prod_r)),
-                  (double) as_scalar(mean(arma_prod_r_el)),
-                  time_spent
-                 };
-    }
-    else{
-        retval = {(double) as_scalar(mean(arma_e_l)), time_spent};
-    }
-    return retval ;
+    retval r;
+    r.exp_vals = all_exp;
+    r.time_spent = time_spent;
+    r.el_exp = accu(arma_e_l)/(double) N_mc ; 
+    return r;
 }
 
-mat vmc::gradient_descent(WaveFunc *psi_t){
+void vmc::gradient_descent(nqs *psi_t, metadata *exp_vals, double E_l){
 
     // Visible biases are vectors of length M.
     // Hidden nodes and corresponding hidden biases are vectors of length N
@@ -244,52 +236,38 @@ mat vmc::gradient_descent(WaveFunc *psi_t){
 
     //int M = R.size(0);
     //int N = W.size(1);
+    
 
-    mat gradient_a = mat(M, 1);
-    mat gradient_b = mat(N, 1);
-    mat gradient_w = mat(M*N, 1);
-    double sigma_squared = sigma*sigma;
+   double sigma_squared = psi_t -> sigma_2;
 
 
     // Gradient a
     gradient_a += R - psi_t -> a;
     gradient_a /= sigma_squared;
 
-
     // Gradient b
     for (int k = 0; k < N; k++) {
-        double temp = 0.0;
-        temp += accu(R*psi_t -> W.col(k))/sigma_squared;
-        gradient_b(k) += 1/(1 + exp(-psi_t -> b(k)
-                                    - temp));
+        double inner_sum;
+        inner_sum = accu(R.t()*psi_t -> W.col(k))/sigma_squared;
+        gradient_b(k) = 1/(1 + exp(-psi_t -> b(k) - inner_sum));
     }
-
 
     // Gradient w_kn
     // Concider changing summing indices in .tex for clarity
     for (int n = 0; n < N; n++) {
         for (int k = 0; k < M; k++) {
             double temp = 0.0;
-            temp += accu(R*psi_t->W.col(n))/sigma_squared;
-            gradient_w(k*n) += 1/(1 + exp(-psi_t->b(n) - temp));
+            temp += accu(R.t()*psi_t->W.col(n))/sigma_squared;
+            gradient_w(k, n) += 1/(1 + exp(-psi_t->b(n) - temp));
         }
     }
     gradient_w /= sigma_squared;
 
-    // Expectation values
-    double energy_local = psi_t -> E_l(R);
-    double expected_a = accu(mean(gradient_a, 1));
-    double expected_b = accu(mean(gradient_b, 1));
-    double expected_w = accu(mean(gradient_w, 1));
+    exp_vals -> grad_a += gradient_a;
+    exp_vals -> grad_b += gradient_b;
+    exp_vals -> grad_W += gradient_w;
 
-    // Return
-    mat G = mat(3, 1);
-    G(0) = accu((mean(energy_local*gradient_a) - energy_local*expected_a));
-    G(1) = accu((mean(energy_local*gradient_b) - energy_local*expected_b));
-    G(2) = accu((mean(energy_local*gradient_w) - energy_local*expected_w));
-    G = 2*G;
-
-
-
-    return G;
+    exp_vals -> prod_E_grad_a += E_l * gradient_a;
+    exp_vals -> prod_E_grad_b += E_l * gradient_b;
+    exp_vals -> prod_E_grad_W += E_l * gradient_w;
 }

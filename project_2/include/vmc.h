@@ -5,15 +5,29 @@
 
 #include <random>
 #include "../include/wavefunc.h"
+#include "../include/nqs.h"
 
 using namespace std;
 using namespace arma;
 
 struct metadata{
     double *exp_E;
-    double *prod_R; 
-    double *prod_R_exp_E;
+    mat prod_E_grad_a;
+    mat grad_a;
+
+    mat grad_b;
+    mat prod_E_grad_b;
+
+    mat grad_W;
+    mat prod_E_grad_W;
+
     long int *obd;
+};
+
+struct retval{
+    metadata exp_vals;
+    double time_spent; 
+    double el_exp;
 };
 
 
@@ -22,7 +36,7 @@ class vmc{
         double step;
         bool compute_extra; 
         bool compute_obd;
-        int N, M, N_p, N_mc, N_d;
+        int N_mc, N, M;
         double sigma, omega, gamma;
    protected:
         int obd_n_bins;
@@ -32,26 +46,26 @@ class vmc{
         mt19937 *gen; //Standard mersenne_twister_engine seeded with rd()
         double* obd_bins;
         void count_obd(mat radii, metadata* all_exp);
+        mat gradient_a, gradient_b, gradient_w;
 
     public:
-        void monte_carlo(WaveFunc *psi_t, metadata *exp_vals);
-        vector<double> solve(WaveFunc *psi, string filename);
+        void monte_carlo(nqs *psi_t, metadata *exp_vals);
+        retval solve(nqs *psi, string filename);
         void generate_positions(double step_int);
-        mat gradient_descent(WaveFunc *psi_t);
-        void set_params(int N, int dim,
-                int mc_cycles, bool obd_bool, bool meta_bool);
+        void gradient_descent(nqs *psi_t, metadata *exp_vals, double E_l);
+        void set_params(int N, int M, int mc_cycles, bool obd_bool, bool meta_bool);
     protected:
-        virtual double metropolis_hastings(WaveFunc *psi_t, double prev_E_l) = 0;
+        virtual double metropolis_hastings(nqs *psi_t, double prev_E_l) = 0;
 };
 
 class Importance: public vmc{
     protected:
-        double metropolis_hastings(WaveFunc *psi_t, double prev_E_l);
+        double metropolis_hastings(nqs *psi_t, double prev_E_l);
 };
 
 class NaiveMh: public vmc{
 
     protected:
-        double metropolis_hastings(WaveFunc *psi_t, double prev_E_l);
+        double metropolis_hastings(nqs *psi_t, double prev_E_l);
 };
 
