@@ -14,18 +14,19 @@ double Importance::metropolis_hastings(nqs *psi_t, double prev_E_l){
 	//double beta = psi_t -> params[2];
 	
 	double dt;
-	int N_p = 2;
-	int N_d = 2;
 
-    uniform_int_distribution<int> dis_r(0, N_p - 1);
+    uniform_int_distribution<int> dis_r(0, 1); // Picks particle 0 or 1
     uniform_real_distribution<double> dis_step(-1.0, 1.0);
     uniform_real_distribution<double> dis_p(0.0, 1.0);
 	normal_distribution<double> dis_zeta(0.0, 1.0);
 
 
 
-	// Pick particle j to move 
-    int j = dis_r(*gen);
+	// Pick particle j to move if more than 1 particle. 
+	int j = 0;
+	if (M/2 < 2){
+		j = dis_r(*gen);
+	}
 
 	// Calculate drift force at all positions.
 	
@@ -39,7 +40,7 @@ double Importance::metropolis_hastings(nqs *psi_t, double prev_E_l){
 	
 	// Move only particle j
 	double zeta = dis_zeta(*gen);
-	for (int i = 1; i <= N_d; i++){
+	for (int i = 1; i <= M/2; i++){
 		R_p(j*i) += 0.5*F_drift(j*i)*dt + zeta*sqrt(dt);
 	}
 

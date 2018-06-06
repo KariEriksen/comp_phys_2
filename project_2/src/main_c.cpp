@@ -11,7 +11,7 @@ int main(int argc, char *argv[]){
     int N_d, N_mc, mc_exp;
     double gamma, omg, sigma, step;
 
-    int N_p = 2;
+    int N_p = 1;
 
     /*
     if( argc < 3){
@@ -23,7 +23,7 @@ int main(int argc, char *argv[]){
         N = atoi(argv[3]);
     }
     */
-    N_d = 2;
+    N_d = 1;
     mc_exp = 15;
     N = 2;
 
