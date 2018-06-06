@@ -33,6 +33,7 @@ struct retval{
 
 class vmc{
     public:
+		double dt;
         double step;
         bool compute_extra; 
         bool compute_obd;
