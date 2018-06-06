@@ -12,8 +12,7 @@ double Importance::metropolis_hastings(WaveFunc *psi_t, double prev_E_l){
 	//double dt = psi_t -> params[4];
 	//double beta = psi_t -> params[2];
 	
-	double dt = 0.1; // Best dt from project 1
-	double beta = 1.0;
+	double dt;
 	
     uniform_int_distribution<int> dis_r(0, N_p - 1);
     uniform_real_distribution<double> dis_step(-1.0, 1.0);
