@@ -53,8 +53,10 @@ double Importance::metropolis_hastings(nqs *psi_t, double prev_E_l){
     double Greens = 0.0;
 
 	// Calculate greens functions
-	Greens += accu(0.5*(F_drift_proposed + F_drift*
-			(0.5*dt*0.5*(F_drift - F_drift_proposed) - R_p + R)));
+	for (int i = 0; i < M; i++){
+	Greens += accu(0.5*(F_drift_proposed(i) + F_drift(i)*
+		(0.5*dt*0.5*(F_drift(i) - F_drift_proposed(i)) - R_p(i) + R(i))));
+	}
 	Greens = exp(Greens);
 
     double eps = dis_p(*gen);

@@ -1,5 +1,5 @@
 FLAGS =  -g -fPIC --std=c++11 -larmadillo -O3 -llapack -lblas
-depend_all = wavefunc.o vmc.o
+depend_all = wavefunc.o vmc.o nqs.o
 
 mh = naive_mh.o
 imp = importance.o
@@ -26,7 +26,7 @@ naive_mh.o: naive_mh.cpp ../include/vmc.h vmc.cpp
 main_b.o: main_b.cpp 
 	clang main_b.cpp $(FLAGS) -c
 
-main_c.o: main_c.cpp 
+main_c.o: main_c.cpp
 	clang main_c.cpp $(FLAGS) -c
 # ==========================================================
 # app.x files
