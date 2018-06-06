@@ -13,9 +13,10 @@ void nqs::initialize(){
     mt19937 gen(rd());
     uniform_real_distribution<double> dis (0, 0.001);
 
-    for(int i = 0; i < N; i++){
+    for(int i = 0; i < M; i++){
         a(i) = dis(gen);
     }
+
 
     for(int i = 0; i < N; i++){
         b(i) = dis(gen);
@@ -67,7 +68,7 @@ double nqs::laplace(mat R){
 
     for(int i = 0; i < M; i++){
         for(int j = 0; j < N; j++){
-
+            
             Hj = - b(j) - sum(R%W.col(j));
             exp_term = exp(Hj);
             term = 1 + exp_term;
@@ -135,18 +136,9 @@ double nqs::ratio(mat R, mat R_p, int k){
 }
 
 void nqs::update_positions(mat R){
-
     D = D_p;
 }
 
-void nqs::update_weights(mat G){
-
-    //Is this sufficient, do we use the same G for all
-    //indices?
-    a += -gamma*G(0);
-    b += -gamma*G(1);
-    W += -gamma*G(2);
-}
 
 void nqs::set_params(vec params){
 
@@ -156,16 +148,17 @@ void nqs::set_params(vec params){
     double omega_in, double omega_sq_in,
     double gamma_in
     */
-
-    a = colvec((int) params[0]);
-    b = colvec((int) params[1]);
-    W = mat((int) params[0], (int) params[1]);
-    sigma = params[2];
-    sigma_2 = params[3];
-    sigma_4 = params[4];
-    omega = params[5];
-    omega_2 = params[6];
-    gamma = params[7];
+    
+    a = colvec(M);
+    b = colvec(N);
+    
+    W = mat(M, N);
+    sigma = params[0];
+    sigma_2 = params[1];
+    sigma_4 = params[2];
+    omega = params[3];
+    omega_2 = params[4];
+    gamma = params[5];
 
 }
 
