@@ -72,6 +72,6 @@ class NaiveMh: public vmc{
 class Gibbs: public vmc{
 
     protected:
-        double metropolis_hastings(nqs *psi_t);
+        double metropolis_hastings(nqs *psi_t, double prev_E_l);
 };
 

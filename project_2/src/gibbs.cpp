@@ -5,7 +5,7 @@
 using namespace arma;
 using namespace std;
 
-double Gibbs::metropolis_hastings(nqs *psi_t){
+double Gibbs::metropolis_hastings(nqs *psi_t, double prev_E_l){
 
     vec hj = vec(N);
     double sigma_sq = psi_t -> sigma_2;
@@ -25,6 +25,8 @@ double Gibbs::metropolis_hastings(nqs *psi_t){
         uniform_real_distribution<double> dis(my, sigma_sq);
         R(i) = dis(*gen);
     }
+
+    return psi_t -> E_l(R);
 
 }
 
