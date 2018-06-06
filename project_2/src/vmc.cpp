@@ -266,7 +266,7 @@ mat vmc::gradient_descent(WaveFunc *psi_t){
 
 
     // Gradient w_kn
-    // Concider changing summing indices in .tex for clarity
+    // Concider changing summation indices in .tex for clarity
     for (int n = 0; n < N; n++) {
         for (int k = 0; k < M; k++) {
             double temp = 0.0;

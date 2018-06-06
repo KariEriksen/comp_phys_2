@@ -26,11 +26,16 @@ naive_mh.o: naive_mh.cpp ../include/vmc.h vmc.cpp
 main_b.o: main_b.cpp 
 	clang main_b.cpp $(FLAGS) -c
 
+main_c.o: main_b.cpp 
+	clang main_b.cpp $(FLAGS) -c
 # ==========================================================
 # app.x files
 
 app_b.x: main_b.o $(depend_all) $(mh)
 	g++ -o app_b.x main_b.o $(depend_all) $(mh) $(FLAGS)  
+
+app_c.x: main_c.o $(depend_all) $(mh)
+	g++ -o app_c.x main_c.o $(depend_all) $(mh) $(FLAGS)  
 
 clean:
 	rm -f *.o

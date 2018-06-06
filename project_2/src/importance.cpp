@@ -34,6 +34,7 @@ double Importance::metropolis_hastings(WaveFunc *psi_t, double prev_E_l){
 	double zeta = dis_zeta(*gen);
 	R_p += 0.5*F_drift*dt + zeta*sqrt(dt);
 	
+	
 	// Move only particle j
 	//double zeta = dis_zeta(*gen);
 	//R_p(j) += 0.5*F_drift*dt + zeta*sqrt(dt);
