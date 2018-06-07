@@ -54,6 +54,8 @@ int main(int argc, char *argv[]){
   
     int n_sims = 30; 
     int i = 0; 
+	
+	ofstream timefile("../data/c_data/time_iter.csv");
 
     while(i < n_sims){
 
@@ -81,7 +83,8 @@ int main(int argc, char *argv[]){
         
         cout << "Iteration " << i << endl;
         cout << "E_l = "<< result.el_exp << endl;
-		cout << "Iteration time =" << result.time_spent << endl;
+		timefile << result.time_spent << endl;
         i ++;
     }
+	timefile.close();
 }

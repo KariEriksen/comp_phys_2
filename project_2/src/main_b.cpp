@@ -30,7 +30,7 @@ int main(int argc, char *argv[]){
     N_mc = pow(2, mc_exp);
     M = N_p*N_d;
 
-    gamma = 1e-1; omg = 1; sigma = 0.9; step = 0.1;
+    gamma = 1e-2; omg = 1; sigma = 1.0; step = 0.1;
     double omg_2 = omg*omg;
     double sigm_2 = sigma*sigma;
     double sigm_4 = sigm_2*sigm_2;
@@ -56,7 +56,9 @@ int main(int argc, char *argv[]){
 
     string base_filename = "weights.csv";
 
-    while(i < n_sims){
+	ofstream timefile("../data/b_data/time_iter.csv");
+    
+	while(i < n_sims){
 
         retval result;
         string filename = "/b_data/iteration_"+to_string(i)+".csv";
@@ -82,6 +84,8 @@ int main(int argc, char *argv[]){
         
         cout << "Iteration " << i << endl;
         cout << "E_l = "<< result.el_exp << endl;
+		timefile << result.time_spent << endl;
         i ++;
     }
+	timefile.close();
 }
