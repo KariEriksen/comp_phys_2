@@ -45,7 +45,7 @@ int main(int argc, char *argv[]){
 
     D.step = step;
 	D.dt = 0.1; // Best dt from project 1.
-    D.set_params(N, M, N_mc, 1, 0);
+    D.set_params(N_p, N_d, N, M, N_mc, 1, 0);
 
     n.N = N;
     n.M = M; 
@@ -81,6 +81,7 @@ int main(int argc, char *argv[]){
         
         cout << "Iteration " << i << endl;
         cout << "E_l = "<< result.el_exp << endl;
+		cout << "Iteration time =" << result.time_spent << endl;
         i ++;
     }
 }
