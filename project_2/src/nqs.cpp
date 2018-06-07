@@ -45,7 +45,7 @@ double nqs::E_l(mat R){
 
     // Calulates the local energy of the given
     // configuration of the system
-    return 0.5*(laplace(R) + accu(omega_2*R));
+    return 0.5*(- laplace(R) + accu(omega_2*R));
 }
 
 double nqs::laplace(mat R){
@@ -56,25 +56,26 @@ double nqs::laplace(mat R){
 
     double Hj = 0;
     double exp_term = 0;
-    double term = 0;
+    double denom = 0;
     double sum_1 = 0;
     double sum_2 = 0;
-    double grad_psi = 0;
-    double grad_psi_sq = 0;
+    double del_ln_psi = 0;
+    double del_ln_psi_sq = 0;
     double laplace_psi = 0;
     double sigmoid = 0;
     double sigmoid_deri = 0;
     double laplace_return = 0;
 
     for(int i = 0; i < M; i++){
-        for(int j = 0; j < N; j++){
-            
-            Hj = - b(j) - sum(R%W.col(j));
-            exp_term = exp(Hj);
-            term = 1 + exp_term;
 
-            sigmoid = 1/(term);
-            sigmoid_deri = exp_term/(term*term);
+        for(int j = 0; j < N; j++){
+                
+            Hj = - b(j) - sigma_2 * sum(R%W.col(j));
+            exp_term = exp(Hj);
+            denom = 1 + exp_term;
+
+            sigmoid = 1/denom;
+            sigmoid_deri = exp_term/(denom*denom);
 
             sum_1 += W(i,j)*sigmoid;
             sum_2 += W(i,j)*W(i,j)*sigmoid_deri;
@@ -82,12 +83,11 @@ double nqs::laplace(mat R){
 
         // First and second derivatives of the logarithm
         // of the nqs wave function
-        grad_psi = -(R(i) - a(i))/sigma_2 + sum_1/sigma_2;
-        grad_psi_sq = grad_psi*grad_psi;
+        del_ln_psi = -(R(i) - a(i))/sigma_2 + sum_1/sigma_2;
+        del_ln_psi_sq = del_ln_psi*del_ln_psi;
         laplace_psi = -1/sigma_2 + sum_2/sigma_4;
 
-
-        laplace_return += (-(grad_psi_sq + laplace_psi) + omega_2*R(i));
+        laplace_return += del_ln_psi_sq + laplace_psi;
     }
 
     return laplace_return;

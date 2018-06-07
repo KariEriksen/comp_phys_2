@@ -51,7 +51,8 @@ void vmc::monte_carlo(nqs *psi_t, metadata *exp_vals){
     }
 }
 
-void vmc::set_params(int N_in, int M_in, int mc_cycles,
+void vmc::set_params(int N_p_in, int N_d_in, 
+                     int N_in, int M_in, int mc_cycles,
                      bool meta_bool,
                      bool obd_bool
                      ){
@@ -65,6 +66,9 @@ void vmc::set_params(int N_in, int M_in, int mc_cycles,
 
     M = M_in;
     N = N_in;
+    N_p = N_p_in;
+    N_d = N_d_in;
+
     gen = new mt19937(rd());
     compute_extra = meta_bool;
     compute_obd = obd_bool;

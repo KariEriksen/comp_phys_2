@@ -11,7 +11,7 @@ int main(int argc, char *argv[]){
     int N_d, N_mc, mc_exp;
     double gamma, omg, sigma, step;
 
-    int N_p = 2;
+    int N_p = 1;
 
     /*
     if( argc < 3){
@@ -23,14 +23,14 @@ int main(int argc, char *argv[]){
         N = atoi(argv[3]);
     }
     */
-    N_d = 2;
+    N_d = 1;
     mc_exp = 15;
-    N = 2;
+    N = N_p * N_d;
 
     N_mc = pow(2, mc_exp);
     M = N_p*N_d;
 
-    gamma = 0.01; omg = 1; sigma = 1; step = 0.1;
+    gamma = 1e-1; omg = 1; sigma = 0.9; step = 0.1;
     double omg_2 = omg*omg;
     double sigm_2 = sigma*sigma;
     double sigm_4 = sigm_2*sigm_2;
@@ -44,15 +44,17 @@ int main(int argc, char *argv[]){
     NaiveMh D;
 
     D.step = step;
-    D.set_params(N, M, N_mc, 1, 0);
+    D.set_params(N_p, N_d, N, M, N_mc, 1, 0);
 
     n.N = N;
     n.M = M; 
     n.set_params(params_nqs);
     n.initialize();
   
-    int n_sims = 20; 
+    int n_sims = 5; 
     int i = 0; 
+
+    string base_filename = "weights.csv";
 
     while(i < n_sims){
 
