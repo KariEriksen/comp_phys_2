@@ -48,6 +48,13 @@ double nqs::E_l(mat R){
     return 0.5*(- laplace(R) + accu(omega_2*R*R));
 }
 
+double nqs::E_l_gibbs(mat R){
+
+    // Calulates the local energy of the given
+    // configuration of the system
+    return 0.5*(- laplace_gibbs(R) + accu(omega_2*R*R));
+}
+
 double nqs::laplace(mat R){
 
     // Calulates the derivatives of the wave function
@@ -86,6 +93,52 @@ double nqs::laplace(mat R){
         del_ln_psi = -(R(i) - a(i))/sigma_2 + sum_1/sigma_2;
         del_ln_psi_sq = del_ln_psi*del_ln_psi;
         laplace_psi = -1/sigma_2 + sum_2/sigma_4;
+
+        laplace_return += del_ln_psi_sq + laplace_psi;
+    }
+
+    return laplace_return;
+}
+
+double nqs::laplace_gibbs(mat R){
+
+    // Calulates the derivatives of the wave function
+    // Both first and second derivatives
+    // Called upon in local energy function
+
+    double Hj = 0;
+    double exp_term = 0;
+    double denom = 0;
+    double sum_1 = 0;
+    double sum_2 = 0;
+    double del_ln_psi = 0;
+    double del_ln_psi_sq = 0;
+    double laplace_psi = 0;
+    double sigmoid = 0;
+    double sigmoid_deri = 0;
+    double laplace_return = 0;
+    double gibbs_factor = 0.5;
+
+    for(int i = 0; i < M; i++){
+
+        for(int j = 0; j < N; j++){
+
+            Hj = - b(j) - sigma_2 * sum(R%W.col(j));
+            exp_term = exp(Hj);
+            denom = 1 + exp_term;
+
+            sigmoid = 1/denom;
+            sigmoid_deri = exp_term/(denom*denom);
+
+            sum_1 += W(i,j)*sigmoid;
+            sum_2 += W(i,j)*W(i,j)*sigmoid_deri;
+        }
+
+        // First and second derivatives of the logarithm
+        // of the nqs wave function
+        del_ln_psi = gibbs_factor*(-(R(i) - a(i))/sigma_2 + sum_1/sigma_2);
+        del_ln_psi_sq = del_ln_psi*del_ln_psi;
+        laplace_psi = gibbs_factor*(-1/sigma_2 + sum_2/sigma_4);
 
         laplace_return += del_ln_psi_sq + laplace_psi;
     }

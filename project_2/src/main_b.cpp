@@ -44,7 +44,7 @@ int main(int argc, char *argv[]){
     NaiveMh D;
 
     D.step = step;
-    D.set_params(N_p, N_d, N, M, N_mc, true, false);
+    D.set_params(N_p, N_d, N, M, N_mc, true, false, false);
 
     n.N = N;
     n.M = M; 

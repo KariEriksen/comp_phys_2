@@ -3,6 +3,7 @@ depend_all = wavefunc.o vmc.o nqs.o
 
 mh = naive_mh.o
 imp = importance.o
+gb = gibbs.o
 
 # ==========================================================
 # Class Object files
@@ -21,6 +22,9 @@ importance.o: importance.cpp ../include/vmc.h vmc.cpp
 naive_mh.o: naive_mh.cpp ../include/vmc.h vmc.cpp 
 	clang naive_mh.cpp -c $(FLAGS)
 
+gibbs.o: gibbs.cpp ../include/vmc.h vmc.cpp 
+	clang gibbs.cpp -c $(FLAGS)
+
 # ==========================================================
 # Main Object files
 main_b.o: main_b.cpp 
@@ -28,6 +32,9 @@ main_b.o: main_b.cpp
 
 main_c.o: main_c.cpp
 	clang main_c.cpp $(FLAGS) -c
+
+main_f.o: main_f.cpp
+	clang main_f.cpp $(FLAGS) -c
 # ==========================================================
 # app.x files
 
@@ -36,6 +43,9 @@ app_b.x: main_b.o $(depend_all) $(mh)
 
 app_c.x: main_c.o $(depend_all) $(imp)
 	g++ -o app_c.x main_c.o $(depend_all) $(imp) $(FLAGS)  
+
+app_f.x: main_f.o $(depend_all) $(gb)
+	g++ -o app_f.x main_f.o $(depend_all) $(gb) $(FLAGS)  
 
 clean:
 	rm -f *.o

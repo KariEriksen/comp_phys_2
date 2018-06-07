@@ -14,13 +14,19 @@ using namespace arma;
 using namespace std;
 
 void vmc::monte_carlo(nqs *psi_t, metadata *exp_vals){
-    exp_vals -> exp_E[0] = psi_t -> E_l(R);
+
+    if(compute_extra){
+        exp_vals -> exp_E[0] = psi_t -> E_l(R);
+    }
+    if(compute_gibbs){
+        exp_vals -> exp_E[0] = psi_t -> E_l_gibbs(R);
+    }
     
     mat square_R;
 
     if(compute_obd)
         square_R = square(R);
-    if(compute_extra){
+    if(compute_extra || compute_gibbs){
         gradient_descent(psi_t, exp_vals, exp_vals -> exp_E[0]);
     }
     if(compute_obd){
@@ -38,12 +44,12 @@ void vmc::monte_carlo(nqs *psi_t, metadata *exp_vals){
 
         if(exp_vals -> exp_E[i] !=  exp_vals -> exp_E[i-1]) acc ++;
         
-        if(compute_extra || compute_obd){
+        if(compute_extra || compute_obd || compute_gibbs){
             if((exp_vals -> exp_E[i-2] != tmp) & compute_obd){
                 square_R = square(R);
             }
 
-            if(compute_extra){
+            if(compute_extra || compute_gibbs){
                 gradient_descent(psi_t, exp_vals, tmp);
             }
             if(compute_obd){
@@ -58,11 +64,10 @@ void vmc::monte_carlo(nqs *psi_t, metadata *exp_vals){
     cout << acc / (double) N_mc << endl; 
 }
 
-void vmc::set_params(int N_p_in, int N_d_in, 
+void vmc::set_params(int N_p_in, int N_d_in,
                      int N_in, int M_in, int mc_cycles,
                      bool meta_bool,
-                     bool obd_bool
-                     ){
+                     bool obd_bool, bool gibbs_bool){
 
     gradient_a = mat(M_in, 1);
     gradient_b = mat(N_in, 1);
@@ -79,6 +84,7 @@ void vmc::set_params(int N_p_in, int N_d_in,
     gen = new mt19937(rd());
     compute_extra = meta_bool;
     compute_obd = obd_bool;
+    compute_gibbs = gibbs_bool;
 }
 
 void vmc::generate_positions(double step_int){
@@ -126,7 +132,7 @@ retval vmc::solve(nqs *psi_t, string filename){
     metadata all_exp;
     all_exp.exp_E = new double[N_mc];
     
-    if(compute_extra){
+    if(compute_extra || compute_gibbs){
         all_exp.grad_a = colvec(M, fill::zeros);
         all_exp.grad_b = colvec(N, fill::zeros);
         all_exp.grad_W = mat(M, N, fill::zeros);
@@ -244,7 +250,6 @@ void vmc::gradient_descent(nqs *psi_t, metadata *exp_vals, double E_l){
     // Gradient a
     gradient_a += R - psi_t -> a;
     gradient_a /= sigma_squared;
-
     // Gradient b
     for (int k = 0; k < N; k++) {
         double inner_sum;
@@ -262,11 +267,26 @@ void vmc::gradient_descent(nqs *psi_t, metadata *exp_vals, double E_l){
     }
     gradient_w /= sigma_squared;
 
-    exp_vals -> grad_a += gradient_a;
-    exp_vals -> grad_b += gradient_b;
-    exp_vals -> grad_W += gradient_w;
+    if(compute_extra){
 
-    exp_vals -> prod_E_grad_a += E_l * gradient_a;
-    exp_vals -> prod_E_grad_b += E_l * gradient_b;
-    exp_vals -> prod_E_grad_W += E_l * gradient_w;
+        exp_vals -> grad_a += gradient_a;
+        exp_vals -> grad_b += gradient_b;
+        exp_vals -> grad_W += gradient_w;
+
+        exp_vals -> prod_E_grad_a += E_l * gradient_a;
+        exp_vals -> prod_E_grad_b += E_l * gradient_b;
+        exp_vals -> prod_E_grad_W += E_l * gradient_w;
+    }
+
+    if(compute_gibbs){
+
+        exp_vals -> grad_a += 0.5*gradient_a;
+        exp_vals -> grad_b += 0.5*gradient_b;
+        exp_vals -> grad_W += 0.5*gradient_w;
+
+        exp_vals -> prod_E_grad_a += E_l * 0.5*gradient_a;
+        exp_vals -> prod_E_grad_b += E_l * 0.5*gradient_b;
+        exp_vals -> prod_E_grad_W += E_l * 0.5*gradient_w;
+    }
+
 }
