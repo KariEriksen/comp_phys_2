@@ -63,7 +63,7 @@ def block(x):
     #print ("%8g %20g %15g" % (mu, k, ans**.5))
     return ans
 
-filenames = np.array(os.listdir("../data/b_data"))
+filenames = sorted(np.array(os.listdir("../data/b_data")))
 filenames = [name for name in filenames if name != "dummy" and name != "time_iter.csv"]
 
 # Perform blocking on results

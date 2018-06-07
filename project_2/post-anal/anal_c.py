@@ -63,7 +63,7 @@ def block(x):
     #print ("%8g %20g %15g" % (mu, k, ans**.5))
     return ans
 
-filenames = np.array(os.listdir("../data/c_data"))
+filenames = sorted(np.array(os.listdir("../data/c_data")))
 filenames = [name for name in filenames if name != "dummy" and name != "time_iter.csv"]
 
 # Perform blocking on results
@@ -78,6 +78,8 @@ for filename in filenames:
 
 time_data = np.loadtxt("../data/c_data/time_iter.csv")
 mean_time = np.mean(np.array(time_data))
+
+
 # Plotting
 fig, ax = plt.subplots(figsize=(9, 7))
 title = filename
@@ -93,9 +95,7 @@ plt.legend()
 plt.xlabel(r"Iteration")
 plt.ylabel(r"$\langle E \rangle $")
 
-figname = "_fig.pdf"
-    #plt.savefig("../report/figures/" + figname)
-    #plt.savefig(figname)
+#plt.savefig("../report/figures/importance")
 plt.show()
-    #plt.clf()
+#plt.clf()
 
