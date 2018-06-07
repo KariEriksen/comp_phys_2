@@ -67,33 +67,40 @@ filenames = sorted(np.array(os.listdir("../data/c_data")))
 filenames = [name for name in filenames if name != "dummy" and name != "time_iter.csv"]
 
 # Perform blocking on results
+gamma_vals = [0.01, 0.26, 0.51, 0.76]
 blocking_data = []
 energies = []
-for filename in filenames: 
-    if filename == "dummy" or filename == "time_iter.csv": pass
-    t_filename = "../data/c_data/"+filename
-    A = loadtxt(t_filename)
-    blocking_data.append(block(A))
-    energies.append(np.mean(A))
+for gamma in gamma_vals:
+    tmp_block = []
+    tmp_energy = []
+    for filename in filenames: 
+        if str(gamma) in filename:
+            t_filename = "../data/c_data/"+filename
+            A = loadtxt(t_filename)
+            tmp_block.append(block(A))
+            tmp_energy.append(np.mean(A))
+
+    blocking_data.append(tmp_block)
+    energies.append(tmp_energy)
+
 
 time_data = np.loadtxt("../data/c_data/time_iter.csv")
 mean_time = np.mean(np.array(time_data))
 
-
 # Plotting
+x = range(len(energies[0]))
 fig, ax = plt.subplots(figsize=(9, 7))
-title = filename
-x = range(len(energies))
-plt.errorbar(x, energies, fmt = "^-",
-        barsabove = True,
-        yerr = np.array(blocking_data, dtype = float),
-        label = r"Importance sampling | mean time = {:.2g}s".format(mean_time))  
-plt.title(title)
+for i in range(len(energies)):
+    plt.errorbar(x, energies[i], fmt = "^-",
+            barsabove = True,
+            yerr = np.array(blocking_data[i], dtype = float),
+            label = r"$\gamma = ${:2f}".format(gamma_vals[i]))
+
 plt.xticks(x, rotation = 45, size = "medium")
 plt.legend()
-
 plt.xlabel(r"Iteration")
 plt.ylabel(r"$\langle E \rangle $")
+plt.title("Importance sampling with varied gamma | mean time = {:.2g}s".format(mean_time))
 
 #plt.savefig("../report/figures/importance")
 plt.show()
