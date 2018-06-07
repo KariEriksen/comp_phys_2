@@ -33,11 +33,12 @@ struct retval{
 
 class vmc{
     public:
-		double dt;
+        double dt;
         double step;
         bool compute_extra; 
         bool compute_obd;
         int N_mc, N, M;
+        int N_p, N_d;
         double sigma, omega, gamma;
    protected:
         int obd_n_bins;
@@ -54,7 +55,7 @@ class vmc{
         retval solve(nqs *psi, string filename);
         void generate_positions(double step_int);
         void gradient_descent(nqs *psi_t, metadata *exp_vals, double E_l);
-        void set_params(int N, int M, int mc_cycles, bool obd_bool, bool meta_bool);
+        void set_params(int N_p_in, int N_d_in, int N, int M, int mc_cycles, bool obd_bool, bool meta_bool);
     protected:
         virtual double metropolis_hastings(nqs *psi_t, double prev_E_l) = 0;
 };
