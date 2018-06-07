@@ -60,6 +60,7 @@ int main(int argc, char *argv[]){
     while(i < n_sims){
 
         retval result;
+		// Add 1000 to int to get proper sorting of filenames.
         string filename = "/c_data/iteration_"+to_string(1000 + i)+".csv";
         result = D.solve(&n, filename);
         

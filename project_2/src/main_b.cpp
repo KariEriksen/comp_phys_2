@@ -61,7 +61,9 @@ int main(int argc, char *argv[]){
     while(i < n_sims){
 
         retval result;
-        string filename = "/b_data/iteration_"+to_string(100 + i)+".csv";
+
+		// Add 1000 to int to get proper sorting of filenames.
+        string filename = "/b_data/iteration_"+to_string(1000 + i)+".csv";
         result = D.solve(&n, filename);
         
         colvec a_update = colvec(M);
