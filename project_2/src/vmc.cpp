@@ -161,21 +161,11 @@ retval vmc::solve(nqs *psi_t, string filename){
     mat arma_e_l = mat(N_mc, 1);
 
     for(int i = 0; i < N_mc; i++) arma_e_l(i, 0) = all_exp.exp_E[i];
-    
-    /*string header = "#{N_p: " + to_string(N_p)
-            + ", N_d: " + to_string(N_d)
-            + ", N_mc: " + to_string(N_mc)
-            + ", alpha: " +to_string(a)
-            + ", beta: "+ to_string(b) + "}";
-
+   
+	// Output to file
     ofstream output_file("../data/"+filename);
-    
-    output_file << header << endl;
     arma_e_l.save(output_file, csv_ascii);
-    
-    cout << "Writing local energies to file: " << "../data/"+  filename << endl;
     output_file.close();
-    */
 
     if(compute_obd){
         string obd_filename = "../data/obd_"+filename;

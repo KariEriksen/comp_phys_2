@@ -57,7 +57,7 @@ int main(int argc, char *argv[]){
     while(i < n_sims){
 
         retval result;
-        string filename = "filename";
+        string filename = "b_iteration_"+to_string(i)+".csv";
         result = D.solve(&n, filename);
         
         colvec a_update = colvec(M);
