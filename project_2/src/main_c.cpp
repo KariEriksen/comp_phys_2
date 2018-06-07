@@ -52,13 +52,13 @@ int main(int argc, char *argv[]){
     n.set_params(params_nqs);
     n.initialize();
   
-    int n_sims = 20; 
+    int n_sims = 30; 
     int i = 0; 
 
     while(i < n_sims){
 
         retval result;
-        string filename = "filename";
+        string filename = "/c_data/iteration_"+to_string(i)+".csv";
         result = D.solve(&n, filename);
         
         colvec a_update = colvec(M);
