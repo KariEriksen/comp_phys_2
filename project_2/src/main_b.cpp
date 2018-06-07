@@ -56,6 +56,8 @@ int main(int argc, char *argv[]){
 
     string base_filename = "weights.csv";
 
+    ofstream timefile("../data/b_data/time_iter.csv");
+    
     while(i < n_sims){
 
         retval result;
@@ -81,6 +83,8 @@ int main(int argc, char *argv[]){
         
         cout << "Iteration " << i << endl;
         cout << "E_l = "<< result.el_exp << endl;
+        timefile << result.time_spent << endl;
         i ++;
     }
+    timefile.close();
 }
