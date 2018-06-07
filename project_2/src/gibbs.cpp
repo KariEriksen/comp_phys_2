@@ -20,13 +20,13 @@ double Gibbs::metropolis_hastings(nqs *psi_t, double prev_E_l){
     //accept with probability of one
     for(int i = 0; i < M; i++){
 
-        double my = psi_t -> a(i) + psi_t -> W.row(i)*hj;
+        double my = psi_t -> a(i) + accu(psi_t -> W.row(i)*hj);
         //Creating a normal dist
         uniform_real_distribution<double> dis(my, sigma_sq);
         R(i) = dis(*gen);
     }
 
-    return psi_t -> E_l(R);
+    return psi_t -> E_l_gibbs(R);
 
 }
 

@@ -45,7 +45,7 @@ int main(int argc, char *argv[]){
 
     D.step = step;
 	D.dt = 0.1; // Best dt from project 1.
-    D.set_params(N_p, N_d, N, M, N_mc, true, false);
+    D.set_params(N_p, N_d, N, M, N_mc, true, false, false);
 
     n.N = N;
     n.M = M; 

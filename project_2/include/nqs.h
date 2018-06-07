@@ -27,6 +27,8 @@ public:
     double evaluate(mat R);
     double E_l(mat R);
     double laplace(mat R);
+    double E_l_gibbs(mat R);
+    double laplace_gibbs(mat R);
     void initialize();
     void update_positions(mat R);
     nqs();

@@ -15,7 +15,7 @@ int main(int argc, char *argv[]){
     int N_d, N_mc, mc_exp;
     double gamma, omg, sigma, step;
 
-    int N_p = 2;
+    int N_p = 1;
 
     /*
     if( argc < 3){
@@ -27,7 +27,7 @@ int main(int argc, char *argv[]){
         N = atoi(argv[3]);
     }
     */
-    N_d = 2;
+    N_d = 1;
     mc_exp = 15;
     N = 2;
 
@@ -48,7 +48,7 @@ int main(int argc, char *argv[]){
     Gibbs D;
 
     D.step = step;
-    D.set_params(N, M, N_mc, 1, 0);
+    D.set_params(N_p, N_d, N, M, N_mc, 0, 0, 1);
 
     n.N = N;
     n.M = M;
@@ -58,10 +58,13 @@ int main(int argc, char *argv[]){
     int n_sims = 20;
     int i = 0;
 
+    ofstream timefile("../data/b_data/time_iter.csv");
+
     while(i < n_sims){
 
         retval result;
-        string filename = "filename";
+        // Add 1000 to int to get proper sorting of filenames.
+        string filename = "/c_data/iteration_"+to_string(1000 + i)+".csv";
         result = D.solve(&n, filename);
 
         colvec a_update = colvec(M);
@@ -76,7 +79,6 @@ int main(int argc, char *argv[]){
 
         w_update =  2*(result.exp_vals.prod_E_grad_W
             - result.exp_vals.grad_W * result.el_exp);
-
 
         n.a = n.a - gamma * a_update;
         n.b = n.b - gamma * b_update;
