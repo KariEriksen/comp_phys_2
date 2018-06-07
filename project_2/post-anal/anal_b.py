@@ -63,14 +63,14 @@ def block(x):
     #print ("%8g %20g %15g" % (mu, k, ans**.5))
     return ans
 
-filenames = np.array(os.listdir("../data/c_data"))
+filenames = np.array(os.listdir("../data/b_data"))
 
 # Perform blocking on results
 blocking_data = []
 energies = []
 for filename in filenames: 
     if filename == "dummy": pass
-    t_filename = "../data/c_data/"+filename
+    t_filename = "../data/b_data/"+filename
     A = loadtxt(t_filename)
     blocking_data.append(block(A))
     energies.append(np.mean(A))
