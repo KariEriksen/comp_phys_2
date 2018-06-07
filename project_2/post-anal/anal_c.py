@@ -69,6 +69,7 @@ filenames = np.array(os.listdir("../data"))
 blocking_data = []
 energies = []
 for filename in filenames: 
+    if filename == "dummy": pass
     t_filename = "../data/"+filename
     # If there will be no header, remove skiprows.
     A = loadtxt(t_filename)
