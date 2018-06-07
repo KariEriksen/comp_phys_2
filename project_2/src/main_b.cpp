@@ -9,7 +9,8 @@ int main(int argc, char *argv[]){
 
     int N, M;
     int N_p, N_d, N_mc, mc_exp;
-    double gamma, omg, sigma, step;
+    //double gamma, 
+	double omg, sigma, step;
 
 
     /*
@@ -31,10 +32,10 @@ int main(int argc, char *argv[]){
     M = N_p*N_d;
 
     //gamma = 1e-2; 
-	double gamma_step = 0.25;
-	ofstream timefile("../data/c_data/time_iter.csv");
+	double gamma_vals[] = {0.01,0.05,0.1,0.2,0.4};
+	ofstream timefile("../data/b_data/time_iter.csv");
 	
-	for (gamma = 0.01; gamma < 1.0; gamma += gamma_step){
+	for (double gamma: gamma_vals){
 		omg = 1; sigma = 1; step = 0.5;
 		double omg_2 = omg*omg;
 		double sigm_2 = sigma*sigma;
@@ -56,22 +57,20 @@ int main(int argc, char *argv[]){
 		n.set_params(params_nqs);
 		n.initialize();
 	  
-		int n_sims = 30; 
+		int n_sims = 10; 
 		int i = 0; 
 
 		string base_filename = "weights.csv";
-
-		ofstream timefile("../data/b_data/time_iter.csv");
 		
 		while(i < n_sims){
 
 			retval result;
 
 			// Add 1000 to int to get proper sorting of filenames.
-			string filename = "/b_data/gamma_" 
-				+ to_string(gamma) 
-				+ "_iteration_"
+			string filename = "/b_data/iteration_" 
 				+ to_string(1000 + i)
+				+ "_gamma_"
+				+ to_string(gamma) 
 				+ ".csv";
 			result = D.solve(&n, filename);
 			

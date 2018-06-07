@@ -1,5 +1,5 @@
 """
-Analysis of data produced for project 2 task c.
+Analysis of data produced for project 2 task b.
 Does exactly the same as anal_b.py, but extends the functionality
 to provide comparison of importance sampling and naive metropolis algorithm.
 Comparison needs:
@@ -67,7 +67,7 @@ filenames = sorted(np.array(os.listdir("../data/b_data")))
 filenames = [name for name in filenames if name != "dummy" and name != "time_iter.csv"]
 
 # Perform blocking on results
-gamma_vals = [0.01, 0.26, 0.51, 0.76]
+gamma_vals = [0.01, 0.05, 0.1, 0.2, 0.4]
 blocking_data = []
 energies = []
 for gamma in gamma_vals:
@@ -75,6 +75,7 @@ for gamma in gamma_vals:
     tmp_energy = []
     for filename in filenames: 
         if str(gamma) in filename:
+            print("Processing file: ", filename)
             t_filename = "../data/b_data/"+filename
             A = loadtxt(t_filename)
             tmp_block.append(block(A))
@@ -100,9 +101,10 @@ plt.xticks(x, rotation = 45, size = "medium")
 plt.legend()
 plt.xlabel(r"Iteration")
 plt.ylabel(r"$\langle E \rangle $")
-plt.title("Importance sampling with varied gamma | mean time = {:.2g}s".format(mean_time))
+plt.ylim(0,3)
+plt.title("Naive metropolis with varied gamma | mean time = {:.2g}s".format(mean_time))
 
 #plt.savefig("../report/figures/importance")
-plt.show()
-#plt.clf()
+plt.savefig("naive_mh.pdf")
+#plt.show()
 

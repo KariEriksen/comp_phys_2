@@ -67,7 +67,7 @@ filenames = sorted(np.array(os.listdir("../data/c_data")))
 filenames = [name for name in filenames if name != "dummy" and name != "time_iter.csv"]
 
 # Perform blocking on results
-gamma_vals = [0.01, 0.26, 0.51, 0.76]
+gamma_vals = [0.01, 0.05, 0.1, 0.2, 0.4]
 blocking_data = []
 energies = []
 for gamma in gamma_vals:
@@ -75,6 +75,7 @@ for gamma in gamma_vals:
     tmp_energy = []
     for filename in filenames: 
         if str(gamma) in filename:
+            #print("Processing file: ", filename)
             t_filename = "../data/c_data/"+filename
             A = loadtxt(t_filename)
             tmp_block.append(block(A))
@@ -103,6 +104,5 @@ plt.ylabel(r"$\langle E \rangle $")
 plt.title("Importance sampling with varied gamma | mean time = {:.2g}s".format(mean_time))
 
 #plt.savefig("../report/figures/importance")
-plt.show()
-#plt.clf()
+plt.savefig("importance_N4_100iter.pdf")
 

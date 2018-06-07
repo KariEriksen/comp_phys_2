@@ -9,7 +9,8 @@ int main(int argc, char *argv[]){
 
     int N, M;
     int N_p, N_d, N_mc, mc_exp;
-    double gamma, omg, sigma, step;
+    //double gamma, 
+	double omg, sigma, step;
 
 
     /*
@@ -25,16 +26,16 @@ int main(int argc, char *argv[]){
     N_p = 1;
     N_d = 1;
     mc_exp = 17;
-    N = 2;
+    N = 4;
 
     N_mc = pow(2, mc_exp);
     M = N_p*N_d;
 
 	// gamma = 0.01;
-	double gamma_step = 0.25;
+	double gamma_vals[] = {0.01,0.05,0.1,0.2,0.4};
 	ofstream timefile("../data/c_data/time_iter.csv");
 	
-	for (gamma = 0.01; gamma < 1.0; gamma += gamma_step){
+	for (double gamma: gamma_vals){
 		omg = 1; sigma = 1.0; step = 0.1;
 		double omg_2 = omg*omg;
 		double sigm_2 = sigma*sigma;
@@ -55,7 +56,7 @@ int main(int argc, char *argv[]){
 		Importance D;
 
 		D.step = step;
-		D.dt = 0.1; // Best dt from project 1.
+		D.dt = 0.1; // Tested with 0.05, 0.1, 0.2, 0.5 and 1.0 -> inconclusive.
 		D.set_params(N_p, N_d, N, M, N_mc, true, false, false);
 
 		n.N = N;
@@ -63,7 +64,7 @@ int main(int argc, char *argv[]){
 		n.set_params(params_nqs);
 		n.initialize();
 	  
-		int n_sims = 30; 
+		int n_sims = 100; 
 		int i = 0; 
 		
 
