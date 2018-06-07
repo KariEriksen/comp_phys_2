@@ -13,7 +13,7 @@ double Gibbs::metropolis_hastings(nqs *psi_t, double prev_E_l){
 
     for(int j = 0; j < N; j++){
 
-        hj(j) = 1/(1 + exp(- psi_t -> b(j) - sum(R%psi_t -> W.col(j))));
+        hj(j) = 1/(1 + exp(- psi_t -> b(j) - sum(R%psi_t -> W.col(j))/sigma_sq));
     }
 
     //Calculate xi+1 from P(hj)
