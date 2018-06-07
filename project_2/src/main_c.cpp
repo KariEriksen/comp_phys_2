@@ -8,10 +8,9 @@ using namespace arma;
 int main(int argc, char *argv[]){
 
     int N, M;
-    int N_d, N_mc, mc_exp;
+    int N_p, N_d, N_mc, mc_exp;
     double gamma, omg, sigma, step;
 
-    int N_p = 1;
 
     /*
     if( argc < 3){
@@ -23,32 +22,34 @@ int main(int argc, char *argv[]){
         N = atoi(argv[3]);
     }
     */
+    N_p = 1;
     N_d = 1;
-    mc_exp = 15;
+    mc_exp = 17;
     N = 2;
 
     N_mc = pow(2, mc_exp);
     M = N_p*N_d;
 
 	// gamma = 0.01;
-    omg = 1; sigma = 1.0; step = 0.1;
-    double omg_2 = omg*omg;
-    double sigm_2 = sigma*sigma;
-    double sigm_4 = sigm_2*sigm_2;
-    
-    vec params_nqs = {
-                      sigma, sigm_2, sigm_4,
-                      omg, omg_2,
-                      gamma
-                     };
-	
-	// TODO:
-	// Perform several runs with different number of hidden nodes, when done with gammas.
-
-	// Loop over gammas
 	double gamma_step = 0.25;
 	ofstream timefile("../data/c_data/time_iter.csv");
-	for (double gamma = 0.01; gamma < 1.0; gamma += gamma_step){
+	
+	for (gamma = 0.01; gamma < 1.0; gamma += gamma_step){
+		omg = 1; sigma = 1.0; step = 0.1;
+		double omg_2 = omg*omg;
+		double sigm_2 = sigma*sigma;
+		double sigm_4 = sigm_2*sigm_2;
+		
+		vec params_nqs = {
+						  sigma, sigm_2, sigm_4,
+						  omg, omg_2,
+						  gamma
+						 };
+		
+		// TODO:
+		// Perform several runs with different number of hidden nodes, when done with gammas.
+
+		// Loop over gammas
 
 		nqs n;
 		Importance D;
