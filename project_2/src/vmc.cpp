@@ -28,10 +28,15 @@ void vmc::monte_carlo(nqs *psi_t, metadata *exp_vals){
         mat all_radii= sqrt(sum(square_R, 1));
         count_obd(all_radii, exp_vals);
     }
+    
+
+    int acc = 0; 
 
     for(int i = 1; i < N_mc; i++){
         double tmp = metropolis_hastings(psi_t, exp_vals -> exp_E[i-1]);
         exp_vals -> exp_E[i] = tmp;
+
+        if(exp_vals -> exp_E[i] !=  exp_vals -> exp_E[i-1]) acc ++;
         
         if(compute_extra || compute_obd){
             if((exp_vals -> exp_E[i-2] != tmp) & compute_obd){
@@ -49,6 +54,8 @@ void vmc::monte_carlo(nqs *psi_t, metadata *exp_vals){
 
         }
     }
+
+    cout << acc / (double) N_mc << endl; 
 }
 
 void vmc::set_params(int N_p_in, int N_d_in, 
@@ -120,13 +127,13 @@ retval vmc::solve(nqs *psi_t, string filename){
     all_exp.exp_E = new double[N_mc];
     
     if(compute_extra){
-        all_exp.grad_a = colvec(M);
-        all_exp.grad_b = colvec(N);
-        all_exp.grad_W = mat(M, N);
+        all_exp.grad_a = colvec(M, fill::zeros);
+        all_exp.grad_b = colvec(N, fill::zeros);
+        all_exp.grad_W = mat(M, N, fill::zeros);
 
-        all_exp.prod_E_grad_a = colvec(M);
-        all_exp.prod_E_grad_b = colvec(N);
-        all_exp.prod_E_grad_W = mat(M, N);
+        all_exp.prod_E_grad_a = colvec(M, fill::zeros);
+        all_exp.prod_E_grad_b = colvec(N, fill::zeros);
+        all_exp.prod_E_grad_W = mat(M, N, fill::zeros);
         
     }
 
@@ -234,7 +241,6 @@ void vmc::gradient_descent(nqs *psi_t, metadata *exp_vals, double E_l){
 
    double sigma_squared = psi_t -> sigma_2;
 
-
     // Gradient a
     gradient_a += R - psi_t -> a;
     gradient_a /= sigma_squared;
@@ -248,11 +254,10 @@ void vmc::gradient_descent(nqs *psi_t, metadata *exp_vals, double E_l){
 
     // Gradient w_kn
     // Concider changing summation indices in .tex for clarity
-    for (int n = 0; n < N; n++) {
-        for (int k = 0; k < M; k++) {
-            double temp = 0.0;
-            temp += accu(R.t()*psi_t->W.col(n))/sigma_squared;
-            gradient_w(k, n) += 1/(1 + exp(-psi_t->b(n) - temp));
+    for (int k = 0; k < M; k++) {
+        for (int n = 0; n < N; n++) {
+            double temp = accu(R.t()*psi_t->W.col(n))/sigma_squared;
+            gradient_w(k, n) += R(k)/(1 + exp(-psi_t->b(n) - temp));
         }
     }
     gradient_w /= sigma_squared;

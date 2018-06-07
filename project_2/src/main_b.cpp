@@ -24,13 +24,13 @@ int main(int argc, char *argv[]){
     }
     */
     N_d = 1;
-    mc_exp = 15;
-    N = N_p * N_d;
+    mc_exp = 17;
+    N = 4;
 
     N_mc = pow(2, mc_exp);
     M = N_p*N_d;
 
-    gamma = 1e-1; omg = 1; sigma = 0.9; step = 0.1;
+    gamma = 1e-2; omg = 1; sigma = 1; step = 0.5;
     double omg_2 = omg*omg;
     double sigm_2 = sigma*sigma;
     double sigm_4 = sigm_2*sigm_2;
@@ -44,14 +44,14 @@ int main(int argc, char *argv[]){
     NaiveMh D;
 
     D.step = step;
-    D.set_params(N_p, N_d, N, M, N_mc, 1, 0);
+    D.set_params(N_p, N_d, N, M, N_mc, true, false);
 
     n.N = N;
     n.M = M; 
     n.set_params(params_nqs);
     n.initialize();
   
-    int n_sims = 5; 
+    int n_sims = 10; 
     int i = 0; 
 
     string base_filename = "weights.csv";
@@ -74,8 +74,7 @@ int main(int argc, char *argv[]){
 
         w_update =  2*(result.exp_vals.prod_E_grad_W 
             - result.exp_vals.grad_W * result.el_exp);
- 
-
+        
         n.a = n.a - gamma * a_update;
         n.b = n.b - gamma * b_update;
         n.W = n.W - gamma * w_update;

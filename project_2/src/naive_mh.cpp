@@ -9,7 +9,7 @@ double NaiveMh::metropolis_hastings(nqs *psi_t, double prev_E_l){
     mat R_p(size(R));
     R_p = R;
 
-    uniform_int_distribution<int> dis_r(1, N_p);
+    uniform_int_distribution<int> dis_r(0, N_p-1);
     uniform_real_distribution<double> dis_step(-1, 1);
     uniform_real_distribution<double> dis_p(0, 1);
 
@@ -17,6 +17,7 @@ double NaiveMh::metropolis_hastings(nqs *psi_t, double prev_E_l){
     for(int i = 0; i < N_p * N_d; i++){
         R_p(j*i) += dis_step(*gen) * step ;
     }
+
     double eps = dis_p(*gen);
     double P = psi_t -> ratio(R, R_p, 1);
 

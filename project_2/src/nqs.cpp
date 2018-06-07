@@ -11,7 +11,7 @@ nqs::nqs() : WaveFunc(){}
 void nqs::initialize(){
     random_device rd;
     mt19937 gen(rd());
-    uniform_real_distribution<double> dis (0, 0.001);
+    uniform_real_distribution<double> dis (-0.1, 0.1);
 
     for(int i = 0; i < M; i++){
         a(i) = dis(gen);
@@ -33,10 +33,10 @@ void nqs::initialize(){
 double nqs::evaluate(mat R){
 
     double exp_term = 0;
-    double prod = 0;
-    exp_term = exp(accu(-(R - a)/2*sigma_2));
+    double prod = 1;
+    exp_term = exp(accu(-square((R - a))/(2*sigma_2)));
     for(int j = 0; j < N; j++){
-        prod *= 1 + exp(- b(j) - sum(R%W.col(j))/sigma_2);
+        prod *= 1 + exp(b(j) + sum(R%W.col(j))/sigma_2);
     }
     return exp_term*prod;
 }
@@ -45,7 +45,7 @@ double nqs::E_l(mat R){
 
     // Calulates the local energy of the given
     // configuration of the system
-    return 0.5*(- laplace(R) + accu(omega_2*R));
+    return 0.5*(- laplace(R) + accu(omega_2*R*R));
 }
 
 double nqs::laplace(mat R){
@@ -153,6 +153,10 @@ void nqs::set_params(vec params){
     b = colvec(N);
     
     W = mat(M, N);
+
+    for(auto i: params) {
+        cout << i << endl;
+    }
     sigma = params[0];
     sigma_2 = params[1];
     sigma_4 = params[2];
