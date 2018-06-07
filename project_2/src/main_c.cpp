@@ -30,7 +30,7 @@ int main(int argc, char *argv[]){
     N_mc = pow(2, mc_exp);
     M = N_p*N_d;
 
-    gamma = 0.01; omg = 1; sigma = 1; step = 0.1;
+    gamma = 0.01; omg = 1; sigma = 1.0; step = 0.1;
     double omg_2 = omg*omg;
     double sigm_2 = sigma*sigma;
     double sigm_4 = sigm_2*sigm_2;
@@ -45,7 +45,7 @@ int main(int argc, char *argv[]){
 
     D.step = step;
 	D.dt = 0.1; // Best dt from project 1.
-    D.set_params(N_p, N_d, N, M, N_mc, 1, 0);
+    D.set_params(N_p, N_d, N, M, N_mc, true, false);
 
     n.N = N;
     n.M = M; 
@@ -60,7 +60,7 @@ int main(int argc, char *argv[]){
     while(i < n_sims){
 
         retval result;
-        string filename = "/c_data/iteration_"+to_string(i)+".csv";
+        string filename = "/c_data/iteration_"+to_string(1000 + i)+".csv";
         result = D.solve(&n, filename);
         
         colvec a_update = colvec(M);

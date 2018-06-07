@@ -64,6 +64,7 @@ def block(x):
     return ans
 
 filenames = np.array(os.listdir("../data/b_data"))
+filenames = [name for name in filenames if name != "dummy" and name != "time_iter.csv"]
 
 # Perform blocking on results
 blocking_data = []
@@ -75,6 +76,8 @@ for filename in filenames:
     blocking_data.append(block(A))
     energies.append(np.mean(A))
 
+time_data = np.loadtxt("../data/b_data/time_iter.csv")
+mean_time = np.mean(np.array(time_data))
 # Plotting
 fig, ax = plt.subplots(figsize=(9, 7))
 title = filename
@@ -82,7 +85,7 @@ x = range(len(energies))
 plt.errorbar(x, energies, fmt = "^-",
         barsabove = True,
         yerr = np.array(blocking_data, dtype = float),
-        label = "Local energy "+t_filename) 
+        label = r"Naive metropolis sampling | mean time = {:.2g}s".format(mean_time))  
 plt.title(title)
 plt.xticks(x, rotation = 45, size = "medium")
 plt.legend()

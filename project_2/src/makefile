@@ -39,4 +39,10 @@ app_c.x: main_c.o $(depend_all) $(imp)
 
 clean:
 	rm -f *.o
+dataclean_b:
+	rm ../data/b_data/iteration*
+	rm ../data/b_data/time*
 
+dataclean_c:
+	rm ../data/c_data/iteration*
+	rm ../data/c_data/time*
