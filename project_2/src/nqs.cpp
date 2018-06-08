@@ -9,9 +9,10 @@ using namespace arma;
 nqs::nqs() : WaveFunc(){}
 
 void nqs::initialize(){
+    double spread = 0.8;
     random_device rd;
     mt19937 gen(rd());
-    uniform_real_distribution<double> dis (-0.1, 0.1);
+    normal_distribution<double> dis (0, spread);
 
     for(int i = 0; i < M; i++){
         a(i) = dis(gen);
@@ -36,7 +37,7 @@ double nqs::evaluate(colvec R){
     double prod = 1;
     exp_term = exp(accu(-square((R - a))/(2*sigma_2)));
     for(int j = 0; j < N; j++){
-        prod *= 1 + exp(b(j) + sum(R%W.col(j))/sigma_2);
+        prod *= 1 + exp(b(j) + sum(R.t()*W.col(j))/sigma_2);
     }
     return exp_term*prod;
 }
@@ -45,7 +46,8 @@ double nqs::E_l(colvec R){
 
     // Calulates the local energy of the given
     // configuration of the system
-    return 0.5*(- laplace(R) + accu(omega_2*square(R)));
+    //cout << -0.5*laplace(R) << "   " <<  accu(omega_2*square(R))*0.5 << "    " << 0.5*(- laplace(R) + accu(omega_2*square(R))) << endl;  
+    return 0.5*(-laplace(R) + omega_2*accu(square(R)));
 }
 
 double nqs::E_l_gibbs(colvec R){
@@ -76,12 +78,17 @@ double nqs::laplace(colvec R){
     for(int i = 0; i < M; i++){
 
         for(int j = 0; j < N; j++){
+
+            double sum_xi_wij = 0;
+            for(int l = 0; l < M; l++){
+                sum_xi_wij += R(l)*W(l, j);
+            }
                 
-            Hj = - b(j) - sigma_2 * sum(R%W.col(j));
+            Hj = - b(j) - sigma_2 * sum_xi_wij;
             exp_term = exp(Hj);
             denom = 1 + exp_term;
 
-            sigmoid = 1/denom;
+            sigmoid = 1.0/denom;
             sigmoid_deri = exp_term/(denom*denom);
 
             sum_1 += W(i,j)*sigmoid;
@@ -90,13 +97,12 @@ double nqs::laplace(colvec R){
 
         // First and second derivatives of the logarithm
         // of the nqs wave function
-        del_ln_psi = -(R(i) - a(i))/sigma_2 + sum_1/sigma_2;
+        del_ln_psi = -(R(i) - a(i))/sigma_2+ sum_1/sigma_2;
         del_ln_psi_sq = del_ln_psi*del_ln_psi;
         laplace_psi = -1/sigma_2 + sum_2/sigma_4;
 
         laplace_return += del_ln_psi_sq + laplace_psi;
     }
-
     return laplace_return;
 }
 
@@ -123,7 +129,7 @@ double nqs::laplace_gibbs(colvec R){
 
         for(int j = 0; j < N; j++){
 
-            Hj = - b(j) - sigma_2 * sum(R%W.col(j));
+            Hj = - b(j) - sigma_2 * sum(R.t()*W.col(j));
             exp_term = exp(Hj);
             denom = 1 + exp_term;
 
@@ -156,11 +162,11 @@ colvec nqs::drift_force(colvec R){
     double sum_1 = 0;
     double sigmoid = 0;
     colvec grad_psi_sq = colvec(M);
-
+    
     for(int i = 0; i < M; i++){
         for(int j = 0; j < N; j++){
 
-            Hj = - b(j) - sum(R%W.col(j));
+            Hj = - b(j) - sum(R.t()*W.col(j));
 
             exp_j = exp(Hj);
             term = 1 + exp_j;
@@ -173,7 +179,6 @@ colvec nqs::drift_force(colvec R){
         // The first derivative of logarithm of the wave function
         grad_psi_sq(i) = -(R(i) - a(i))/sigma_2 + sum_1/sigma_2;
     }
-
     // F = 2* '(ln(psi))
     colvec drift_force_i = 2*grad_psi_sq;
 
@@ -207,9 +212,6 @@ void nqs::set_params(vec params){
     
     W = mat(M, N);
 
-    for(auto i: params) {
-        cout << i << endl;
-    }
     sigma = params[0];
     sigma_2 = params[1];
     sigma_4 = params[2];
