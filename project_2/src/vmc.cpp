@@ -159,7 +159,6 @@ retval vmc::solve(nqs *psi_t, string filename){
         }
     }
     
-    cout << "before solve" << endl;
     int start_s = clock();
     monte_carlo(psi_t, &all_exp);
     int end_s = clock();

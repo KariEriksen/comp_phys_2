@@ -207,9 +207,6 @@ void nqs::set_params(vec params){
     
     W = mat(M, N);
 
-    for(auto i: params) {
-        cout << i << endl;
-    }
     sigma = params[0];
     sigma_2 = params[1];
     sigma_4 = params[2];
