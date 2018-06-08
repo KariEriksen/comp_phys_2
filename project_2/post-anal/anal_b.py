@@ -67,8 +67,10 @@ filenames = sorted(np.array(os.listdir("../data/b_data")))
 filenames = [name for name in filenames if name != "dummy" and name != "time_iter.csv"]
 
 # Perform blocking on results
-gamma_vals = [1e-5, 1e-4, 1e-3, 1e-2 ]
-n_sims = 10
+gamma_vals = [1e-2]
+n_sims = 100
+
+E_l_exp = 2
 
 sims_n_str = []
 for i in range(n_sims):
@@ -111,7 +113,7 @@ plt.xticks(x, rotation = 45, size = "medium")
 plt.legend()
 plt.xlabel(r"Iteration")
 plt.ylabel(r"$\langle E \rangle $")
-plt.ylim(0,3)
+plt.ylim(E_l_exp - 3, E_l_exp + 3 )
 plt.title("Naive metropolis with varied gamma | mean time = {:.2g}s".format(mean_time))
 
 #plt.savefig("../report/figures/importance")

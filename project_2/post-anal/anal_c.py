@@ -67,19 +67,29 @@ filenames = sorted(np.array(os.listdir("../data/c_data")))
 filenames = [name for name in filenames if name != "dummy" and name != "time_iter.csv"]
 
 # Perform blocking on results
-gamma_vals = [0.01, 0.05, 0.1, 0.2, 0.4]
+gamma_vals = [1e-1]
+n_sims = 5
+
+E_l_exp = 1
+
+sims_n_str = []
+for i in range(n_sims):
+    if i < 10:
+        sims_n_str.append("0"+str(i))
+    else:
+        sims_n_str.append(str(i))
+
 blocking_data = []
 energies = []
 for gamma in gamma_vals:
     tmp_block = []
     tmp_energy = []
-    for filename in filenames: 
-        if str(gamma) in filename:
-            #print("Processing file: ", filename)
-            t_filename = "../data/c_data/"+filename
-            A = loadtxt(t_filename)
-            tmp_block.append(block(A))
-            tmp_energy.append(np.mean(A))
+    for i in sims_n_str:
+        filename = "iteration_10"+i+"_gamma_{:.6f}.csv".format(gamma)
+        t_filename = "../data/c_data/"+filename
+        A = loadtxt(t_filename)
+        tmp_block.append(block(A))
+        tmp_energy.append(np.mean(A))
 
     blocking_data.append(tmp_block)
     energies.append(tmp_energy)
@@ -89,9 +99,10 @@ time_data = np.loadtxt("../data/c_data/time_iter.csv")
 mean_time = np.mean(np.array(time_data))
 
 # Plotting
-x = range(len(energies[0]))
+x = np.arange(n_sims)
 fig, ax = plt.subplots(figsize=(9, 7))
-for i in range(len(energies)):
+for i in range(n_sims):
+    print(energies[i])
     plt.errorbar(x, energies[i], fmt = "^-",
             barsabove = True,
             yerr = np.array(blocking_data[i], dtype = float),
