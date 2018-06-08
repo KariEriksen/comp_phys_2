@@ -136,14 +136,26 @@ void vmc::gradient_descent(nqs& psi_t, metadata& exp_vals, double E_l){
     gradient_a /= sigma_squared;
     // Gradient b
     for (int k = 0; k < N; k++) {
-        double inner_sum = accu(R.t()*psi_t.W.col(k))/sigma_squared;
+
+        double sum_xi_wij = 0;
+        for(int l = 0; l < M; l++){
+            sum_xi_wij += R(l)*psi_t.W(l, k);
+        }
+
+        double inner_sum = sum_xi_wij/sigma_squared;
         gradient_b(k) = 1/(1 + exp(-psi_t.b(k) - inner_sum));
     }
     // Gradient w_kn
     // Concider changing summation indices in .tex for clarity
     for (int k = 0; k < M; k++) {
         for (int n = 0; n < N; n++) {
-            double temp = accu(R.t()*psi_t.W.col(n))/sigma_squared;
+            
+            double sum_xi_wij = 0;
+            for(int l = 0; l < M; l++){
+                sum_xi_wij += R(l)*psi_t.W(l, n);
+            }
+
+            double temp = sum_xi_wij/sigma_squared;
             gradient_w(k, n) = R(k)/(1 + exp(-psi_t.b(n) - temp));
         }
     }

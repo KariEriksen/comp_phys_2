@@ -37,7 +37,13 @@ double nqs::evaluate(colvec R){
     double prod = 1;
     exp_term = exp(accu(-square((R - a))/(2*sigma_2)));
     for(int j = 0; j < N; j++){
-        prod *= 1 + exp(b(j) + sum(R.t()*W.col(j))/sigma_2);
+    
+        double sum_xi_wij = 0;
+        for(int l = 0; l < M; l++){
+            sum_xi_wij += R(l)*W(l, j);
+        }
+
+        prod *= 1 + exp(b(j) + sum_xi_wij/sigma_2);
     }
     return exp_term*prod;
 }
