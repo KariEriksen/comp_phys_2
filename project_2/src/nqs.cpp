@@ -9,10 +9,11 @@ using namespace arma;
 nqs::nqs() : WaveFunc(){}
 
 void nqs::initialize(){
-    double spread = 0.8;
+    double spread = 0.2;
     random_device rd;
     mt19937 gen(rd());
-    normal_distribution<double> dis (0, spread);
+    uniform_real_distribution<double> dis (0, 1);
+    normal_distribution<double> w_dis(0, spread);
 
     for(int i = 0; i < M; i++){
         a(i) = dis(gen);
@@ -25,7 +26,7 @@ void nqs::initialize(){
 
     for(int i = 0; i < M; i++){
         for(int j = 0; j < N; j++){
-            W(i,j) = dis(gen);
+            W(i,j) = w_dis(gen);
         }
 
     }
@@ -60,7 +61,7 @@ double nqs::E_l_gibbs(colvec R){
 
     // Calulates the local energy of the given
     // configuration of the system
-    return 0.5*(- laplace_gibbs(R) + accu(omega_2*square(R)));
+    return 0.5*(- laplace_gibbs(R) + omega_2*accu(square(R)));
 }
 
 double nqs::laplace(colvec R){
@@ -103,9 +104,9 @@ double nqs::laplace(colvec R){
 
         // First and second derivatives of the logarithm
         // of the nqs wave function
-        del_ln_psi = -(R(i) - a(i))/sigma_2+ sum_1/sigma_2;
+        del_ln_psi = -(R(i) - a(i))/sigma_2 + sum_1/sigma_2;
         del_ln_psi_sq = del_ln_psi*del_ln_psi;
-        laplace_psi = -1/sigma_2 + sum_2/sigma_4;
+        laplace_psi = - 1/sigma_2 + sum_2/sigma_4;
 
         laplace_return += del_ln_psi_sq + laplace_psi;
     }

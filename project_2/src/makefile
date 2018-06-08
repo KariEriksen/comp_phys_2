@@ -50,9 +50,7 @@ app_f.x: main_f.o $(depend_all) $(gb)
 clean:
 	rm -f *.o
 dataclean_b:
-	rm ../data/b_data/iteration*
-	rm ../data/b_data/time*
+	rm ../data/b_data/*.csv
 
 dataclean_c:
-	rm ../data/c_data/iteration*
-	rm ../data/c_data/time*
+	rm ../data/c_data/*.csv

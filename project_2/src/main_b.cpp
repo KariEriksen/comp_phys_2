@@ -23,8 +23,8 @@ int main(int argc, char *argv[]){
         N = atoi(argv[3]);
     }
     */
-    N_p = 2;
-    N_d = 2;
+    N_p = 1;
+    N_d = 1;
     mc_exp = 16;
     N = 4;
 
@@ -32,7 +32,7 @@ int main(int argc, char *argv[]){
     M = N_p*N_d;
 
     //gamma = 1e-2; 
-    double gamma_vals[] = {0.01};//{1e-5, 1e-4, 1e-3, 1e-2};
+    double gamma_vals[] = {1e-3, 1e-2, 1e-1, 0.4};
     ofstream timefile("../data/b_data/time_iter.csv");
     
     for (double gamma: gamma_vals){
@@ -57,7 +57,7 @@ int main(int argc, char *argv[]){
             n.set_params(params_nqs);
             n.initialize();
       
-            int n_sims = 100;
+            int n_sims = 50;
             int i = 0; 
 
             string base_filename = "weights.csv";
