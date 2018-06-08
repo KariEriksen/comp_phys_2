@@ -71,7 +71,6 @@ gamma_vals = [1e-1]
 n_sims = 5
 
 E_l_exp = 1
-
 sims_n_str = []
 for i in range(n_sims):
     if i < 10:
@@ -112,8 +111,9 @@ plt.xticks(x, rotation = 45, size = "medium")
 plt.legend()
 plt.xlabel(r"Iteration")
 plt.ylabel(r"$\langle E \rangle $")
+plt.ylim(0.5,1.5)
 plt.title("Importance sampling with varied gamma | mean time = {:.2g}s".format(mean_time))
 
 #plt.savefig("../report/figures/importance")
-plt.savefig("importance_N4_100iter.pdf")
+plt.savefig("importance.pdf")
 
