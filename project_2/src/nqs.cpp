@@ -90,7 +90,7 @@ double nqs::laplace(colvec R){
                 sum_xi_wij += R(l)*W(l, j);
             }
                 
-            Hj = - b(j) - sigma_2 * sum_xi_wij;
+            Hj = - b(j) - (sum_xi_wij/sigma_2);
             exp_term = exp(Hj);
             denom = 1 + exp_term;
 
@@ -135,7 +135,7 @@ double nqs::laplace_gibbs(colvec R){
 
         for(int j = 0; j < N; j++){
 
-            Hj = - b(j) - sigma_2 * sum(R.t()*W.col(j));
+            Hj = - b(j) - sum(R.t()*W.col(j))/sigma_2;
             exp_term = exp(Hj);
             denom = 1 + exp_term;
 
@@ -172,7 +172,7 @@ colvec nqs::drift_force(colvec R){
     for(int i = 0; i < M; i++){
         for(int j = 0; j < N; j++){
 
-            Hj = - b(j) - sum(R.t()*W.col(j));
+            Hj = - b(j) - sum(R.t()*W.col(j))/sigma_2;
 
             exp_j = exp(Hj);
             term = 1 + exp_j;
