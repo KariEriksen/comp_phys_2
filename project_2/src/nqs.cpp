@@ -45,14 +45,14 @@ double nqs::E_l(colvec R){
 
     // Calulates the local energy of the given
     // configuration of the system
-    return 0.5*(- laplace(R) + accu(omega_2*R*R));
+    return 0.5*(- laplace(R) + accu(omega_2*square(R)));
 }
 
 double nqs::E_l_gibbs(colvec R){
 
     // Calulates the local energy of the given
     // configuration of the system
-    return 0.5*(- laplace_gibbs(R) + accu(omega_2*R*R));
+    return 0.5*(- laplace_gibbs(R) + accu(omega_2*square(R)));
 }
 
 double nqs::laplace(colvec R){
@@ -72,7 +72,7 @@ double nqs::laplace(colvec R){
     double sigmoid = 0;
     double sigmoid_deri = 0;
     double laplace_return = 0;
-
+    
     for(int i = 0; i < M; i++){
 
         for(int j = 0; j < N; j++){

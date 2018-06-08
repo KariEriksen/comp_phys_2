@@ -14,7 +14,7 @@ using namespace arma;
 using namespace std;
 
 void vmc::monte_carlo(nqs *psi_t, metadata *exp_vals){
-
+    
     if(compute_extra){
         exp_vals -> exp_E[0] = psi_t -> E_l(R);
     }
@@ -159,6 +159,7 @@ retval vmc::solve(nqs *psi_t, string filename){
         }
     }
     
+    cout << "before solve" << endl;
     int start_s = clock();
     monte_carlo(psi_t, &all_exp);
     int end_s = clock();
@@ -256,7 +257,6 @@ void vmc::gradient_descent(nqs *psi_t, metadata *exp_vals, double E_l){
         inner_sum = accu(R.t()*psi_t -> W.col(k))/sigma_squared;
         gradient_b(k) = 1/(1 + exp(-psi_t -> b(k) - inner_sum));
     }
-
     // Gradient w_kn
     // Concider changing summation indices in .tex for clarity
     for (int k = 0; k < M; k++) {
@@ -266,7 +266,7 @@ void vmc::gradient_descent(nqs *psi_t, metadata *exp_vals, double E_l){
         }
     }
     gradient_w /= sigma_squared;
-
+    
     if(compute_extra){
 
         exp_vals -> grad_a += gradient_a;
