@@ -30,7 +30,7 @@ void nqs::initialize(){
     }
 }
 
-double nqs::evaluate(mat R){
+double nqs::evaluate(colvec R){
 
     double exp_term = 0;
     double prod = 1;
@@ -41,21 +41,21 @@ double nqs::evaluate(mat R){
     return exp_term*prod;
 }
 
-double nqs::E_l(mat R){
+double nqs::E_l(colvec R){
 
     // Calulates the local energy of the given
     // configuration of the system
     return 0.5*(- laplace(R) + accu(omega_2*R*R));
 }
 
-double nqs::E_l_gibbs(mat R){
+double nqs::E_l_gibbs(colvec R){
 
     // Calulates the local energy of the given
     // configuration of the system
     return 0.5*(- laplace_gibbs(R) + accu(omega_2*R*R));
 }
 
-double nqs::laplace(mat R){
+double nqs::laplace(colvec R){
 
     // Calulates the derivatives of the wave function
     // Both first and second derivatives
@@ -100,7 +100,7 @@ double nqs::laplace(mat R){
     return laplace_return;
 }
 
-double nqs::laplace_gibbs(mat R){
+double nqs::laplace_gibbs(colvec R){
 
     // Calulates the derivatives of the wave function
     // Both first and second derivatives
@@ -146,7 +146,7 @@ double nqs::laplace_gibbs(mat R){
     return laplace_return;
 }
 
-mat nqs::drift_force(mat R){
+colvec nqs::drift_force(colvec R){
 
     // Drift force, F, to be used in importance sampling
 
@@ -155,7 +155,7 @@ mat nqs::drift_force(mat R){
     double term = 0;
     double sum_1 = 0;
     double sigmoid = 0;
-    mat grad_psi_sq = mat(M, 1);
+    colvec grad_psi_sq = colvec(M);
 
     for(int i = 0; i < M; i++){
         for(int j = 0; j < N; j++){
@@ -175,12 +175,12 @@ mat nqs::drift_force(mat R){
     }
 
     // F = 2* '(ln(psi))
-    mat drift_force_i = 2*grad_psi_sq;
+    colvec drift_force_i = 2*grad_psi_sq;
 
     return drift_force_i;
 }
 
-double nqs::ratio(mat R, mat R_p, int k){
+double nqs::ratio(colvec R, colvec R_p, int k){
 
     double eval_R = evaluate(R);
     double eval_R_p = evaluate(R_p);
@@ -188,7 +188,7 @@ double nqs::ratio(mat R, mat R_p, int k){
     return prob;
 }
 
-void nqs::update_positions(mat R){
+void nqs::update_positions(colvec R){
     D = D_p;
 }
 

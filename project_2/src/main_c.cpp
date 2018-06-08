@@ -23,10 +23,10 @@ int main(int argc, char *argv[]){
         N = atoi(argv[3]);
     }
     */
-    N_p = 1;
+    N_p = 2;
     N_d = 1;
     mc_exp = 17;
-    N = 4;
+    N = 2;
 
     N_mc = pow(2, mc_exp);
     M = N_p*N_d;
@@ -35,6 +35,7 @@ int main(int argc, char *argv[]){
 	double gamma_vals[] = {0.01,0.05,0.1,0.2,0.4};
 	ofstream timefile("../data/c_data/time_iter.csv");
 	
+	// Loop over gammas
 	for (double gamma: gamma_vals){
 		omg = 1; sigma = 1.0; step = 0.1;
 		double omg_2 = omg*omg;
@@ -47,10 +48,6 @@ int main(int argc, char *argv[]){
 						  gamma
 						 };
 		
-		// TODO:
-		// Perform several runs with different number of hidden nodes, when done with gammas.
-
-		// Loop over gammas
 
 		nqs n;
 		Importance D;
@@ -64,7 +61,7 @@ int main(int argc, char *argv[]){
 		n.set_params(params_nqs);
 		n.initialize();
 	  
-		int n_sims = 100; 
+		int n_sims = 20; 
 		int i = 0; 
 		
 

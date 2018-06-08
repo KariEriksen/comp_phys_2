@@ -69,8 +69,8 @@ void vmc::set_params(int N_p_in, int N_d_in,
                      bool meta_bool,
                      bool obd_bool, bool gibbs_bool){
 
-    gradient_a = mat(M_in, 1);
-    gradient_b = mat(N_in, 1);
+    gradient_a = colvec(M_in);
+    gradient_b = colvec(N_in);
     gradient_w = mat(M_in, N_in);
     
     N_mc = mc_cycles;

@@ -11,14 +11,14 @@ class WaveFunc{
         WaveFunc(){}
         virtual void set_params(vec params) =0;
         virtual void initialize() = 0;
-        virtual void update_positions(mat R) = 0;
+        virtual void update_positions(colvec R) = 0;
         virtual ~WaveFunc() {}
     
-        virtual double evaluate(mat R) = 0;
-        virtual double E_l(mat R) = 0;
-        virtual mat drift_force(mat R) = 0;
-        virtual double laplace(mat R) = 0;
-        virtual double E_l_gibbs(mat R) = 0;
-        virtual double laplace_gibbs(mat R) = 0;
-        virtual double ratio(mat R, mat R_p, int k) = 0;
+        virtual double evaluate(colvec R) = 0;
+        virtual double E_l(colvec R) = 0;
+        virtual colvec drift_force(colvec R) = 0;
+        virtual double laplace(colvec R) = 0;
+        virtual double E_l_gibbs(colvec R) = 0;
+        virtual double laplace_gibbs(colvec R) = 0;
+        virtual double ratio(colvec R, colvec R_p, int k) = 0;
         };

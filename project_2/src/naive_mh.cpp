@@ -6,7 +6,7 @@ using namespace arma;
 using namespace std;
 
 double NaiveMh::metropolis_hastings(nqs *psi_t, double prev_E_l){
-    mat R_p(size(R));
+    colvec R_p(M);
     R_p = R;
 
     uniform_int_distribution<int> dis_r(0, N_p-1);

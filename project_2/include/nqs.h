@@ -20,17 +20,17 @@ public:
 
     colvec a, b;
     mat W;
-    mat drift_force(mat R);
+    colvec drift_force(colvec R);
 
     void set_params(vec params);
-    double ratio(mat R, mat R_p, int k);
-    double evaluate(mat R);
-    double E_l(mat R);
-    double laplace(mat R);
-    double E_l_gibbs(mat R);
-    double laplace_gibbs(mat R);
+    double ratio(colvec R, colvec R_p, int k);
+    double evaluate(colvec R);
+    double E_l(colvec R);
+    double laplace(colvec R);
+    double E_l_gibbs(colvec R);
+    double laplace_gibbs(colvec R);
     void initialize();
-    void update_positions(mat R);
+    void update_positions(colvec R);
     nqs();
 
 };

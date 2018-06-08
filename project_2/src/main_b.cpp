@@ -23,7 +23,7 @@ int main(int argc, char *argv[]){
         N = atoi(argv[3]);
     }
     */
-    N_p = 1;
+    N_p = 2;
     N_d = 1;
     mc_exp = 17;
     N = 2;

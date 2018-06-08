@@ -12,11 +12,11 @@ using namespace arma;
 
 struct metadata{
     double *exp_E;
-    mat prod_E_grad_a;
-    mat grad_a;
+    colvec prod_E_grad_a;
+    colvec grad_a;
 
-    mat grad_b;
-    mat prod_E_grad_b;
+    colvec grad_b;
+    colvec prod_E_grad_b;
 
     mat grad_W;
     mat prod_E_grad_W;
@@ -44,12 +44,13 @@ class vmc{
    protected:
         int obd_n_bins;
         double bin_length;
-        mat R;
+        colvec R;
         random_device rd;  //Will be used to obtain a seed for the random number engine
         mt19937 *gen; //Standard mersenne_twister_engine seeded with rd()
         double* obd_bins;
         void count_obd(mat radii, metadata* all_exp);
-        mat gradient_a, gradient_b, gradient_w;
+        colvec gradient_a, gradient_b;
+		mat gradient_w;
 
     public:
         void monte_carlo(nqs *psi_t, metadata *exp_vals);
