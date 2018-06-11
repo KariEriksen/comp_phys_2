@@ -23,10 +23,10 @@ int main(int argc, char *argv[]){
         N = atoi(argv[3]);
     }
     */
-    N_p = 1;
-    N_d = 1;
+    N_p = 2;
+    N_d = 2;
     mc_exp = 16;
-    N = 4;
+    N = 2;
 
     N_mc = pow(2, mc_exp);
     M = N_p*N_d;
@@ -36,7 +36,7 @@ int main(int argc, char *argv[]){
     ofstream timefile("../data/b_data/time_iter.csv");
     
     for (double gamma: gamma_vals){
-            omg = 1; sigma = 1; step = 0.3;
+            omg = 1; sigma = 1; step = 1.0;
             double omg_2 = omg*omg;
             double sigm_2 = sigma*sigma;
             double sigm_4 = sigm_2*sigm_2;
@@ -90,16 +90,16 @@ int main(int argc, char *argv[]){
                     n.a += - gamma * a_update;
                     n.b += - gamma * b_update;
                     n.W += - gamma * w_update;
-                    
-
+                    /*
                     cout << "WEIGTS" << endl;
                     n.a.print();
                     n.b.print();
                     n.W.print();
                     cout << "###########" << endl;
                     cout << "Iteration " << i << endl;
-                    cout << "E_l = "<< result.el_exp ;
-                    cout << endl;
+					*/
+                    cout << "E_l = "<< result.el_exp <<"\n" ;
+                    //cout << endl;
                     cout << "gamma " << gamma << endl;
                     timefile << result.time_spent << endl;
                     i ++;
