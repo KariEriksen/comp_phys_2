@@ -14,6 +14,7 @@ double Importance::metropolis_hastings(nqs& psi_t, double prev_E_l){
     normal_distribution<double> dis_zeta(0, 1);
 
     int j = dis_r(*gen);
+    j = j*N_d;
 
 	// Calculate drift force at all positions.
 	
@@ -24,7 +25,7 @@ double Importance::metropolis_hastings(nqs& psi_t, double prev_E_l){
     double zeta = dis_zeta(*gen);
     
     for (int i = 0; i < N_d; i++){
-            R_p(2*j+i) += 0.5*F_drift(2*j+i)*dt + zeta*sqrt(dt);
+            R_p(j+i) += 0.5*F_drift(j+i)*dt + zeta*sqrt(dt);
     }
 
     double P = psi_t.ratio(R, R_p, 1); // 3rd input same as naive_mh.
