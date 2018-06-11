@@ -14,8 +14,9 @@ double NaiveMh::metropolis_hastings(nqs& psi_t, double prev_E_l){
     uniform_real_distribution<double> dis_p(0, 1);
 
     int j = dis_r(*gen);
+    j = j*N_d;
     for(int i = 0; i < N_d; i++){
-        R_p(2*j+i) += dis_step(*gen) * step ;
+        R_p(j+i) += dis_step(*gen) * step ;
     }
 
     double eps = dis_p(*gen);
