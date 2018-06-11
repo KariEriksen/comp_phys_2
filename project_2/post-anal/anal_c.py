@@ -105,7 +105,7 @@ for i in range(n_sims):
     plt.errorbar(x, energies[i], fmt = "^-",
             barsabove = True,
             yerr = np.array(blocking_data[i], dtype = float),
-            label = r"$\gamma = ${:2f}".format(gamma_vals[i]))
+            label = r"$\gamma = ${:2e}".format(gamma_vals[i]))
 
 plt.xticks(x, rotation = 45, size = "medium")
 plt.legend()

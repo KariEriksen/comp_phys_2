@@ -73,8 +73,6 @@ double nqs::laplace(colvec R){
     double Hj = 0;
     double exp_term = 0;
     double denom = 0;
-    double sum_1 = 0;
-    double sum_2 = 0;
     double del_ln_psi = 0;
     double del_ln_psi_sq = 0;
     double laplace_psi = 0;
@@ -84,6 +82,8 @@ double nqs::laplace(colvec R){
     
     for(int i = 0; i < M; i++){
 
+		double sum_1 = 0;
+		double sum_2 = 0;
         for(int j = 0; j < N; j++){
 
             double sum_xi_wij = 0;

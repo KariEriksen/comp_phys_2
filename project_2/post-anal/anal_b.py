@@ -67,10 +67,10 @@ filenames = sorted(np.array(os.listdir("../data/b_data")))
 filenames = [name for name in filenames if name != "dummy" and name != "time_iter.csv"]
 
 # Perform blocking on results
-gamma_vals = [1e-2]
-n_sims = 100
+gamma_vals = [1e-3,1e-2,1e-1,0.4]
+n_sims = 50
 
-E_l_exp = 2
+E_l_exp = 1.0
 
 sims_n_str = []
 for i in range(n_sims):
@@ -107,7 +107,7 @@ for i in range(len(energies)):
     plt.errorbar(x, energies[i], fmt = "^-",
             barsabove = True,
             yerr = np.array(blocking_data[i], dtype = float),
-            label = r"$\gamma = ${:.2f}".format(gamma_vals[i]))
+            label = r"$\gamma = ${:.2e}".format(gamma_vals[i]))
 
 plt.xticks(x, rotation = 45, size = "medium")
 plt.legend()
