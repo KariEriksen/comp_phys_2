@@ -166,12 +166,13 @@ colvec nqs::drift_force(colvec R){
     double Hj = 0;
     double exp_j = 0;
     double term = 0;
-    double sum_1 = 0;
     double sigmoid = 0;
     colvec grad_psi_sq = colvec(M);
     
     for(int i = 0; i < M; i++){
-        for(int j = 0; j < N; j++){
+		double sum_1 = 0;
+        
+		for(int j = 0; j < N; j++){
 
             Hj = - b(j) - sum(R.t()*W.col(j))/sigma_2;
 

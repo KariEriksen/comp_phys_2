@@ -67,10 +67,10 @@ filenames = sorted(np.array(os.listdir("../data/c_data")))
 filenames = [name for name in filenames if name != "dummy" and name != "time_iter.csv"]
 
 # Perform blocking on results
-gamma_vals = [1e-1]
-n_sims = 5
+gamma_vals = [1e-3,1e-2,1e-1,0.4]
+n_sims = 50
 
-E_l_exp = 1
+E_l_exp = 2.0
 sims_n_str = []
 for i in range(n_sims):
     if i < 10:
@@ -98,20 +98,20 @@ time_data = np.loadtxt("../data/c_data/time_iter.csv")
 mean_time = np.mean(np.array(time_data))
 
 # Plotting
-x = np.arange(n_sims)
+x = range(len(energies[0]))
 fig, ax = plt.subplots(figsize=(9, 7))
-for i in range(n_sims):
-    print(energies[i])
+for i in range(len(energies)):
+    print(blocking_data[i])
     plt.errorbar(x, energies[i], fmt = "^-",
             barsabove = True,
             yerr = np.array(blocking_data[i], dtype = float),
-            label = r"$\gamma = ${:2e}".format(gamma_vals[i]))
+            label = r"$\gamma = ${:.2e}".format(gamma_vals[i]))
 
 plt.xticks(x, rotation = 45, size = "medium")
 plt.legend()
 plt.xlabel(r"Iteration")
 plt.ylabel(r"$\langle E \rangle $")
-plt.ylim(0.5,1.5)
+plt.ylim(E_l_exp - 3, E_l_exp + 3 )
 plt.title("Importance sampling with varied gamma | mean time = {:.2g}s".format(mean_time))
 
 #plt.savefig("../report/figures/importance")
