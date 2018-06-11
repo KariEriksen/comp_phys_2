@@ -67,14 +67,16 @@ filenames = sorted(np.array(os.listdir("../data/c_data")))
 filenames = [name for name in filenames if name != "dummy" and name != "time_iter.csv"]
 
 # Perform blocking on results
-gamma_vals = [1e-3,1e-2,1e-1,0.4]
-n_sims = 50
+gamma_vals = [1e-1, 0.4]
+n_sims = 200
 
 E_l_exp = 2.0
 sims_n_str = []
 for i in range(n_sims):
     if i < 10:
-        sims_n_str.append("0"+str(i))
+        sims_n_str.append("00"+str(i))
+    elif i > 9 and i <  100:
+        sims_n_str.append("0" + str(i))
     else:
         sims_n_str.append(str(i))
 
@@ -84,7 +86,7 @@ for gamma in gamma_vals:
     tmp_block = []
     tmp_energy = []
     for i in sims_n_str:
-        filename = "iteration_10"+i+"_gamma_{:.6f}.csv".format(gamma)
+        filename = "iteration_1"+i+"_gamma_{:.6f}.csv".format(gamma)
         t_filename = "../data/c_data/"+filename
         A = loadtxt(t_filename)
         tmp_block.append(block(A))
