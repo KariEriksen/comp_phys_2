@@ -70,7 +70,7 @@ filenames = [name for name in filenames if name != "dummy" and name != "time_ite
 gamma_vals = [1e-3,1e-2,1e-1,0.4]
 n_sims = 50
 
-E_l_exp = 1.0
+E_l_exp = 0.5
 
 sims_n_str = []
 for i in range(n_sims):
@@ -86,7 +86,7 @@ for gamma in gamma_vals:
     tmp_energy = []
     for i in sims_n_str:
         filename = "iteration_10"+i+"_gamma_{:.6f}.csv".format(gamma)
-        print("Processing file: ", filename)
+        #print("Processing file: ", filename)
         t_filename = "../data/b_data/"+filename
         A = loadtxt(t_filename)
         tmp_block.append(block(A))
@@ -103,7 +103,6 @@ mean_time = np.mean(np.array(time_data))
 x = range(len(energies[0]))
 fig, ax = plt.subplots(figsize=(9, 7))
 for i in range(len(energies)):
-    print(blocking_data[i])
     plt.errorbar(x, energies[i], fmt = "^-",
             barsabove = True,
             yerr = np.array(blocking_data[i], dtype = float),
@@ -113,9 +112,16 @@ plt.xticks(x, rotation = 45, size = "medium")
 plt.legend()
 plt.xlabel(r"Iteration")
 plt.ylabel(r"$\langle E \rangle $")
-plt.ylim(E_l_exp - 3, E_l_exp + 3 )
-plt.title("Naive metropolis with varied gamma | mean time = {:.2g}s".format(mean_time))
+#plt.ylim(E_l_exp - 3, E_l_exp + 3 )
+plt.title(r"Simulation of 1 particle in 1 dimension for different learning rates $\gamma$")
+plt.savefig("naive_1p_1d.pdf")
 
-#plt.savefig("../report/figures/importance")
-plt.savefig("naive_mh.pdf")
-#plt.show()
+# Output
+print("Mean time for simulation = {:.2g}s".format(mean_time))
+print("========================================")
+print("Final energy and its variance for each gamma")
+print("========================================")
+for i in range(len(blocking_data)):
+    var = np.sqrt(blocking_data[i][-1])
+    energy = energies[i][-1]
+    print("Gamma = {:.2e} | Energy = {:.5e} | Variance = {:.2e}".format(gamma_vals[i], energy, var))
