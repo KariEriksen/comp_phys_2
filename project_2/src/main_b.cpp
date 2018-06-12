@@ -9,23 +9,12 @@ int main(int argc, char *argv[]){
 
     int N, M;
     int N_p, N_d, N_mc, mc_exp;
-    //double gamma, 
 	double omg, sigma, step;
 
 
-    /*
-    if( argc < 3){
-        cout << "Wrong usage" << endl;
-        exit(1);
-    }
-    else{
-        N_d = atoi(argv[1]); mc_exp = atoi(argv[2]);
-        N = atoi(argv[3]);
-    }
-    */
     N_p = 2;
-    N_d = 2;
-    mc_exp = 16;
+    N_d = 3;
+    mc_exp = 17;
     N = 2;
 
     N_mc = pow(2, mc_exp);
@@ -34,28 +23,42 @@ int main(int argc, char *argv[]){
     //gamma = 1e-2; 
     double gamma_vals[] = {1e-3, 1e-2, 1e-1, 0.4};
     ofstream timefile("../data/b_data/time_iter.csv");
+
+	// Initializations:
+	// We store initialization values for positions, biases, and weights,
+	// to improve comparison between different gamma values.
+	omg = 1; sigma = 1; step = 0.8;
+	double omg_2 = omg*omg;
+	double sigm_2 = sigma*sigma;
+	double sigm_4 = sigm_2*sigm_2;
+	
+	NaiveMh D;
+	D.step = step;
+	D.set_params(N_p, N_d, N, M, N_mc, true, false, false);
+	
+	vec params_nqs = {
+					  sigma, sigm_2, sigm_4,
+					  omg, omg_2,
+					 };
+
+    nqs n;
+	n.N = N;
+	n.M = M; 
+	n.set_params(params_nqs);
+    n.initialize();
+	
+	vec a_stored = colvec(M);
+	vec b_stored = colvec(N);
+	mat W_stored = mat(M, N);
+	
+	a_stored = n.a;
+	b_stored = n.b;
+	W_stored = n.W;
     
     for (double gamma: gamma_vals){
-            omg = 1; sigma = 1; step = 1.0;
-            double omg_2 = omg*omg;
-            double sigm_2 = sigma*sigma;
-            double sigm_4 = sigm_2*sigm_2;
-            
-            vec params_nqs = {
-                              sigma, sigm_2, sigm_4,
-                              omg, omg_2,
-                              gamma
-                             };
-            nqs n;
-            NaiveMh D;
-
-            D.step = step;
-            D.set_params(N_p, N_d, N, M, N_mc, true, false, false);
-
-            n.N = N;
-            n.M = M; 
-            n.set_params(params_nqs);
-            n.initialize();
+			n.a = a_stored;
+			n.b = b_stored;
+			n.W = W_stored;
       
             int n_sims = 50;
             int i = 0; 
@@ -98,9 +101,7 @@ int main(int argc, char *argv[]){
                     cout << "###########" << endl;
                     cout << "Iteration " << i << endl;
 					*/
-                    cout << "E_l = "<< result.el_exp <<"\n" ;
-                    //cout << endl;
-                    cout << "gamma " << gamma << endl;
+                    cout << "E_l = "<< result.el_exp << " | gamma " << gamma << endl;
                     timefile << result.time_spent << endl;
                     i ++;
         }// END gamma loop

@@ -26,20 +26,19 @@ void vmc::monte_carlo(nqs& psi_t, metadata& exp_vals){
 		gradient_descent(psi_t, exp_vals, exp_vals.exp_E[0]);
 	}
 
-	// WRITING THINGS OUT BCUZ DAMN, GRAPH, U UGLY
-	int acceptance = 0;
+	//int acceptance = 0;
 	//ofstream acceptance_file("../data/c_data/acceptance_file");
 
 	for(int i = 1; i < N_mc; i++) {
 		double tmp = metropolis_hastings(psi_t, exp_vals.exp_E[i-1]);
 		exp_vals.exp_E[i] = tmp;
-		if(exp_vals.exp_E[i] !=  exp_vals.exp_E[i-1]) acceptance++;
+		//if(exp_vals.exp_E[i] !=  exp_vals.exp_E[i-1]) acceptance++;
 
 		if(compute_extra || compute_gibbs){
 			gradient_descent(psi_t, exp_vals, tmp);
 		}
 	}
-	cout << to_string(acceptance / (double) N_mc) << "\n";
+	//cout << to_string(acceptance / (double) N_mc) << "\n";
 	//acceptance_file << to_string(acceptance / (double) N_mc) << "\n";
 	//acceptance_file.close();
 }

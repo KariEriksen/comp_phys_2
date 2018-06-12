@@ -212,7 +212,6 @@ void nqs::set_params(vec params){
     double sigma_in, double sigma_sq_in,
     double sigma_4_in,
     double omega_in, double omega_sq_in,
-    double gamma_in
     */
     
     a = colvec(M);
@@ -225,7 +224,6 @@ void nqs::set_params(vec params){
     sigma_4 = params[2];
     omega = params[3];
     omega_2 = params[4];
-    gamma = params[5];
 
 }
 

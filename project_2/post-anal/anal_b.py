@@ -70,7 +70,7 @@ filenames = [name for name in filenames if name != "dummy" and name != "time_ite
 gamma_vals = [1e-3,1e-2,1e-1,0.4]
 n_sims = 50
 
-E_l_exp = 0.5
+E_l_exp = 3.0
 
 sims_n_str = []
 for i in range(n_sims):
@@ -106,22 +106,28 @@ for i in range(len(energies)):
     plt.errorbar(x, energies[i], fmt = "^-",
             barsabove = True,
             yerr = np.array(blocking_data[i], dtype = float),
-            label = r"$\gamma = ${:.2e}".format(gamma_vals[i]))
+            label = r"$\gamma = ${:.2e}".format(gamma_vals[i]),
+            alpha = 0.5)
 
-plt.xticks(x, rotation = 45, size = "medium")
+plt.xticks(x, rotation = 45, size = "small")
 plt.legend()
 plt.xlabel(r"Iteration")
 plt.ylabel(r"$\langle E \rangle $")
 #plt.ylim(E_l_exp - 3, E_l_exp + 3 )
-plt.title(r"Simulation of 1 particle in 1 dimension for different learning rates $\gamma$")
-plt.savefig("naive_1p_1d.pdf")
+plt.title(r"Simulation of 2 particles in 3 dimensions for different learning rates $\gamma$ using brute force metropolis algorithm")
+#plt.savefig("naive_mh_testing.pdf")
+figname = "naive_mh_prod"
+plt.savefig(figname + ".pdf")
 
 # Output
-print("Mean time for simulation = {:.2g}s".format(mean_time))
-print("========================================")
-print("Final energy and its variance for each gamma")
-print("========================================")
-for i in range(len(blocking_data)):
-    var = np.sqrt(blocking_data[i][-1])
-    energy = energies[i][-1]
-    print("Gamma = {:.2e} | Energy = {:.5e} | Variance = {:.2e}".format(gamma_vals[i], energy, var))
+# Writes mean time etc. to a file with same name as fig.
+with open(figname+".txt", "w") as outfile:
+    outfile.write("Mean time for simulation = {:.2e}s\n".format(mean_time))
+    outfile.write("========================================\n")
+    outfile.write("Final energy and its variance for each gamma\n")
+    outfile.write("========================================\n")
+    for i in range(len(blocking_data)):
+        var = np.sqrt(blocking_data[i][-1])
+        energy = energies[i][-1]
+        outfile.write("Gamma = {:.2e} | Energy = {:.5e} | Variance = {:.2e}\n".format(gamma_vals[i], energy, var))
+
