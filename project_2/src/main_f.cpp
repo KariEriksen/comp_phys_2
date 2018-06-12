@@ -7,85 +7,91 @@ using namespace arma;
 
 int main(int argc, char *argv[]){
 
-    //in nqs.cpp add new evaluate, ratio and E_l, laplace
-    //in vmc.cpp evaluate with new psi
-    //and calculate E_l and sgd with new psi!!!
-
     int N, M;
-    int N_d, N_mc, mc_exp;
-    double gamma, omg, sigma, step;
+    int N_p, N_d, N_mc, mc_exp;
+    double omg, sigma, step;
 
-    int N_p = 1;
-
-    /*
-    if( argc < 3){
-        cout << "Wrong usage" << endl;
-        exit(1);
-    }
-    else{
-        N_d = atoi(argv[1]); mc_exp = atoi(argv[2]);
-        N = atoi(argv[3]);
-    }
-    */
-    N_d = 1;
-    mc_exp = 15;
-    N = 2;
+    N_p = 1;
+    N_d = 2;
+    mc_exp = 16;
+    N = 3;
 
     N_mc = pow(2, mc_exp);
     M = N_p*N_d;
 
-    gamma = 0.01; omg = 1; sigma = 1; step = 0.1;
-    double omg_2 = omg*omg;
-    double sigm_2 = sigma*sigma;
-    double sigm_4 = sigm_2*sigm_2;
+    //double gamma_vals[] = {1e-3, 1e-2, 1e-1, 0.4};
+    double gamma_vals[] = {0.001};
+    ofstream timefile("../data/f_data/time_iter.csv");
 
-    vec params_nqs = {
-                      sigma, sigm_2, sigm_4,
-                      omg, omg_2,
-                      gamma
-                     };
-    nqs n;
-    Gibbs D;
+    for (double gamma: gamma_vals){
+            omg = 1; sigma = 1; step = 1.0;
+            double omg_2 = omg*omg;
+            double sigm_2 = sigma*sigma;
+            double sigm_4 = sigm_2*sigm_2;
 
-    D.step = step;
-    D.set_params(N_p, N_d, N, M, N_mc, 0, 0, 1);
+            vec params_nqs = {
+                              sigma, sigm_2, sigm_4,
+                              omg, omg_2,
+                              gamma
+                             };
+            nqs n;
+            Gibbs D;
 
-    n.N = N;
-    n.M = M;
-    n.set_params(params_nqs);
-    n.initialize();
+            D.step = step;
+            D.set_params(N_p, N_d, N, M, N_mc, false, false, true);
 
-    int n_sims = 20;
-    int i = 0;
+            n.N = N;
+            n.M = M;
+            n.set_params(params_nqs);
+            n.initialize();
 
-    ofstream timefile("../data/b_data/time_iter.csv");
+            int n_sims = 100;
+            int i = 0;
 
-    while(i < n_sims){
+            string base_filename = "weights.csv";
 
-        retval result;
-        // Add 1000 to int to get proper sorting of filenames.
-        string filename = "/c_data/iteration_"+to_string(1000 + i)+".csv";
-        result = D.solve(&n, filename);
+            while(i < n_sims){
 
-        colvec a_update = colvec(M);
-        colvec b_update = colvec(N);
-        mat w_update = mat(M, N);
+                    retval result;
 
-        a_update = 2*(result.exp_vals.prod_E_grad_a
-            - result.exp_vals.grad_a * result.el_exp);
+                    // Add 1000 to int to get proper sorting of filenames.
+                    string filename = "/f_data/iteration_"
+                            + to_string(1000 + i)
+                            + "_gamma_"
+                            + to_string(gamma)
+                            + ".csv";
+                    result = D.solve(n, filename);
 
-        b_update =  2*(result.exp_vals.prod_E_grad_b
-            - result.exp_vals.grad_b * result.el_exp);
+                    colvec a_update = colvec(M);
+                    colvec b_update = colvec(N);
+                    mat w_update = mat(M, N);
 
-        w_update =  2*(result.exp_vals.prod_E_grad_W
-            - result.exp_vals.grad_W * result.el_exp);
+                    a_update = 2*(result.exp_vals.prod_E_grad_a
+                            - result.exp_vals.grad_a * result.el_exp);
 
-        n.a = n.a - gamma * a_update;
-        n.b = n.b - gamma * b_update;
-        n.W = n.W - gamma * w_update;
+                    b_update =  2*(result.exp_vals.prod_E_grad_b
+                            - result.exp_vals.grad_b * result.el_exp);
 
-        cout << "Iteration " << i << endl;
-        cout << "E_l = "<< result.el_exp << endl;
-        i ++;
+                    w_update =  2*(result.exp_vals.prod_E_grad_W
+                            - result.exp_vals.grad_W * result.el_exp);
+
+                    n.a += - gamma * a_update;
+                    n.b += - gamma * b_update;
+                    n.W += - gamma * w_update;
+                    /*
+                    cout << "WEIGTS" << endl;
+                    n.a.print();
+                    n.b.print();
+                    n.W.print();*/
+                    cout << "###########" << endl;
+                    cout << "Iteration " << i << endl;
+
+                    cout << "E_l = "<< result.el_exp <<"\n" ;
+                    //cout << endl;
+                    cout << "gamma " << gamma << endl;
+                    timefile << result.time_spent << endl;
+                    i ++;
+        }// END gamma loop
+    timefile.close();
     }
 }
