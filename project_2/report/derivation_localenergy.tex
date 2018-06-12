@@ -73,10 +73,11 @@ G_i = \frac{\partial \expect{E_L}}{\partial \alpha_i} = 2\left( \expect{E_L \fra
 
 \noindent While the NQS is defined for the Gaussian Binary RBM as (REPLACE WITH REF TO EQ )
 
-\begin{align}
-    \Psi (\mathbf{X}) = \frac{1}{Z} \exp\left(-\sum_i^M \frac{(X_i - a_i)^2}{2\sigma^2}\right) 
-    \prod_j ^N \left( 1 + \exp\left(b_j  + \sum_i^M \frac{X_i w_^\mathbf{T}{ij}}{\sigma^2}\right) \right)
-\end{align}
+\begin{align*}
+\Psi (\mathbf{X}) = \frac{1}{Z} \exp\left(-\sum_i^M \frac{(X_i - a_i)^2}{2\sigma^2}\right) 
+    \prod_j ^N \left( 1 + \exp\left(b_j  + \sum_i^M \frac{X_i w^\mathbf{T}_{ij}}{\sigma^2}\right) \right)
+\end{align*}
+    
 \noindent We now find it useful to use the identity 
 \begin{align}
     \frac{d}{dx}\ln f(x) = \frac{1}{f(x)} \frac{d}{dx}f(x)

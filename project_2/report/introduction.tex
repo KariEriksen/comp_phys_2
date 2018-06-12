@@ -1,13 +1,6 @@
 \section{Introduction}
-The aim of this project is to evaluate the case of a hard sphere trapped Bose gas using Variational Monte Carlo simulations. We want to find the ground state energy for systems containing different number of particles given a trial wave function. As the number of particles grow, so does the complexity of the wave function.
-What we are looking at is a quantum many-body-problem
 
-$$\imath \hbar \frac{\partial}{\partial x} |\Psi (t)\rangle = \hat{H} |\Psi (t)\rangle$$
-
-and with a growing exponential complexity in the wave function the more impossible the calculation of the Hamiltonian and the energy becomes. The Variatonal Monte Carlo method allows us to look for the low ground state energy, but we will be using Metropolis-Hastings algorithm and Importance Sampling to make the selection of movements of particles in the system. 
-
-Our trail wave function consist of one variational parameter, $\Psi_T(\mathbf{R};\alpha)$. We want to find the optimal value for $\alpha$ that minimizes the energy. For that we use the method of Steepest Descent. 
-For the statistical analysis and error estimates of the numerical data we have used blocking techniques.  
-
-All the code in the project can be found in the repository \lstinline{https://github.com/copperwire/comp_phys_2}
-
+The aim of this project is to apply Restricted Boltzmann Machine (RBM) on the quantum many-body-problem. We seek the ground state energy of a system containing $N$ particles, however we will not extend the case of two particles. The reason for this is that for two electrons in a quantum dot with frequency $\hbar \omega = 1$ we have a closed form solutions to the ground state energy. We also have analytic answers for the non-interacting case. This is convenient in that we can compare results from our numerical methods.\\
+Another reason to limit the amount of particles is that we operate with three optimization parameters. This requires a lot of CPU time.  \\
+Our wave function is represented by the energy of the RBM, eq. \eqref{eq:F_rbm}. We produce input to feed the RBM using Monte Carlo method with Metropolis Hasting or Importance sampling algorithm for selecting states. With stochastic gradient descent we are able to optimize the parameters, the weights $W_{ij}$ and bias functions $a_i(v_i)$ and $b_j(h_j)$. \\
+We also want to experiment with Gibbs sampling. For this sampling method we can use an easier version of the wave function since we know it to be positive definite. The expressions of both energy and the derivatives for the gradient descent can be found in the Appendix C and B. 

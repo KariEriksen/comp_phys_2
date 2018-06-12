@@ -11,12 +11,40 @@ We are studying a system of two electrons confined in a harmonic oscillator trap
 where the first sum is the standard harmonic oscillator part and the last is the interacting part between the electrons and $N$ represent the number of particles. $\omega$ is the oscillator frequency of the trap and $r_i$ is the position of particle $i$, whereas $r_{ij}$ is the distance between the particles and given as $r_{ij} = |\mathbf{r_i} - \mathbf{r_j}|$. \\
 Our wave function is given from the energy of the restricted Boltzmann machine, see \eqref{eq:E_rbm}, which is the joint energy functional between the visible and hidden nodes. From the marginal probability of the joint probability distribution, see \eqref{eq:F_rbm_marg}, we get our wave equation.                     
 
-\begin{align}
+\begin{align}\label{eq:F_rbm}
 \Psi(X) &= F_{rbm}(X) \\
 &= \frac{1}{Z} \exp \left( -\sum_{i}^{M} \frac{(X_i - a_i)^2}{2 \sigma^2} \right) \prod_{j}^{N} \left( 1 + \exp \left( b_j + \sum_{i}^{M} \frac{X_i \omega_{ij}}{\sigma^2} \right) \right)
 \end{align}
 
-Here $Z$ is the partition function, $X_i$ represents the visible nodes running up to $M$, and $a_i$ and $b_j$ are the biases described in the section below, \eqref{sec:rbm}, where number of hidden nodes $j$ runs up to $N$. $\omega_{ij}$ is an $M \times N$ matrix holding the weights connecting the visible nodes with the hidden and $\sigma$ is the standard deviation of the noise in our model. \\
+Here $Z$ is the partition function, $X_i$ represents the visible nodes running up to $M$, and $a_i$ and $b_j$ are the biases described in the section below, \eqref{sec:rbm}, where number of hidden nodes $j$ runs up to $N$. $\omega_{ij}$ is an $M \times N$ matrix holding the weights connecting the visible nodes with the hidden and $\sigma$ is the standard deviation of the noise in our model. \\ 
+
+\subsection{Variational Monte Carlo}
+
+Monte Carlo simulations are widely used methods in numerical science that employs random walkers. 
+In this project we are taking a closer look at trapped bosons. We are given a trail wave function we assume is as close to the real case as possible, $\Psi_T(\mathbf{R};\alpha)$ where $\mathbf{R} = (\mathbf{R}_1, ... , \mathbf{R}_N)$ is the position of the different particles. 
+From quantum mechanics we know the probability distribution is given by the wave function. 
+
+$$P(\mathbf{R}; \alpha) = \frac{|\Psi_T(\mathbf{R};\alpha)|^2}{\int |\Psi_T(\mathbf{R};\alpha)|^2 d\mathbf{R}}$$
+
+Monte Carlo integration allow us to evaluate the integral at hand. The expectation value of the Hamiltonian is given as follows. 
+
+$$\langle \widehat{\mathbf{H}}\rangle = \frac{\int d \mathbf{R} \Psi^{\ast} (\mathbf{R})H(\mathbf{R}) \Psi(\mathbf{R})}{\int d \mathbf{R} \Psi^{\ast} (\mathbf{R}) \Psi(\mathbf{R})}$$
+
+The variational principle states that the expectation value of the Hamiltonian is an upper-bound for the ground state energy of the Hamiltonian.
+
+$$E_0 \leq \langle H \rangle$$
+
+This is what the Variational Monte Carlo method bases itself on. Given a probability distribution we can evaluate the wave function and look for a local minimum. We define the local energy by
+
+$$\widehat{\mathbf{E}}_L(\mathbf{R};\alpha) = \frac{1}{\Psi_T(\mathbf{R};\alpha)}\widehat{\mathbf{H}}\Psi_T(\mathbf{R};\alpha).$$
+
+Then the expectation value of the local energy is given by
+
+$$\langle \widehat{\mathbf{E}}_L\rangle = \int P(\mathbf{R}) \widehat{\mathbf{E}}_L d\mathbf{R} \approx \frac{1}{N} \sum_{i = 1}^N \mathbf{E_L}(x_i)$$
+
+where $N$ is the number of Monte Carlo cycles. Now we can calculate the probability distribution and the local energy. And for each cycle we propose a new configuration $\mathbf{R}_p$ for the system and hopefully we come closer to the ground state.
+
+$$\mathbf{R}_p = \mathbf{R} + r \ast \Delta \mathbf{R}$$
 
 \subsection{Restricted Boltzmann Machine}\label{sec:rbm}
 
@@ -47,35 +75,7 @@ F_{rbm} (\mathbf{X}) &= \sum_{\mathbf{h}} F_{rbm} (\mathbf{X}, \mathbf{h}) \\
 &= \frac{1}{Z} \sum_{\mathbf{h}} e^{-E(\mathbf{X}, \mathbf{h})}
 \end{align}
 
-Since we have no data to train we use the technique of reinforcement learning. We feed the network with input using Monte Carlo method and based on the variational principle we find the ground state of the system by seeking the configuration that gives the lowest quantum mechanical energy. According to this principle we change the weights and biases by gradient descent method and hopefully the network will converge towards the correct state.  
-
-\subsection{Variational Monte Carlo}
-
-Monte Carlo simulations are widely used methods in numerical science that employs random walkers. 
-In this project we are taking a closer look at trapped bosons. We are given a trail wave function we assume is as close to the real case as possible, $\Psi_T(\mathbf{R};\alpha)$ where $\mathbf{R} = (\mathbf{R}_1, ... , \mathbf{R}_N)$ is the position of the different particles. 
-From quantum mechanics we know the probability distribution is given by the wave function. 
-
-$$P(\mathbf{R}; \alpha) = \frac{|\Psi_T(\mathbf{R};\alpha)|^2}{\int |\Psi_T(\mathbf{R};\alpha)|^2 d\mathbf{R}}$$
-
-Monte Carlo integration allow us to evaluate the integral at hand. The expectation value of the Hamiltonian is given as follows. 
-
-$$\langle \widehat{\mathbf{H}}\rangle = \frac{\int d \mathbf{R} \Psi^{\ast} (\mathbf{R})H(\mathbf{R}) \Psi(\mathbf{R})}{\int d \mathbf{R} \Psi^{\ast} (\mathbf{R}) \Psi(\mathbf{R})}$$
-
-The variational principle states that the expectation value of the Hamiltonian is an upper-bound for the ground state energy of the Hamiltonian.
-
-$$E_0 \leq \langle H \rangle$$
-
-This is what the Variational Monte Carlo method bases itself on. Given a probability distribution we can evaluate the wave function and look for a local minimum. We define the local energy by
-
-$$\widehat{\mathbf{E}}_L(\mathbf{R};\alpha) = \frac{1}{\Psi_T(\mathbf{R};\alpha)}\widehat{\mathbf{H}}\Psi_T(\mathbf{R};\alpha).$$
-
-Then the expectation value of the local energy is given by
-
-$$\langle \widehat{\mathbf{E}}_L\rangle = \int P(\mathbf{R}) \widehat{\mathbf{E}}_L d\mathbf{R} \approx \frac{1}{N} \sum_{i = 1}^N \mathbf{E_L}(x_i)$$
-
-where $N$ is the number of Monte Carlo cycles. Now we can calculate the probability distribution and the local energy. And for each cycle we propose a new configuration $\mathbf{R}_p$ for the system and hopefully we come closer to the ground state.
-
-$$\mathbf{R}_p = \mathbf{R} + r \ast \Delta \mathbf{R}$$
+Since we have no data to train we use the technique of reinforcement learning. We feed the network with input using Monte Carlo method and based on the variational principle we find the ground state of the system by seeking the configuration that gives the lowest quantum mechanical energy. According to this principle we change the weights and biases by gradient descent method and hopefully the network will converge towards the correct state. 
 
 \subsection{The Metropolis Algorithm}
 
@@ -161,6 +161,23 @@ Now equation \ref{eq:ratio} from Metropolis algorithm changes to
 $$\frac{p_i T_{i \rightarrow j}}{p_j T_{j \rightarrow i}} = \frac{G(x, y, \Delta t)|\Psi_T(y)|^2}{G(y, x, \Delta t)|\Psi_T(x)|^2},$$
 
 and we must calculate the drift force in order to find new moves and the Green's function to accept/reject these moves.
+
+\subsection{Gibbs Sampling}
+
+A special case of the Metropolis sampling is when we know the wave function to be positive definite. We can then express the wave function as in \eqref{eq:F_rbm_sq} and since we do not need to worry about a complex wave function we can model the probability density as we wish. Now we sample new configurations from the conditional probabilities directly. This we can do since all nodes in each layer are independent from one another. 
+
+\begin{equation}
+P(H_j= 1|\mathbf{x}) = \frac{1}{1 + e^{- b_j - \sum_i\frac{x_i w_{ij}}{\sigma^2}}}
+\end{equation}
+
+We first calculate values for the hidden nodes from the current configuration, which in the beginning is initialized with random numbers. Here we recognize the Sigmoid function. From this we begin generating new samples for the visible values. These however are picked from a normal distribution with mean equal $a_i + \sum_j \mathbf{w}_{ij} \mathbf{h}$ and variance equal $\sigma^2$.
+
+\begin{equation}
+P(X_i|\mathbf{h}) = \mathcal{N}(X_i;a_i + \sum_j \mathbf{w}_{ij} \mathbf{h}, \sigma^2)
+\end{equation}
+
+The acceptance rate is 1, so the configuration is change every time. We then update the energy as before. Accept now we operate with a different wave function so the expression for both the energy and the derivatives in the gradient descent method are different, with a factor 0.5. So this must be accounted for. When evaluating the wave function we take a ratio and this factor vanishes, so changing the wave function itself is unnecessary.
+
 
 \subsection{Gradient Descent}
 
