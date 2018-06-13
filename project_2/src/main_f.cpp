@@ -12,19 +12,24 @@ int main(int argc, char *argv[]){
     double omg, sigma, step;
 
     N_p = 1;
-    N_d = 2;
+    N_d = 1;
     mc_exp = 16;
     N = 3;
 
     N_mc = pow(2, mc_exp);
     M = N_p*N_d;
+    
+    colvec start_a = colvec(M);
+    colvec start_b = colvec(N);
+    mat start_w = mat(M, N);
 
     //double gamma_vals[] = {1e-3, 1e-2, 1e-1, 0.4};
-    double gamma_vals[] = {0.001};
+    double gamma = 0.8;
+    double sigma_vals[] = {0.9, 1, 1.3};
     ofstream timefile("../data/f_data/time_iter.csv");
 
-    for (double gamma: gamma_vals){
-            omg = 1; sigma = 1; step = 1.0;
+    for (double sigma: sigma_vals){
+            omg = 1; step = 0.45;
             double omg_2 = omg*omg;
             double sigm_2 = sigma*sigma;
             double sigm_4 = sigm_2*sigm_2;
@@ -43,10 +48,21 @@ int main(int argc, char *argv[]){
             n.N = N;
             n.M = M;
             n.set_params(params_nqs);
-            n.initialize();
 
             int n_sims = 100;
             int i = 0;
+
+            if(i == 0){ 
+                n.initialize();
+                start_a = n.a;
+                start_b = n.b;
+                start_w = n.W;
+            }
+            else{
+                n.a = start_a;
+                n.b = start_b;
+                n.W = start_w;
+            }
 
             string base_filename = "weights.csv";
 
@@ -55,10 +71,10 @@ int main(int argc, char *argv[]){
                     retval result;
 
                     // Add 1000 to int to get proper sorting of filenames.
-                    string filename = "/f_data/iteration_"
+                    string filename = "../data/f_data/gibbs_iteration_"
                             + to_string(1000 + i)
-                            + "_gamma_"
-                            + to_string(gamma)
+                            + "_sigma_"
+                            + to_string(sigma)
                             + ".csv";
                     result = D.solve(n, filename);
 
@@ -88,7 +104,7 @@ int main(int argc, char *argv[]){
 
                     cout << "E_l = "<< result.el_exp <<"\n" ;
                     //cout << endl;
-                    cout << "gamma " << gamma << endl;
+                    cout << "sigma: " << sigma << endl;
                     timefile << result.time_spent << endl;
                     i ++;
         }// END gamma loop
