@@ -67,7 +67,7 @@ filenames = sorted(np.array(os.listdir("../data/c_data")))
 filenames = [name for name in filenames if name != "dummy" and name != "time_iter.csv"]
 
 # Perform blocking on results
-gamma_vals = [1e-3, 1e-2, 1e-1, 0.4]
+gamma_vals = [1e-3, 1e-2, 1e-1, 0.4, 1.0]
 n_sims = 50
 
 E_l_exp = 0.5
@@ -113,9 +113,11 @@ plt.xticks(x, rotation = 45, size = "small")
 plt.legend()
 plt.xlabel(r"Iteration")
 plt.ylabel(r"$\langle E \rangle $")
-plt.ylim(E_l_exp - 3, E_l_exp + 3 )
+#plt.ylim(E_l_exp - 3, E_l_exp + 3 )
 plt.title(r"Simulation of 1 particle in 1 dimension for different learning rates $\gamma$ using importance sampling")
-figname = "naive_mh_prod"
+
+figname = "importance_testing"
+#figname = "importance_prod"
 plt.savefig(figname + ".pdf")
 
 # Output
