@@ -48,7 +48,7 @@ $$\mathbf{R}_p = \mathbf{R} + r \ast \Delta \mathbf{R}$$
 
 \subsection{Restricted Boltzmann Machine}\label{sec:rbm}
 
-Restricted Boltzmann machine is a energy-based generative model which include hidden and visible variables (ref to Metha). It consists of a two-layer network with a two dimensional matrix $W_{ij}$ telling how strong the connections between the hidden and visible nodes are. The energy related to a configuration of the nodes is what forms the basis of our model. It is given in \eqref{eq:E_rbm}.
+Restricted Boltzmann machine is a energy-based generative model which include hidden and visible variables [3]. It consists of a two-layer network with a two dimensional matrix $W_{ij}$ telling how strong the connections between the hidden and visible nodes are. The energy related to a configuration of the nodes is what forms the basis of our model. It is given in \eqref{eq:E_rbm}.
 
 \begin{equation}\label{eq:E_rbm}
 E(\mathbf{v}, \mathbf{h}) = - \sum_{i} a_i(v_i) - \sum_{\mu} b_j(h_j) - \sum_{ij} W_{ij}v_i h_j 
