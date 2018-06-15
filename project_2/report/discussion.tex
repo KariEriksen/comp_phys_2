@@ -1,8 +1,13 @@
 \section{Discussion}
 \subsection{Brute force metropolis}
 
+Using the simplest version of the metropolis algorithm we've shown good results for the convergence towards analytical values for two non-interactive fermions. In comparison to a more traditional VMC method we encounter more typical machine learning problems. Working with hyperparameters like $\gamma$ and the magnitude of the sampling step in the metropolis algorithm exposes (especially with importance sampling) problems with glassy energy landscapes. Wherein the optimum is fairly localized and close to zero outside leading to gradient descent breaking down. We did not explore methods to remedy this problemm, though it should be noted  that this exists in the literature.  While the tuning of the variational parameters are fairly expensive for two particles how the method scales is the  true test of it's efficacy in the field. 
+
 \subsection{Importance sampling}
+
 
 \subsection{Gibbs sampling}
 
 \subsection{The interactive case}
+
+We observe that the importance sampling algorithm was very sensitive to the tuning of hyperparameters and we were not able to get the gibbs-sampler to perform even for the non-interactive case we opted to use the brute force method to investicate the interactive case of two fermions. The brute force method achieves great, but spurious accuracy as it touches the analytic minimum of 3 a.u. but does not hold this solution and averages at about $3.1$ a.u. with a standard deviation of about $0.2$. This estimate does not seem wholly unreasonable  and we can conclude that using a generative method as a replacement to a more traditional ansatz of the wavefunction may not be optimal but is at least feasible. 
