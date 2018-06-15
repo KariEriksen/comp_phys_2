@@ -48,7 +48,7 @@ $$\mathbf{R}_p = \mathbf{R} + r \ast \Delta \mathbf{R}$$
 
 \subsection{Restricted Boltzmann Machine}\label{sec:rbm}
 
-Restricted Boltzmann machine is a energy-based generative model which include hidden and visible variables (ref to Metha). It consists of a two-layer network with a two dimensional matrix $W_{ij}$ telling how strong the connections between the hidden and visible nodes are. The energy related to a configuration of the nodes is what forms the basis of our model. It is given in \eqref{eq:E_rbm}.
+Restricted Boltzmann machine is a energy-based generative model which include hidden and visible variables [3]. It consists of a two-layer network with a two dimensional matrix $W_{ij}$ telling how strong the connections between the hidden and visible nodes are. The energy related to a configuration of the nodes is what forms the basis of our model. It is given in \eqref{eq:E_rbm}.
 
 \begin{equation}\label{eq:E_rbm}
 E(\mathbf{v}, \mathbf{h}) = - \sum_{i} a_i(v_i) - \sum_{\mu} b_j(h_j) - \sum_{ij} W_{ij}v_i h_j 
@@ -204,48 +204,3 @@ where $\tau$ is the time between one sample and the next uncorrelated sample and
 If we knew what $\tau$ was we could simply find our $\sigma$, but since we don't we use blocking to find it. The method is simple enough, we divide our samples of data into blocks and calculating the mean of each block. So if we have an amount of samples of $\langle E_L \rangle$, we divide these into $M$ blocks and calculate the mean. By plotting the standard deviation as function of the block size we can keep blocking and blocking until we see that the std. dev. stops increasing, and this is where the blocks are uncorrelated. Now we have an estimate for $\tau$ and thus the standard deviation.
 
 
-\subsection{Numerical differentiation}
-To evaluate the local energy of the system as defined in the project it necessary to compute the second derivative of the trial wavefunction $\psi_T$. We've chosen to implement the numerical differentiation as a finite difference approximation. Let $\mathbf{R}$ be the row major $N \times D$ matrix where $N$ is the number of particles and $D$ is their dimension. Then the second derivative can be found by the procedure listed as algorithm \ref{alg:nd}
-
-\begin{algorithm}
-\KwData{matrix $\mathbf{R}$}
-\KwResult{float $\nabla ^2 \psi_T (R)$}
-\BlankLine
-$\Delta = 0$ \\
-$\mathbf{R_p} = \mathbf{R}$\\
-$\mathbf{R_m} = \mathbf{R}$\\
-\BlankLine
-\For{$i$ in $[0, N-1]$}{
-	\For{$j$ in $[0, D-1]$}{
-		$\mathbf{R_p}(i,j) += h$ \\
-		$\mathbf{R_m}(i,j) -= h$ \\
-		$\Delta = \psi_T(\mathbf{R_p}) + \psi_T(\mathbf{R_m}) - 2 \psi_T(\mathbf{R})$\\
-
-		$\mathbf{R_p}(i,j) -= h$ \\
-		$\mathbf{R_m}(i,j) += h$ \\
-	}
-}
-\KwRet{$\frac{\Delta}{h^2} $}
-\BlankLine
-\caption{Numerical differentiation of the second order of the trial wavefunction on a system $\mathbf{R}$}\label{alg:nd}
-\end{algorithm} 
-
-Since the derivative involves three function calls for each particle the numerical derivative will obviously be quite computationally expensive. It is noted  that the differentiation could be substantially optimized from the version included in the code, but is outside the scope of this project. 
-
-\begin{table}
-    \centering
-    \begin{tabular}{|c|c|c|}
-    \hline
-    Name   &  Type   &   Shape \\
-    \hline
-    $R$ & vec & $M$ \\
-    $W$ & mat & $M$ $\times$ $N$ \\
-    $a$ & vec & $M$ \\
-    $b$ & vec & $N$ \\
-    $F$ & vec & $M$ \\
-    $G$ & mat & 3 $\times$ 1 \\
-    \hline
-    \end{tabular}
-    \caption{List of different variables in our code and their type and shape. $R$ is the positions of the particles, W is the weights, $a$ and $b$ the bias functions, $F$ the drift force and $G$ the matrix containing the gradients of local energy. $N$ is the number of hidden nodes and $M$ is the number of visible, equal $N_p \cdot N_d$, number of particles times number of dimensions.}
-    \label{tab:variables}
-\end{table} 
