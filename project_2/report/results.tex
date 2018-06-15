@@ -12,15 +12,6 @@ From the figure and data in the table, the $dt$ parameter influences mainly the 
 lowering it by $~\frac{1}{3}$ per order of magnitude.
 Mean variance and data analysis was produced using the blocking method (\cite{Lectures-blocking}).
 
-\begin{figure}[h]
-\hspace{-2.8cm}
-\includegraphics[width = \paperwidth]{figures/naive_2p_3d.pdf}
-\caption{Plot of simulation with 2 particles in 3 dimensions with varied learning rates $\gamma$, using brute force metropolis sampling.
-			2 hidden nodes were used.
-			For detailed values on energy, variance, and CPU-time per mc-cycle, see table \ref{tab:naive-nin}}
-\label{fig:naive-nin}
-\end{figure}
-
 \begin{table}[h]
 \begin{tabular}{l c c}
 	Mean time per mc-cycle & &$5.88\cdot10^{-5}$ s \\
@@ -39,14 +30,6 @@ Mean variance and data analysis was produced using the blocking method (\cite{Le
 	For corresponding plot, see figure \ref{fig:naive-nin}}
 \end{table}
 
-\begin{figure}[h]
-\hspace{-2.8cm}
-\includegraphics[width = \paperwidth]{figures/importance_2p_3d.pdf}
-\caption{Plot of simulation with 2 particles in 3 dimensions with varied learning rates $\gamma$, using brute force metropolis sampling.
-			For detailed values on energy, variance, and CPU-time per mc-cycle, see table \ref{tab:importance-nin-gamma}}
-\label{fig:importance-nin-gamma}
-\end{figure}
-
 \begin{table}[h]
 \begin{tabular}{l c c}
 	Mean time per mc-cycle & &$5.80\cdot10^{-4}$ s \\
@@ -64,14 +47,6 @@ Mean variance and data analysis was produced using the blocking method (\cite{Le
 		Mean CPU-time per monte-carlo cycle across all iterations at the top. 4 hidden nodes were used.
 	For corresponding plot, see figure \ref{fig:importance-nin-gamma}}
 \end{table}
-
-\begin{figure}[h]
-\hspace{-2.8cm}
-\includegraphics[width = \paperwidth]{figures/importance_2p_3d_dt.pdf}
-\caption{Plot of simulation with 2 particles in 3 dimensions with varied learning rates $\gamma$, using brute force metropolis sampling.
-			For detailed values on energy, variance, and CPU-time per mc-cycle, see table \ref{tab:importance-nin-dt}}
-\label{fig:importance-nin-dt}
-\end{figure}
 
 \begin{table}[h]
 \begin{tabular}{l c c}
