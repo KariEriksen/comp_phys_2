@@ -1,4 +1,25 @@
 \section{Method}
+\subsection{Importance sampling}
+The importance sampling implementation uses a Greens function and drift force (quantum force)
+calculations to imporove the metropolis algorithm such that the suggested positions
+are better thus increasing the acceptance rate of the sampling process.
+\begin{lstlisting}
+for(int i = 0; i < M; i++) {
+	Greens += pow((R(i) - R_p(i) - 0.5*dt*F_drift_proposed(i)),2)
+				+ pow((R_p(i) - R(i) - 0.5*dt*F_drift(i)),2);
+}
+Greens = exp(Greens/(4*0.5*dt));
+
+
+double eps = dis_p(*gen);
+if(eps < P*Greens){
+	R = R_p;
+	return psi_t.E_l(R);
+}
+else{
+	return prev_E_l;
+}
+\end{lstlisting}
 
 \subsection{Gibbs sampling}
 
