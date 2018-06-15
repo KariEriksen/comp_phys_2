@@ -9,7 +9,6 @@ double Importance::metropolis_hastings(nqs& psi_t, double prev_E_l){
     R_p = R;
 
     uniform_int_distribution<int> dis_r(0, N_p - 1); // Picks particle 0 or 1
-    uniform_real_distribution<double> dis_step(-1, 1);
     uniform_real_distribution<double> dis_p(0.0, 1.0);
     normal_distribution<double> dis_zeta(0, 1);
 
@@ -39,7 +38,7 @@ double Importance::metropolis_hastings(nqs& psi_t, double prev_E_l){
 
     // Calculate greens functions
 	for(int i = 0; i < M; i++) {
-		Greens += -pow((R(i) - R_p(i) - 0.5*dt*F_drift_proposed(i)),2)
+		Greens += pow((R(i) - R_p(i) - 0.5*dt*F_drift_proposed(i)),2)
 					+ pow((R_p(i) - R(i) - 0.5*dt*F_drift(i)),2);
 	}
 	Greens = exp(Greens/(4*0.5*dt));
@@ -48,7 +47,7 @@ double Importance::metropolis_hastings(nqs& psi_t, double prev_E_l){
     double eps = dis_p(*gen);
     if(eps < P*Greens){
         R = R_p;
-        //psi_t. update();
+        //psi_t.update_positions(R);
         return psi_t.E_l(R);
     }
     else{

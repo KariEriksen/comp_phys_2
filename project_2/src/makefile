@@ -35,6 +35,9 @@ main_c.o: main_c.cpp
 
 main_f.o: main_f.cpp
 	clang main_f.cpp $(FLAGS) -c
+
+main_g.o: main_g.cpp
+	clang main_g.cpp $(FLAGS) -c
 # ==========================================================
 # app.x files
 
@@ -46,6 +49,10 @@ app_c.x: main_c.o $(depend_all) $(imp)
 
 app_f.x: main_f.o $(depend_all) $(gb)
 	g++ -o app_f.x main_f.o $(depend_all) $(gb) $(FLAGS)  
+
+app_g.x: main_g.o $(depend_all) $(mh)
+	g++ -o app_g.x main_g.o $(depend_all) $(mh) $(FLAGS)  
+
 
 clean:
 	rm -f *.o

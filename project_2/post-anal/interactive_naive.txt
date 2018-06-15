@@ -1,0 +1,7 @@
+Mean time for simulation = 2.97e-04s
+========================================
+Final energy and its variance for each gamma
+========================================
+Gamma = 3.00e-01 & Energy = 3.10432e+00 & Variance = 4.11e-02
+Gamma = 4.00e-01 & Energy = 3.10004e+00 & Variance = 4.07e-02
+Gamma = 5.00e-01 & Energy = 3.10643e+00 & Variance = 4.15e-02

@@ -1,1 +1,46 @@
 \section{Results}
+\subsection{Initial Code, Importance Sampling, and Statistical Analysis}
+\begin{table}
+\begin{tabular}{l|c|c}
+	Mean time for simulations & $5.88E-5$ s & \\
+	\hline
+	$\gamma$ & $\expect{E}$ a.u & Mean Variance $\sqrt{\sigma}$\\
+	\hline
+	$1E-3$ & $4.25093$ & $2.99E-2$ \\
+	$1E-2$ & $3.26251$ & $2.99E-2$ \\
+	$1E-1$ & $3.00228$ & $2.99E-2$ \\
+	$4E-1$ & $3.00023$ & $2.99E-2$ \\
+\end{tabular}
+\label{tab:naive-nin}
+\caption{Gamma comparisons for brute force metropolis sampling.}
+\end{table}
+
+\begin{table}
+\begin{tabular}{l|c|c}
+	Mean time for simulations & $4.81E-4$ s & \\
+	\hline
+	$\gamma$ & $\expect{E}$ a.u & Mean Variance $\sqrt{\sigma}$\\
+	\hline
+	$1E-3$ & $3.45633$ & $2.22E-2$ \\
+	$1E-2$ & $3.26251$ & $4.08E-3$ \\
+	$1E-1$ & $3.26461$ & $1.52E-3$ \\
+	$2E-1$ & $3.13645$ & $9.41E-4$ \\
+\end{tabular}
+\label{tab:importance-nin-gamma}
+\caption{Gamma comparisons for importance sampling.}
+\end{table}
+
+\begin{table}
+\begin{tabular}{l|c|c}
+	Mean time for simulations & $5.24E-4$ s & \\
+	\hline
+	$dt$ & $\expect{E}$ a.u & Mean Variance $\sqrt{\sigma}$\\
+	\hline
+	$1E-3$ & $3.06248$ & $9.18E-3$ \\
+	$1E-2$ & $3.09863$ & $3.43E-3$ \\
+	$1E-1$ & $3.09969$ & $1.13E-3$ \\
+\end{tabular}
+\label{tab:importance-nin-dt}
+\caption{dt comparison for importance sampling with $\gamma = 0.15$}
+\end{table}
+

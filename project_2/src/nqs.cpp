@@ -9,10 +9,10 @@ using namespace arma;
 nqs::nqs() : WaveFunc(){}
 
 void nqs::initialize(){
-    double spread = 0.2;
+    double spread = 0.4;
     random_device rd;
     mt19937 gen(rd());
-    uniform_real_distribution<double> dis (0, 1);
+    uniform_real_distribution<double> dis (0, 0.5);
     normal_distribution<double> w_dis(0, spread);
 
     for(int i = 0; i < M; i++){
@@ -32,6 +32,24 @@ void nqs::initialize(){
     }
 }
 
+double nqs::interaction(colvec R, int m, int nd){
+    double interaction_term = 0;
+    double r_dist;
+
+    for(int i = 0; i < m-nd; i += nd){
+        for(int j = i + nd; j < m; j += nd){
+        
+            r_dist = 0;
+            for(int k = 0; k < nd; k ++){
+                double tmp = R(i+k) - R(j+k);
+                r_dist += tmp*tmp;
+            }
+        }
+        interaction_term += 1./sqrt(r_dist);
+    } 
+    return interaction_term;
+    }
+
 double nqs::evaluate(colvec R){
 
     double exp_term = 0;
@@ -49,19 +67,35 @@ double nqs::evaluate(colvec R){
     return exp_term*prod;
 }
 
-double nqs::E_l(colvec R){
+double nqs::E_l(colvec R, int m, int nd){
 
     // Calulates the local energy of the given
     // configuration of the system
     //cout << -0.5*laplace(R) << "   " <<  accu(omega_2*square(R))*0.5 << "    " << 0.5*(- laplace(R) + accu(omega_2*square(R))) << endl;  
-    return 0.5*(-laplace(R) + omega_2*accu(square(R)));
+
+    double energy = 0;
+    energy += -laplace(R);
+    energy += omega_2*accu(square(R));
+    energy *= 0.5;
+
+    if(interactive == true) energy += interaction(R, m, nd);
+
+    return energy;
 }
 
-double nqs::E_l_gibbs(colvec R){
+double nqs::E_l_gibbs(colvec R, int m, int nd){
 
     // Calulates the local energy of the given
     // configuration of the system
-    return 0.5*(- laplace_gibbs(R) + omega_2*accu(square(R)));
+    
+    double energy = 0;
+    energy += -laplace_gibbs(R);
+    energy += omega_2*accu(square(R));
+    energy *= 0.5;
+
+    if(interactive == true) energy += interaction(R, m, nd);
+
+    return energy;
 }
 
 double nqs::laplace(colvec R){
