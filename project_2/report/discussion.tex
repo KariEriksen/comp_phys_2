@@ -1,16 +1,15 @@
 \section{Discussion}
-\section{Non interacting bosons}
+\subsection{Brute force metropolis}
 
-We've observed that for non-interactive bosons we are able to find an analytical minimum for the local energy, that we've used as a reference to assert that the VMC machinery indeed produces the correct result. As noted in task 1b this information is not in general something that is available to us. Methods like gradient descent ad variations thereof must then be considered. We implemented a GD algorithm that converged fast, and with relatively few MC-cycles, to a stable minimum for $\alpha$. More complex methods were not considered since we knew the problem to be quadratic, and thus well behaved in that the search space only has one minimum. 
-As and additional metric on the system we computed the one-body desities which shows a delta like behaviour in the non-interactive regime. The physical interpretation of this is that the particles are all very close to eachother and the origio. The authors did not find any demonstrations of the onebody density for bosons in the BEC in a HO trap in the litterature so comparison weren't readily available. 
+<<<<<<< HEAD
+Using the simplest version of the metropolis algorithm we've shown good results for the convergence towards analytical values for two non-interactive fermions. In comparison to a more traditional VMC method we encounter more typical machine learning problems. Working with hyperparameters like $\gamma$ and the magnitude of the sampling step in the metropolis algorithm exposes (especially with importance sampling) problems with glassy energy landscapes. Wherein the optimum is fairly localized and close to zero outside leading to gradient descent breaking down. We did not explore methods to remedy this problemm, though it should be noted  that this exists in the literature.  While the tuning of the variational parameters are fairly expensive for two particles how the method scales is the  true test of it's efficacy in the field. 
 
-We have also shown that there is, unsurprisingly, a large chunk of time lost by doing numerical estimations of the local energy. While trivial to implement and compute it is only useful as a sanity-check for the analytical solution for many body systems where an analytic derivative is available. Both the numeric and analytic simulations were run with the \lstinline{-O3} optimization flag. 
+\subsection{Importance sampling}
 
-There is also shown to be experimental indications of the hypothesis \footnote{theory, assumption?} that the ground state of the ensamble of bosons also is  the one that has the lowest variance in the VMC scheme by presenting the relative error in the measurment of $\expect{E_L}$  
+\subsection{Gibbs sampling}
+When it comes to the Gibbs sampling we have had some difficulties along the way and can not say we got the sampler to work.
+First we've had big problems with initializing the system, with starting value of the energy sometimes getting below the expectation value. This is a problem since the energy then only keeps sinking without end, never reaching the true expectation value. \\
+Another problem is the calculation of the hidden and visible nodes. We are essentially accepting all new configurations compared to standard Metropolis. Making it a less reliable method than Metropolis. 
+\subsection{The interactive case}
 
-
-\section{Interacting bosons}
-In the case of the elliptical trap with interaction we observe the expectation value of the local energy to increases by a small amount as we increase the number of particles in the system. This is consistent with what we see in Fig. 2 in ref \cite{VMC}. As the density of the gas increases so should its energy. 
-We are able to find an optimal value for $\alpha$, not without difficulties though. With an analytic solution with many terms something is bound to go wrong. Also with the amount of time it takes to numerically solve the interactive case it is important know the code produces the correct answers. However we are happy with the results.
-
-The onebody densities of the bosons in the ground state was shown to be distributed according to a normal distribution  \footnote{This should probably be rigorously tested, but we didn't}. Which shows a large effect of the jastrow factor on the density, as the shape is nearly delta-function distributed for the non-interactive case. 
+We observe that the importance sampling algorithm was very sensitive to the tuning of hyperparameters and we were not able to get the gibbs-sampler to perform even for the non-interactive case we opted to use the brute force method to investicate the interactive case of two fermions. The brute force method achieves great, but spurious accuracy as it touches the analytic minimum of 3 a.u. but does not hold this solution and averages at about $3.1$ a.u. with a standard deviation of about $0.2$. This estimate does not seem wholly unreasonable  and we can conclude that using a generative method as a replacement to a more traditional ansatz of the wavefunction may not be optimal but is at least feasible. 
