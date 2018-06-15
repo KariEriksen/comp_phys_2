@@ -10,7 +10,9 @@ efficiently shows sub-optimal results for the ground-state energy, but is more s
 force method when it converges.
 Importance sampling has shown itself to be much more sensitive to parameter tuning than the brute
 force method, resulting in different values of gamma used when comparing. The method often does not
-converge at all - rather, it diverges and then stabilizes several orders of magnitute too high (or low), seemingly at random - when using learning rates $\gamma > 0.2$.
+converge at all - rather, it diverges and then stabilizes several orders of magnitute too high (or low) - when using learning rates $\gamma > 0.2$.
+This seems to indicate that the increased complexity of the sampling algorithm doesn't necessarily provide better results, keeping in mind
+that the problem it is applied to is of a simpler character.
 
 
 \subsection{Gibbs sampling}
@@ -19,4 +21,9 @@ First we've had big problems with initializing the system, with starting value o
 Another problem is the calculation of the hidden and visible nodes. We are essentially accepting all new configurations compared to standard Metropolis. Making it a less reliable method than Metropolis. 
 \subsection{The interactive case}
 
-We observe that the importance sampling algorithm was very sensitive to the tuning of hyperparameters and we were not able to get the gibbs-sampler to perform even for the non-interactive case we opted to use the brute force method to investicate the interactive case of two fermions. The brute force method achieves great, but spurious accuracy as it touches the analytic minimum of 3 a.u. but does not hold this solution and averages at about $3.1$ a.u. with a standard deviation of about $0.2$. This estimate does not seem wholly unreasonable  and we can conclude that using a generative method as a replacement to a more traditional ansatz of the wavefunction may not be optimal but is at least feasible. 
+We observe that the importance sampling algorithm was very sensitive to the tuning of hyperparameters and we were not able to get the gibbs-sampler to perform even for the non-interactive case. 
+We opted to use the brute force method to investigate the interactive case of two fermions. 
+The brute force method achieves great, but spurious accuracy as it touches the analytic minimum of 3 a.u. 
+However, it does not hold this solution and averages at about $3.1$ a.u. with a standard deviation of about $0.2$. 
+This estimate does not seem wholly unreasonable and we can conclude that using a generative method as a replacement to a more traditional 
+ansatz of the wavefunction may not be optimal but is at least feasible. 
