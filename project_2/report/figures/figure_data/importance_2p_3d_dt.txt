@@ -2,6 +2,6 @@ Mean time for simulation = 5.24e-04s
 ========================================
 Final energy and  mean variance for each dt
 ========================================
-dt = 1.00e-03 | Energy = 3.06248e+00 | Variance = 9.18e-03
-dt = 1.00e-02 | Energy = 3.09863e+00 | Variance = 3.43e-03
-dt = 1.00e-01 | Energy = 3.09969e+00 | Variance = 1.13e-03
+dt = 1.00e-03 | Mean Energy = 3.09979e+00 | Mean Variance = 9.18e-03
+dt = 1.00e-02 | Mean Energy = 3.10374e+00 | Mean Variance = 3.43e-03
+dt = 1.00e-01 | Mean Energy = 3.10651e+00 | Mean Variance = 1.13e-03
