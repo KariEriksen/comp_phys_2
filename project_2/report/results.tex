@@ -17,7 +17,7 @@ and stays stable at the ground state, when using brute force metropolis sampling
 \caption{Table of learning rates $\gamma$ and mean expectation values for the local energy $E_L$ with mean variance, for brute force metropolis sampling
 		of 2 particles in 3 dimensions, with 4 hidden nodes.
 		Mean CPU-time per monte-carlo cycle across all iterations at the top.
-	For corresponding plot, see figure \ref{fig:naive-nin}}
+	For corresponding plot, see figure \ref{fig:naive-nin}.}
 \label{tab:naive-nin}
 \end{table}
 
@@ -45,7 +45,7 @@ Mean variance and data analysis was produced using the blocking method (\cite{Le
 \caption{Table of learning rates $\gamma$ and corresponding expectation values obtained for the local energy $E_L$ with variance, for importance sampling
 		of 2 particles in 3 dimensions, with 4 hidden nodes.
 		Mean CPU-time per monte-carlo cycle across all iterations at the top. 4 hidden nodes were used.
-	For corresponding plot, see figure \ref{fig:importance-nin-gamma}}
+	For corresponding plot, see figure \ref{fig:importance-nin-gamma}.}
 \label{tab:importance-nin-gamma}
 \end{table}
 
@@ -62,14 +62,15 @@ Mean variance and data analysis was produced using the blocking method (\cite{Le
 \caption{Table of timesteps $dt$ and corresponding expectation values obtained for the local energy $E_L$ with variance, for importance sampling
 		of 2 particles in 3 dimensions, with 4 hidden nodes.
 		Mean CPU-time per monte-carlo cycle across all iterations at the top.
-	For corresponding plot, see figure \ref{fig:importance-nin-dt}}
+	For corresponding plot, see figure \ref{fig:importance-nin-dt}.}
 \label{tab:importance-nin-dt}
 \end{table}
 
 \subsection{Gibbs sampling}
 Figure \ref{fig:1f_1}, \ref{fig:1f_2} and \ref{fig:1f_3} show simulations for the system using Gibbs sampling. In \ref{fig:1f_1} we see the results for one particle for 1, 2 and 3 dimensions. For all cases we see that the higher $\gamma$ the faster the gradient descent method moves towards an the expectation energy, however they are not the right values. In the case of one particle in one dimension the expectation value keeps dropping to infinity. \\
 For the two particle case we still have a factorization problem, the energy stabilizes at wrong energies.\\
-In figure \ref{fig:1f_3} we see how the simulations evolve using different values of standard deviation $\sigma$. For small $\sigma$ we draw new values for the visible units from a smaller range in position space and for bigger $\sigma$ we draw from a broader range. Calculating new moves with a higher standard deviation could cause the method to moves faster. And we see that the slope for high $\sigma$ is steeper than for smaller $\sigma$. However the energies are again wrong.
+In figure \ref{fig:1f_3} we see how the simulations evolve using different values of standard deviation $\sigma$. 
+For small $\sigma$ we draw new values for the visible units from a smaller range in position space and for bigger $\sigma$ we draw from a broader range. Calculating new moves with a higher standard deviation could cause the method to moves faster. And we see that the slope for high $\sigma$ is steeper than for smaller $\sigma$. However the energies are again wrong.
 
 
 \subsection{Interaction}
