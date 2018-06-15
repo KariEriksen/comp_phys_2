@@ -1,5 +1,8 @@
 \section{Results}
 \subsection{Initial Code, Importance Sampling, and Statistical Analysis}
+
+
+
 \begin{table}
 \begin{tabular}{l|c|c}
 	Mean time for simulations & $5.88E-5$ s & \\
@@ -44,3 +47,24 @@
 \caption{dt comparison for importance sampling with $\gamma = 0.15$}
 \end{table}
 
+\subsection{Interaction}
+We add the simple coloumb interaction to the program and opt to use the brute force metropolis algorithm as it was the most stable over the model hyperparameters, e.g. $\gamma$. Simulatig for the $N = D = 2$ case granted results as can be seen in figure \ref{fig:inter} and table \ref{tab:inter}. We observe an instability around the reported analytic mean of 3 a.u. And also no seeming great impact of variations of the paramete $\gamma$ on the scale $1e-1$. More rigorous analysis of the significance of these changes were however not performed. 
+
+\begin{table}
+	\begin{tabular}{|L|c|c|}
+	\hline
+$\gamma$ & $\textit{mean}(\expect{E})$ & $\textit{mean}(\sigma ^2)$ \\
+\hline \hline
+$3.00e-01$ & $3.10432$ & $4.11e-02$ \\
+$4.00e-01$ &  $3.10004$ & $4.07e-02$ \\
+$5.00e-01$ &  $3.10643$ & $4.15e-02$ \\
+\hline
+	\end{tabular}
+\caption{Simulating the $N = D = 2$ system with an added coloumb interaction led to a more oscillating behaviour than for the non-interactive case. This can be seen in figure \ref{fig:inter}. The simulation was run for 200 gradient descent iterations, the means were taken over the last 160 of them to capture only the oscillation and not the convergence. We observe that gamma does not seeem to have a dramatic impact on the stability in this case. The mean time for the simulations was $2.97e-04$ seconds}\label{tab:inter}
+\end{table}
+
+
+\begin{figure}
+	\includegraphics[width = \textwidth]{figures/interactive_naive.pdf}
+\caption{Plotting the expectation value of the energy on the vertical axis versus the gradient descent step on the horizontal shows an oscillating behaviour. In this case the hamiltonian for the system has been modified to include a interactive term based on the distance between the two particles. As noted in the project description this system has an analytic minimum of 3 a.u. that the RBM touches, but does not stabilize to. See table \ref{tab:inter} for details on the stability for the different values of $\gamma$} \label{fig:inter}
+\end{figure}
