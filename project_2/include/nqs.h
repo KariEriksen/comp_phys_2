@@ -15,6 +15,7 @@ public:
     double sigma, sigma_2, sigma_4;
     double omega, omega_2;
     double gamma;
+    bool interactive; 
 
     string id = "nqs";
 
@@ -24,10 +25,11 @@ public:
 
     void set_params(vec params);
     double ratio(colvec R, colvec R_p, int k);
+    double interaction(colvec R, int m, int nd);
     double evaluate(colvec R);
-    double E_l(colvec R);
+    double E_l(colvec R, int m, int nd);
     double laplace(colvec R);
-    double E_l_gibbs(colvec R);
+    double E_l_gibbs(colvec R, int m, int nd);
     double laplace_gibbs(colvec R);
     void initialize();
     void update_positions(colvec R);

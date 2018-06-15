@@ -14,12 +14,13 @@ using namespace arma;
 using namespace std;
 
 void vmc::monte_carlo(nqs& psi_t, metadata& exp_vals){
+        int acceptance = 0;    
 
 	if(compute_extra){
-		exp_vals.exp_E[0] = psi_t.E_l(R);
+		exp_vals.exp_E[0] = psi_t.E_l(R, M, N_d);
 	}
 	if(compute_gibbs){
-		exp_vals.exp_E[0] = psi_t.E_l_gibbs(R);
+		exp_vals.exp_E[0] = psi_t.E_l_gibbs(R, M, N_d);
 	}
 
 	if(compute_extra || compute_gibbs){
@@ -32,7 +33,7 @@ void vmc::monte_carlo(nqs& psi_t, metadata& exp_vals){
 	for(int i = 1; i < N_mc; i++) {
 		double tmp = metropolis_hastings(psi_t, exp_vals.exp_E[i-1]);
 		exp_vals.exp_E[i] = tmp;
-		//if(exp_vals.exp_E[i] !=  exp_vals.exp_E[i-1]) acceptance++;
+		if(exp_vals.exp_E[i] !=  exp_vals.exp_E[i-1]) acceptance++;
 
 		if(compute_extra || compute_gibbs){
 			gradient_descent(psi_t, exp_vals, tmp);
