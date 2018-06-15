@@ -1,0 +1,45 @@
+\subsection{Numerical differentiation}
+To evaluate the local energy of the system as defined in the project it necessary to compute the second derivative of the trial wavefunction $\psi_T$. We've chosen to implement the numerical differentiation as a finite difference approximation. Let $\mathbf{R}$ be the row major $N \times D$ matrix where $N$ is the number of particles and $D$ is their dimension. Then the second derivative can be found by the procedure listed as algorithm \ref{alg:nd}
+
+\begin{algorithm}
+\KwData{matrix $\mathbf{R}$}
+\KwResult{float $\nabla ^2 \psi_T (R)$}
+\BlankLine
+$\Delta = 0$ \\
+$\mathbf{R_p} = \mathbf{R}$\\
+$\mathbf{R_m} = \mathbf{R}$\\
+\BlankLine
+\For{$i$ in $[0, N-1]$}{
+	\For{$j$ in $[0, D-1]$}{
+		$\mathbf{R_p}(i,j) += h$ \\
+		$\mathbf{R_m}(i,j) -= h$ \\
+		$\Delta = \psi_T(\mathbf{R_p}) + \psi_T(\mathbf{R_m}) - 2 \psi_T(\mathbf{R})$\\
+
+		$\mathbf{R_p}(i,j) -= h$ \\
+		$\mathbf{R_m}(i,j) += h$ \\
+	}
+}
+\KwRet{$\frac{\Delta}{h^2} $}
+\BlankLine
+\caption{Numerical differentiation of the second order of the trial wavefunction on a system $\mathbf{R}$}\label{alg:nd}
+\end{algorithm} 
+
+Since the derivative involves three function calls for each particle the numerical derivative will obviously be quite computationally expensive. It is noted  that the differentiation could be substantially optimized from the version included in the code, but is outside the scope of this project. 
+
+\begin{table}
+    \centering
+    \begin{tabular}{|c|c|c|}
+    \hline
+    Name   &  Type   &   Shape \\
+    \hline
+    $R$ & vec & $M$ \\
+    $W$ & mat & $M$ $\times$ $N$ \\
+    $a$ & vec & $M$ \\
+    $b$ & vec & $N$ \\
+    $F$ & vec & $M$ \\
+    $G$ & mat & 3 $\times$ 1 \\
+    \hline
+    \end{tabular}
+    \caption{List of different variables in our code and their type and shape. $R$ is the positions of the particles, W is the weights, $a$ and $b$ the bias functions, $F$ the drift force and $G$ the matrix containing the gradients of local energy. $N$ is the number of hidden nodes and $M$ is the number of visible, equal $N_p \cdot N_d$, number of particles times number of dimensions.}
+    \label{tab:variables}
+\end{table} 
