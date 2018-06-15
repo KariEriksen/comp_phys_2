@@ -1,10 +1,17 @@
 \section{Discussion}
 \subsection{Brute force metropolis}
 
-<<<<<<< HEAD
 Using the simplest version of the metropolis algorithm we've shown good results for the convergence towards analytical values for two non-interactive fermions. In comparison to a more traditional VMC method we encounter more typical machine learning problems. Working with hyperparameters like $\gamma$ and the magnitude of the sampling step in the metropolis algorithm exposes (especially with importance sampling) problems with glassy energy landscapes. Wherein the optimum is fairly localized and close to zero outside leading to gradient descent breaking down. We did not explore methods to remedy this problemm, though it should be noted  that this exists in the literature.  While the tuning of the variational parameters are fairly expensive for two particles how the method scales is the  true test of it's efficacy in the field. 
 
 \subsection{Importance sampling}
+
+Modifying the brute force metropolis algorithm to use a quantum force (drift force) to sample more
+efficiently shows sub-optimal results for the ground-state energy, but is more stable than the brute
+force method when it converges.
+Importance sampling has shown itself to be much more sensitive to parameter tuning than the brute
+force method, resulting in different values of gamma used when comparing. The method often does not
+converge at all - rather, it diverges and then stabilizes several orders of magnitute too high (or low), seemingly at random - when using learning rates $\gamma > 0.2$.
+
 
 \subsection{Gibbs sampling}
 When it comes to the Gibbs sampling we have had some difficulties along the way and can not say we got the sampler to work.
