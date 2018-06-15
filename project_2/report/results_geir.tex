@@ -1,6 +1,15 @@
 \section{Results}
 \subsection{Initial Code, Importance Sampling, and Statistical Analysis}
-Figure \ref{fig:naive-nin} show a clear trend that
+For the simulations a highest learning-rate value of $\gamma = 0.4$ was chosen based on recommendations in \cite{Marsland}.
+Figure \ref{fig:naive-nin} along with table \ref{tab:naive-nin} shows that the neural network tends to converge faster when the learning rate is increased,
+and stays stable at the ground state, when using brute force metropolis sampling. $\gamma = 0.4$ is clearly the best learning rate of the tested ones.
+For importance sampling (figure \ref{fig:importance-nin-gamma}, table \ref{tab:importance-nin-gamma})
+the data follows the same trend. With importance sampling the precision is lower than that of brute
+force metropolis, but the mean variance is lower.
+For the best converging value of gamma, a simulation with the same parameters, but varying the
+timestep $dt$ was done (figure \ref{fig:importance-nin-dt}, table \ref{tab:importance-nin-dt}).
+From the figure and data in the table, the $dt$ parameter influences mainly the variance,
+lowering it by $~\frac{1}{3}$ per order of magnitude.
 
 \begin{figure}[h]
 \hspace{-2.8cm}
@@ -15,16 +24,17 @@ Figure \ref{fig:naive-nin} show a clear trend that
 \begin{tabular}{l c c}
 	Mean time per mc-cycle & &$5.88\cdot10^{-5}$ s \\
 	\hline
-	$\gamma$ & $\expect{E_L}$ a.u & Mean Variance $\sqrt{\sigma}$\\
+	$\gamma$ & Mean $\expect{E_L}$ a.u & Mean Variance $\sqrt{\sigma}$\\
 	\hline
-	$1\cdot10^{-3}$ & $4.25$ & $2.99\cdot10^{-2}$ \\
-	$1\cdot10^{-2}$ & $3.26$ & $1.48\cdot10^{-2}$ \\
-	$1\cdot10^{-1}$ & $3.002$ & $1.67\cdot10^{-3}$ \\
-	$4\cdot10^{-1}$ & $3.000$ & $1.23\cdot10^{-3}$ \\
+	$1\cdot10^{-3}$ & $4.36$ & $3.07\cdot10^{-2}$ \\
+	$1\cdot10^{-2}$ & $3.57$ & $1.97\cdot10^{-2}$ \\
+	$1\cdot10^{-1}$ & $3.005$ & $1.97\cdot10^{-3}$ \\
+	$4\cdot10^{-1}$ & $3.002$ & $1.45\cdot10^{-3}$ \\
 \end{tabular}
 \label{tab:naive-nin}
-\caption{Table of learning rates $\gamma$ and corresponding expectation values obtained for the local energy $E_L$ with variance, for brute force metropolis sampling.
-		Mean CPU-time per monte-carlo cycle across all iterations at the top. 4 hidden nodes were used.
+\caption{Table of learning rates $\gamma$ and mean expectation values for the local energy $E_L$ with mean variance, for brute force metropolis sampling
+		of 2 particles in 3 dimensions, with 4 hidden nodes.
+		Mean CPU-time per monte-carlo cycle across all iterations at the top.
 	For corresponding plot, see figure \ref{fig:naive-nin}}
 \end{table}
 
@@ -38,17 +48,18 @@ Figure \ref{fig:naive-nin} show a clear trend that
 
 \begin{table}[h]
 \begin{tabular}{l c c}
-	Mean time per mc-cycle & &$4.81\cdot10^{-4}$ s \\
+	Mean time per mc-cycle & &$5.80\cdot10^{-4}$ s \\
 	\hline
 	$\gamma$ & $\expect{E_L}$ a.u & Mean Variance $\sqrt{\sigma}$\\
 	\hline
-	$1\cdot10^{-3}$ & $3.45$ & $2.22\cdot10^{-2}$ \\
-	$1\cdot10^{-2}$ & $3.262$ & $4.08\cdot10^{-3}$ \\
-	$1\cdot10^{-1}$ & $3.264$ & $1.52\cdot10^{-3}$ \\
-	$2\cdot10^{-1}$ & $3.1364$ & $9.41\cdot10^{-4}$ \\
+	$1\cdot10^{-3}$ & $3.62$ & $2.16\cdot10^{-2}$ \\
+	$1\cdot10^{-2}$ & $3.149$ & $6.09\cdot10^{-3}$ \\
+	$1\cdot10^{-1}$ & $3.1011$ & $7.51\cdot10^{-4}$ \\
+	$2\cdot10^{-1}$ & $3.0959$ & $6.91\cdot10^{-4}$ \\
 \end{tabular}
 \label{tab:importance-nin-gamma}
-\caption{Table of learning rates $\gamma$ and corresponding expectation values obtained for the local energy $E_L$ with variance, for importance sampling.
+\caption{Table of learning rates $\gamma$ and corresponding expectation values obtained for the local energy $E_L$ with variance, for importance sampling
+		of 2 particles in 3 dimensions, with 4 hidden nodes.
 		Mean CPU-time per monte-carlo cycle across all iterations at the top. 4 hidden nodes were used.
 	For corresponding plot, see figure \ref{fig:importance-nin-gamma}}
 \end{table}
@@ -67,12 +78,13 @@ Figure \ref{fig:naive-nin} show a clear trend that
 	\hline
 	$dt$ & $\expect{E_L}$ a.u & Mean Variance $\sqrt{\sigma}$\\
 	\hline
-	$1\cdot10^{-3}$ & $3.062$ & $9.18\cdot10^{-3}$ \\
-	$1\cdot10^{-2}$ & $3.098$ & $3.43\cdot10^{-3}$ \\
-	$1\cdot10^{-1}$ & $3.099$ & $1.13\cdot10^{-3}$ \\
+	$1\cdot10^{-3}$ & $3.099$ & $9.18\cdot10^{-3}$ \\
+	$1\cdot10^{-2}$ & $3.103$ & $3.43\cdot10^{-3}$ \\
+	$1\cdot10^{-1}$ & $3.106$ & $1.13\cdot10^{-3}$ \\
 \end{tabular}
 \label{tab:importance-nin-dt}
-\caption{Table of timesteps $dt$ and corresponding expectation values obtained for the local energy $E_L$ with variance, for importance sampling.
+\caption{Table of timesteps $dt$ and corresponding expectation values obtained for the local energy $E_L$ with variance, for importance sampling
+		of 2 particles in 3 dimensions, with 4 hidden nodes.
 		Mean CPU-time per monte-carlo cycle across all iterations at the top.
 	For corresponding plot, see figure \ref{fig:importance-nin-dt}}
 \end{table}
