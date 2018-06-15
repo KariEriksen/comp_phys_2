@@ -1,8 +1,8 @@
-Mean time for simulation = 4.81e-04s
+Mean time for simulation = 5.80e-04s
 ========================================
-Final energy and its variance for each gamma
+Mean energy and mean variance for each gamma
 ========================================
-Gamma = 1.00e-03 | Energy = 3.45633e+00 | Variance = 2.22e-02
-Gamma = 1.00e-02 | Energy = 3.28056e+00 | Variance = 4.08e-03
-Gamma = 1.00e-01 | Energy = 3.26461e+00 | Variance = 1.52e-03
-Gamma = 2.00e-01 | Energy = 3.13645e+00 | Variance = 9.41e-04
+Gamma = 1.00e-03 | Mean Energy = 3.62896e+00 | Mean Variance = 2.16e-02
+Gamma = 1.00e-02 | Mean Energy = 3.14181e+00 | Mean Variance = 6.09e-03
+Gamma = 1.00e-01 | Mean Energy = 3.10111e+00 | Mean Variance = 7.51e-04
+Gamma = 2.00e-01 | Mean Energy = 3.09587e+00 | Mean Variance = 6.91e-04
