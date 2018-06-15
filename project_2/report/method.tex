@@ -4,11 +4,18 @@ The importance sampling implementation uses a Greens function and drift force (q
 calculations to imporove the metropolis algorithm such that the suggested positions
 are better thus increasing the acceptance rate of the sampling process.
 \begin{lstlisting}
+// Generate distributions
+uniform_int_distribution<int> dis_r(0, N_p - 1);
+uniform_real_distribution<double> dis_p(0.0, 1.0);
+normal_distribution<double> dis_zeta(0, 1);
+
+// Calculate Greens' function
 for(int i = 0; i < M; i++) {
 	Greens += pow((R(i) - R_p(i)-0.5*dt*F_drift_proposed(i)),2) + pow((R_p(i) - R(i) - 0.5*dt*F_drift(i)),2);
 }
 Greens = exp(Greens/(4*0.5*dt));
 
+// Metropolis
 double eps = dis_p(*gen);
 if(eps < P*Greens){
 	R = R_p;
