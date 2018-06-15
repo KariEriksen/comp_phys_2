@@ -181,20 +181,13 @@ The acceptance rate is 1, so the configuration is change every time. We then upd
 
 \subsection{Gradient Descent}
 
-Like most problems in physics the variational quantum problem is one of optimization. In this project we are optimizing the expectation value of the energy over the parameter $\alpha$. In the naive implementation we simply span a reasonable range of $\alpha$ \footnote{an implementation of which can be seen in the file \lstinline{main_b.cpp}}. For a multi-parameter variational problem this approach is too computationally expensive to implement in most cases. To remedy this problem iterative gradient methods have been developed to make more intelligent choices for the variational parameters. In this project we have opted to implement a simple gradient descent method. The gradient descent is ordinarily presented as 
+Like most problems in physics the variational quantum problem is one of optimization. In the last project we optimizied the expectation value of the energy over the single parameter $\alpha$. Though in general interesting problems in many-body problems will not have one, but very many parameters to optimize. This is part of the motivation for the RBM implementation. That while the number of parameters are significantly larger than one, it may still be preferable to a more traditional ansatz for the wave function. In this project we then seek to optimize over the RBM parameters $\alpha = \{\mathbf{a}, \mathbf{b}, \mathbf{w}\}$. Put more formally we seek to minimize the expecattion of the energy over the aforementioned variational parameters by performing gradient descent. More sophisticated methods for optimization are available but will not be explored here. We're then left with the simple GD algorithm as before.
 
 \begin{equation}
 \alpha_{i+1} = \alpha_i -\gamma \frac{\partial \langle E_L (\alpha_i) \rangle}{\partial \alpha_i}
 \end{equation}
 
-\noindent Where we have opted to update the parameter $\gamma$ iteratively by the Barzilai-Borwein formula which is a method that uses an iterative approach to the step size $\gamma$ derived in much the same manner as for quasi-Newton methods\cite{OptTheory}. The only constraint we have to enforce is that $0 < \alpha$. In the algorithm we have a simple rule  that checks the sign of $\alpha$ and makes a correction if it is out-of-bounds. For $i > 0$ the step size $\gamma_i$ is then given as: 
-
-\begin{equation}
-\gamma_i = (\alpha_{i+1} - \alpha_i) \cdot \frac{1}{\expect{E_L}^\alpha_{i+1} - \expect{E_L}^\alpha_i}
-\end{equation}
-
-\noindent We also introduce the notation $\frac{\partial \langle E_L^i \rangle}{\partial \alpha} = \expect{E_L}^\alpha_{i}$ for brevity, and the same notation will be used for the tiral wavefunction $\psi_T$. The partial derivative itself can be found by the equation\footnote{The equation was retrieved from the lecture notes} 
-
+The differentiation to find the expecation values are a bit more laborious now than for the previous project , but they are listed in appendix 
 
 \subsection{Blocking Method}
 
