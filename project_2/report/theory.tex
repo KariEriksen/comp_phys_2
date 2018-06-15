@@ -166,13 +166,13 @@ and we must calculate the drift force in order to find new moves and the Green's
 
 A special case of the Metropolis sampling is when we know the wave function to be positive definite. We can then express the wave function as in \eqref{eq:F_rbm_sq} and since we do not need to worry about a complex wave function we can model the probability density as we wish. Now we sample new configurations from the conditional probabilities directly. This we can do since all nodes in each layer are independent from one another. 
 
-\begin{equation}
+\begin{equation}\label{eq:hidden}
 P(H_j= 1|\mathbf{x}) = \frac{1}{1 + e^{- b_j - \sum_i\frac{x_i w_{ij}}{\sigma^2}}}
 \end{equation}
 
 We first calculate values for the hidden nodes from the current configuration, which in the beginning is initialized with random numbers. Here we recognize the Sigmoid function. From this we begin generating new samples for the visible values. These however are picked from a normal distribution with mean equal $a_i + \sum_j \mathbf{w}_{ij} \mathbf{h}$ and variance equal $\sigma^2$.
 
-\begin{equation}
+\begin{equation}\label{eq:visible}
 P(X_i|\mathbf{h}) = \mathcal{N}(X_i;a_i + \sum_j \mathbf{w}_{ij} \mathbf{h}, \sigma^2)
 \end{equation}
 
@@ -238,22 +238,6 @@ $\mathbf{R_m} = \mathbf{R}$\\
 \end{algorithm} 
 
 Since the derivative involves three function calls for each particle the numerical derivative will obviously be quite computationally expensive. It is noted  that the differentiation could be substantially optimized from the version included in the code, but is outside the scope of this project. 
-
-
-\subsection{One-body densities}
-The one body density can be defined in terms of an arbitrary position vector $\mathbf{r}_1$ as 
-
-\begin{equation}\label{eq:obd}
-\rho(\mathbf{r}_1) = \int d\mathbf{r}_2 \ldots d\mathbf{r}_N |\Psi(\mathbf{r}_1, \mathbf{r}_2, \ldots, \mathbf{r}_N)|^2
-\end{equation}
-
-It's a useful size to compute since it relates the number of particles in the simulation to the density by way of equation \ref{eq:obd_N}
-
-\begin{equation}\label{eq:obd_N}
-N = \int d\mathbf{r}\rho(\mathbf{r})
-\end{equation}
-
-It also provides a complete picture of the relative distribution of particles. Which can be used to visually identify the ground state\footnote{In the odd case where the computation of $\frac{\partial \langle E_L (\alpha_i) \rangle}{\partial \alpha_i}$ for variational optimization is unavailable or too cumbersome one could ostensibly use very simple ML algorithms to optimize the variational parameter.}.
 
 \begin{table}
     \centering
